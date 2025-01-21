@@ -59,3 +59,20 @@ def create():
         return "VIRHE: tunnus on jo varattu"
 
     return "Tunnus luotu"
+
+@app.route("/create_recipe", methods=["POST"])
+def create_recipe():
+    title = request.form["title"]
+    instructions = request.form["instructions"]
+    user_id = session["user_id"]
+    try:
+        sql = """ INSERT INTO recipes (title, instructions, user_id)
+                  VALUES (?, ?, ?)"""
+        db.execute(sql, [title, instructions, user_id])
+    except sqlite3.IntegrityError:
+        return "VIRHE: reseptin tallennus epäonnistui"
+    return redirect("/")
+
+@app.route("/new_recipe")
+def new_item():
+    return render_template("new_recipe.html")
