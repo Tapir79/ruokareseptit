@@ -10,6 +10,7 @@
   {% if session.username %}
   <p>
     Olet kirjautunut nimellä {{ session.username }}
+    Sessio id on {{ session.user_id }}
   </p>
   {% endif %}
   <p>
