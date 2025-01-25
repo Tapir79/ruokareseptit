@@ -4,6 +4,7 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
+import recipes
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -66,9 +67,7 @@ def create_recipe():
     instructions = request.form["instructions"]
     user_id = session["user_id"]
     try:
-        sql = """ INSERT INTO recipes (title, instructions, user_id)
-                  VALUES (?, ?, ?)"""
-        db.execute(sql, [title, instructions, user_id])
+        recipes.add_recipe(title, instructions, user_id)
     except sqlite3.IntegrityError:
         return "VIRHE: reseptin tallennus epäonnistui"
     return redirect("/")
