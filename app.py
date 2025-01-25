@@ -1,10 +1,9 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session
-from werkzeug.security import generate_password_hash, check_password_hash
 import config
-import db
 import recipes
+import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -23,17 +22,14 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        sql = "SELECT id,password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])[0]
-        user_id = result["id"]
-        password_hash = result["password_hash"]
-
-        if check_password_hash(password_hash, password):
+        user_id = users.check_login(username, password)
+        if user_id:
             session["user_id"] = user_id
             session["username"] = username
             return redirect("/")
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            print("VIRHE: väärä tunnus tai salasana")
+            return redirect("/login")
 
 @app.route("/logout")
 def logout():
@@ -51,16 +47,15 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
-
+        print("VIRHE: salasanat eivät ole samat")
+        redirect("/register")
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        users.create_user(username, password1)
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
-
-    return "Tunnus luotu"
+        print("VIRHE: tunnus on jo varattu")
+        return redirect("/register")
+    print("Tunnus luotu")
+    return redirect("/")
 
 @app.route("/create_recipe", methods=["POST"])
 def create_recipe():
@@ -70,7 +65,7 @@ def create_recipe():
     try:
         recipes.add_recipe(title, instructions, user_id)
     except sqlite3.IntegrityError:
-        return "VIRHE: reseptin tallennus epäonnistui"
+        print("VIRHE: reseptin tallennus epäonnistui")
     return redirect("/")
 
 @app.route("/new_recipe")
