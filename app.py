@@ -8,12 +8,20 @@ import users
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+
 @app.route("/")
 def index():
     all_recipes = recipes.get_recipes()
     return render_template("index.html", recipes=all_recipes)
 
-@app.route("/login", methods=["GET","POST"])
+
+@app.route("/recipe/<int:recipe_id>")
+def recipe(recipe_id):
+    single_recipe = recipes.get_recipe(recipe_id)
+    return render_template("show_recipe.html", recipe=single_recipe)
+
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "GET":
@@ -31,15 +39,18 @@ def login():
             print("VIRHE: väärä tunnus tai salasana")
             return redirect("/login")
 
+
 @app.route("/logout")
 def logout():
     del session["user_id"]
     del session["username"]
     return redirect("/")
 
+
 @app.route("/register")
 def register():
     return render_template("register.html")
+
 
 @app.route("/create", methods=["POST"])
 def create():
@@ -57,6 +68,7 @@ def create():
     print("Tunnus luotu")
     return redirect("/")
 
+
 @app.route("/create_recipe", methods=["POST"])
 def create_recipe():
     title = request.form["title"]
@@ -67,6 +79,7 @@ def create_recipe():
     except sqlite3.IntegrityError:
         print("VIRHE: reseptin tallennus epäonnistui")
     return redirect("/")
+
 
 @app.route("/new_recipe")
 def new_item():

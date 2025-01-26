@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Uuden reseptin lisääminen</title>
-</head>
-<body>
-  <h1>Uusi resepti</h1>  
-  <form action="/create_recipe" method="post">
-    <p>
-      Otsikko: <br />
-      <input type="text" name="title" />
-    </p>
-    <p>
-      Ohjeteksti: <br />
-      <textarea name="instructions" rows="8" cols="60"></textarea>
-    </p>
-    <input type="submit" value="Luo resepti" />
-  </form>
-</body>
+  <head>
+    <title>Uuden reseptin lisääminen</title>
+  </head>
+  <body>
+    <h1>Uusi resepti</h1>
+    <form action="/create_recipe" method="post">
+      <p>
+        Otsikko: <br />
+        <input type="text" name="title" />
+      </p>
+      <p>
+        Ohjeteksti: <br />
+        <textarea name="instructions" rows="8" cols="60"></textarea>
+      </p>
+      <input type="submit" value="Luo resepti" />
+    </form>
+  </body>
 </html>

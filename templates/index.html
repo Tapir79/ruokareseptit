@@ -1,40 +1,42 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Ruokareseptit</title>
+  </head>
 
-<head>
-  <title>Ruokareseptit</title>
-</head>
-
-<body>
-  <h1>Ruokareseptit!</h1>
-  {% if session.username %}
-  <p>
-    Olet kirjautunut nimellä {{ session.username }}
-    Sessio id on {{ session.user_id }}
-  </p>
-  {% endif %}
-  <p>
-    <a href="/register">Luo tunnus</a>
-  </p>
-  <p>
+  <body>
+    <h1>Ruokareseptit!</h1>
     {% if session.username %}
-    <a href="/logout">Kirjaudu ulos</a>
-    {% else %}
-    <a href="/login">Kirjaudu sisään</a>
+    <p>
+      Olet kirjautunut nimellä {{ session.username }} Sessio id on {{
+      session.user_id }}
+    </p>
     {% endif %}
-  </p>
-  {% if session.username %}
-  <p>
-    <a href="/new_recipe"> Uusi resepti </a>
-  </p>
-  {% endif %}
+    <p>
+      <a href="/register">Luo tunnus</a>
+    </p>
+    <p>
+      {% if session.username %}
+      <a href="/logout">Kirjaudu ulos</a>
+      {% else %}
+      <a href="/login">Kirjaudu sisään</a>
+      {% endif %}
+    </p>
+    {% if session.username %}
+    <p>
+      <a href="/new_recipe"> Uusi resepti </a>
+    </p>
+    {% endif %}
 
-  <h2>Recipes</h2>
-  <ul>
-  {% for recipe in recipes %}
-    <li> {{ recipe.title }} </li>
-  {% endfor %}
-  </ul>
-</body>
-
+    <h2>Recipes</h2>
+    <ul>
+      {% for recipe in recipes %}
+      <li>
+        <a href="/recipe/{{ recipe.id }}">
+          {{ recipe.title }} id: {{ recipe.id }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
 </html>
