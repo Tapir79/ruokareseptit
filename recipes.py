@@ -1,13 +1,12 @@
 import db
 
-
 def get_recipes():
     sql = """SELECT id, 
                     title, 
                     instructions, 
                     user_id 
-            FROM recipes 
-            ORDER BY id DESC"""
+             FROM recipes 
+             ORDER BY id DESC"""
     return db.query(sql)
 
 
@@ -33,3 +32,7 @@ def update_recipe(recipe_id, title, instructions):
                                 instructions = ?
                             WHERE id = ?"""
     db.execute(sql, [title, instructions, recipe_id])
+
+def delete_recipe(recipe_id):
+    sql = """DELETE FROM recipes WHERE id = ?"""
+    db.execute(sql, [recipe_id])

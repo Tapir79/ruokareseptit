@@ -31,6 +31,22 @@ def edit_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     return render_template("edit_recipe.html", recipe=single_recipe)
 
+@app.route("/remove_recipe/<int:recipe_id>")
+def remove_recipe(recipe_id):
+    single_recipe = recipes.get_recipe(recipe_id)
+    return render_template("remove_recipe.html", recipe=single_recipe)
+
+@app.route("/delete_recipe", methods=["POST"])
+def delete_recipe():
+    recipe_id = request.form["recipe_id"]
+    if "remove" in request.form:
+        try:
+            recipes.delete_recipe(recipe_id)
+        except sqlite3.IntegrityError:
+            print("VIRHE: reseptin poistaminen epäonnistui")
+        return redirect("/")
+    else:
+        return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/update_recipe", methods=["POST"])
 def update_recipe():

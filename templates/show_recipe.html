@@ -8,6 +8,7 @@
     <h1>{{recipe.title}}</h1>
     {% if session.user_id == recipe.user_id %}
     <a href="/edit_recipe/{{ recipe.id }}">Muokkaa reseptiä</a>
+    <a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
     {% endif %}
     <p>{{ recipe.instructions }}</p>
     <p>Laatinut: {{ recipe.username}}</p>
