@@ -15,12 +15,49 @@ def index():
     return render_template("index.html", recipes=all_recipes)
 
 
+@app.route("/new_recipe")
+def new_item():
+    return render_template("new_recipe.html")
+
+
 @app.route("/recipe/<int:recipe_id>")
 def recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     return render_template("show_recipe.html", recipe=single_recipe)
 
 
+@app.route("/edit_recipe/<int:recipe_id>")
+def edit_recipe(recipe_id):
+    single_recipe = recipes.get_recipe(recipe_id)
+    return render_template("edit_recipe.html", recipe=single_recipe)
+
+
+@app.route("/update_recipe", methods=["POST"])
+def update_recipe():
+    recipe_id = request.form["recipe_id"]
+    title = request.form["title"]
+    instructions = request.form["instructions"]
+
+    try:
+        recipes.update_recipe(recipe_id, title, instructions)
+    except sqlite3.IntegrityError:
+        print("VIRHE: reseptin muokkaus epäonnistui")
+    return redirect("/recipe/" + str(recipe_id))
+
+
+@app.route("/create_recipe", methods=["POST"])
+def create_recipe():
+    title = request.form["title"]
+    instructions = request.form["instructions"]
+    user_id = session["user_id"]
+    try:
+        recipes.add_recipe(title, instructions, user_id)
+    except sqlite3.IntegrityError:
+        print("VIRHE: reseptin tallennus epäonnistui")
+    return redirect("/")
+
+
+# login/logout/register
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -67,20 +104,3 @@ def create():
         return redirect("/register")
     print("Tunnus luotu")
     return redirect("/")
-
-
-@app.route("/create_recipe", methods=["POST"])
-def create_recipe():
-    title = request.form["title"]
-    instructions = request.form["instructions"]
-    user_id = session["user_id"]
-    try:
-        recipes.add_recipe(title, instructions, user_id)
-    except sqlite3.IntegrityError:
-        print("VIRHE: reseptin tallennus epäonnistui")
-    return redirect("/")
-
-
-@app.route("/new_recipe")
-def new_item():
-    return render_template("new_recipe.html")
