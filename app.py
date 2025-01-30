@@ -44,12 +44,24 @@ def create_recipe():
             print("VIRHE: reseptin tallennus epäonnistui")
         return redirect("/")
 
-@app.route("/edit_recipe/<int:recipe_id>")
+@app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     if single_recipe["user_id"] != session["user_id"]:
         abort(403)
-    return render_template("edit_recipe.html", recipe=single_recipe)
+
+    if request.method == "GET":
+        return render_template("edit_recipe.html", recipe=single_recipe)
+
+    if request.method == "POST":
+        title = request.form["title"]
+        instructions = request.form["instructions"]
+        
+        try:
+            recipes.edit_recipe(recipe_id, title, instructions)
+        except sqlite3.IntegrityError:
+            print("VIRHE: reseptin muokkaus epäonnistui")
+        return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
@@ -67,19 +79,6 @@ def remove_recipe(recipe_id):
             return redirect("/")
         else:
             return redirect("/recipe/" + str(recipe_id))
-
-@app.route("/update_recipe", methods=["POST"])
-def update_recipe():
-    recipe_id = request.form["recipe_id"]
-    title = request.form["title"]
-    instructions = request.form["instructions"]
-
-    try:
-        recipes.update_recipe(recipe_id, title, instructions)
-    except sqlite3.IntegrityError:
-        print("VIRHE: reseptin muokkaus epäonnistui")
-    return redirect("/recipe/" + str(recipe_id))
-
 
 
 

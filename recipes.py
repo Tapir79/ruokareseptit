@@ -27,7 +27,7 @@ def add_recipe(title, instructions, user_id):
     db.execute(sql, [title, instructions, user_id])
 
 
-def update_recipe(recipe_id, title, instructions):
+def edit_recipe(recipe_id, title, instructions):
     sql = """UPDATE recipes SET title = ?, 
                                 instructions = ?
                             WHERE id = ?"""

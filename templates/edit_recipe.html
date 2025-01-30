@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>Muokkaa reseptiä</h1>
-    <form action="/update_recipe" method="post">
+    <form action="/edit_recipe/{{ recipe.id }}" method="post">
       <p>
         Otsikko: <br />
         <input type="text" name="title" value="{{recipe.title}}" />
@@ -14,7 +14,6 @@
         Ohjeteksti: <br />
         <textarea name="instructions" rows="8" cols="60">{{recipe.instructions}}</textarea>
       </p>
-      <input type="hidden" name="recipe_id" value="{{ recipe.id }}"/>
       <input type="submit" value="Tallenna" />
     </form>
   </body>
