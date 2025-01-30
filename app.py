@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import abort, redirect, render_template, request, session
 import config
 import recipes
 import users
@@ -39,6 +39,8 @@ def recipe(recipe_id):
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
+    if single_recipe["user_id"] != session["user_id"]:
+        abort(403)
     return render_template("edit_recipe.html", recipe=single_recipe)
 
 @app.route("/remove_recipe/<int:recipe_id>")
