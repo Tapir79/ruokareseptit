@@ -12,6 +12,11 @@ def user_ids_must_match(recipe_user_id):
     if recipe_user_id != session["user_id"]:
         abort(403)
 
+def recipe_must_exist(recipe):
+    if not recipe:
+        abort(404)
+
+
 @app.route("/")
 def index():
     all_recipes = recipes.get_recipes()
@@ -50,8 +55,7 @@ def create_recipe():
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
-    if single_recipe is None:
-        abort(404)
+    recipe_must_exist(single_recipe)
     user_ids_must_match(single_recipe["user_id"])
 
     if request.method == "GET":
@@ -70,8 +74,7 @@ def edit_recipe(recipe_id):
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
-    if single_recipe is None:
-        abort(404)
+    recipe_must_exist(single_recipe)
     user_ids_must_match(single_recipe["user_id"])
 
     if request.method == "GET":
