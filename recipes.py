@@ -18,7 +18,12 @@ def get_recipe(recipe_id):
                     users.username 
              FROM recipes JOIN users ON recipes.user_id = users.id
              WHERE recipes.id = ?"""
-    return db.query(sql, [recipe_id])[0]
+    result = db.query(sql, [recipe_id])
+
+    if result:
+        return result[0]
+    else:
+        return None
 
 
 def add_recipe(title, instructions, user_id):

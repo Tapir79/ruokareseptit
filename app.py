@@ -8,6 +8,9 @@ import users
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+def user_ids_must_match(recipe_user_id):
+    if recipe_user_id != session["user_id"]:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -47,8 +50,9 @@ def create_recipe():
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
-    if single_recipe["user_id"] != session["user_id"]:
-        abort(403)
+    if single_recipe is None:
+        abort(404)
+    user_ids_must_match(single_recipe["user_id"])
 
     if request.method == "GET":
         return render_template("edit_recipe.html", recipe=single_recipe)
@@ -65,8 +69,12 @@ def edit_recipe(recipe_id):
 
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
+    single_recipe = recipes.get_recipe(recipe_id)
+    if single_recipe is None:
+        abort(404)
+    user_ids_must_match(single_recipe["user_id"])
+
     if request.method == "GET":
-        single_recipe = recipes.get_recipe(recipe_id)
         return render_template("remove_recipe.html", recipe=single_recipe)
 
     if request.method == "POST":
