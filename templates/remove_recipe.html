@@ -12,7 +12,6 @@
 
     <br />
     <form action="/remove_recipe/{{ recipe.id }}" method="post">
-      <input type="hidden" name="recipe_id" value="{{ recipe.id }}" />
       <input type="submit" name="remove" value="Poista resepti" />
       <input type="submit" name="back" value="Palaa takaisin" />
     </form>

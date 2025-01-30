@@ -56,7 +56,7 @@ def edit_recipe(recipe_id):
     if request.method == "POST":
         title = request.form["title"]
         instructions = request.form["instructions"]
-        
+
         try:
             recipes.edit_recipe(recipe_id, title, instructions)
         except sqlite3.IntegrityError:
@@ -70,7 +70,6 @@ def remove_recipe(recipe_id):
         return render_template("remove_recipe.html", recipe=single_recipe)
 
     if request.method == "POST":
-        recipe_id = request.form["recipe_id"]
         if "remove" in request.form:
             try:
                 recipes.remove_recipe(recipe_id)
