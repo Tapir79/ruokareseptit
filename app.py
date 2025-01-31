@@ -73,7 +73,11 @@ def edit_recipe(recipe_id):
 
     if request.method == "POST":
         title = request.form["title"]
+        if len(title) > 50:
+            abort(403)
         instructions = request.form["instructions"]
+        if len(instructions) > 1000:
+            abort(403)
 
         try:
             recipes.edit_recipe(recipe_id, title, instructions)

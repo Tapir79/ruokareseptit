@@ -8,11 +8,11 @@
     <form action="/edit_recipe/{{ recipe.id }}" method="post">
       <p>
         Otsikko: <br />
-        <input type="text" name="title" value="{{recipe.title}}" />
+        <input type="text" name="title" maxlength="50" value="{{recipe.title}}" />
       </p>
       <p>
         Ohjeteksti: <br />
-        <textarea name="instructions" rows="8" cols="60">{{recipe.instructions}}</textarea>
+        <textarea name="instructions" rows="8" cols="60" maxlength="1000">{{recipe.instructions}}</textarea>
       </p>
       <input type="submit" value="Tallenna" />
     </form>
