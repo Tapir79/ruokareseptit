@@ -8,11 +8,11 @@
     <form action="/create_recipe" method="post">
       <p>
         Otsikko: <br />
-        <input type="text" name="title" />
+        <input type="text" name="title" maxlength="50"/>
       </p>
       <p>
         Ohjeteksti: <br />
-        <textarea name="instructions" rows="8" cols="60"></textarea>
+        <textarea name="instructions" rows="8" cols="60" maxlength="1000"></textarea>
       </p>
       <input type="submit" value="Luo resepti" />
     </form>

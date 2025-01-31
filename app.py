@@ -49,7 +49,11 @@ def create_recipe():
 
     if request.method == "POST":
         title = request.form["title"]
+        if len(title) > 50:
+            abort(403)
         instructions = request.form["instructions"]
+        if len(instructions) > 1000:
+            abort(403)
         user_id = session["user_id"]
         try:
             recipes.add_recipe(title, instructions, user_id)
@@ -103,7 +107,6 @@ def remove_recipe(recipe_id):
 # login/logout/register
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
     if request.method == "GET":
         return render_template("login.html")
     if request.method == "POST":
