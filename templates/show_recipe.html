@@ -12,6 +12,16 @@
     {% endif %}
     <p>{{ recipe.instructions }}</p>
     <p>Laatinut: {{ recipe.username}}</p>
+
+    {% if recipe_ingredients %}
+    <h2>Ainesosat</h2>
+    <ul>
+      {% for ingredient in recipe_ingredients %}
+      <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <a href="/add_ingredient/{{ recipe.id }}">Lisää aineisosa</a>
     <a href="/">Takaisin</a>
   </body>
 </html>

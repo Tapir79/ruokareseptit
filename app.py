@@ -4,6 +4,7 @@ from flask import abort, redirect, render_template, request, session
 import config
 import recipes
 import users
+import re
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -39,7 +40,8 @@ def find_recipe():
 @app.route("/recipe/<int:recipe_id>")
 def recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
-    return render_template("show_recipe.html", recipe=single_recipe)
+    recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
+    return render_template("show_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients)
 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
@@ -56,10 +58,35 @@ def create_recipe():
             abort(403)
         user_id = session["user_id"]
         try:
-            recipes.add_recipe(title, instructions, user_id)
+            recipe_id = recipes.add_recipe(title, instructions, user_id)
         except sqlite3.IntegrityError:
             print("VIRHE: reseptin tallennus epäonnistui")
-        return redirect("/")
+        return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/add_ingredient/<int:recipe_id>", methods=["GET", "POST"])
+def add_ingredient(recipe_id):
+    require_login()
+    single_recipe = recipes.get_recipe(recipe_id)
+    recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
+    recipe_must_exist(single_recipe)
+    user_ids_must_match(single_recipe["user_id"])
+
+    if request.method == "GET":
+        return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients)
+
+    if request.method == "POST":
+        name = request.form["name"]
+        if len(name) > 30:
+            abort(403)
+        amount = request.form["amount"]
+        if len(amount) > 20:
+            abort(403)
+
+        try:
+            recipes.add_ingredient(recipe_id, name, amount)
+        except sqlite3.IntegrityError:
+            print("VIRHE: reseptin muokkaus epäonnistui")
+        return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
