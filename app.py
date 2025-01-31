@@ -16,6 +16,10 @@ def recipe_must_exist(recipe):
     if not recipe:
         abort(404)
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
 
 @app.route("/")
 def index():
@@ -39,6 +43,7 @@ def recipe(recipe_id):
 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
+    require_login()
     if request.method == "GET":
         return render_template("new_recipe.html")
 
@@ -54,6 +59,7 @@ def create_recipe():
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
+    require_login()
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
     user_ids_must_match(single_recipe["user_id"])
@@ -73,6 +79,7 @@ def edit_recipe(recipe_id):
 
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
+    require_login()
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
     user_ids_must_match(single_recipe["user_id"])
