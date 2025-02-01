@@ -4,7 +4,7 @@ from flask import abort, redirect, render_template, request, session
 import config
 import recipes
 import users
-import re
+from validate import validate_input
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -20,6 +20,18 @@ def recipe_must_exist(recipe):
 def require_login():
     if "user_id" not in session:
         abort(403)
+
+def validate_form(form_data):
+    """Validates multiple form fields."""
+    errors = {}
+
+    for field, value in form_data.items():
+        error = validate_input(field, value)
+        if error:
+            errors[field] = error
+
+    return errors
+
 
 
 @app.route("/")
@@ -47,15 +59,17 @@ def recipe(recipe_id):
 def create_recipe():
     require_login()
     if request.method == "GET":
-        return render_template("new_recipe.html")
+        return render_template("new_recipe.html", errors=[], form_data=[])
 
     if request.method == "POST":
+        form_data = request.form
+        errors = validate_form(request.form)
+
+        if errors:
+            return render_template("new_recipe.html", errors=errors, form_data=form_data)
+
         title = request.form["title"]
-        if len(title) > 50:
-            abort(403)
         instructions = request.form["instructions"]
-        if len(instructions) > 1000:
-            abort(403)
         user_id = session["user_id"]
         try:
             recipe_id = recipes.add_recipe(title, instructions, user_id)
@@ -72,15 +86,17 @@ def add_ingredient(recipe_id):
     user_ids_must_match(single_recipe["user_id"])
 
     if request.method == "GET":
-        return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients)
+        return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=[], form_data=[])
 
     if request.method == "POST":
+        form_data = request.form
+        errors = validate_form(request.form)
+
+        if errors:
+            return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
+
         name = request.form["name"]
-        if len(name) > 30:
-            abort(403)
         amount = request.form["amount"]
-        if len(amount) > 20:
-            abort(403)
 
         try:
             recipes.add_ingredient(recipe_id, name, amount)
@@ -96,15 +112,17 @@ def edit_recipe(recipe_id):
     user_ids_must_match(single_recipe["user_id"])
 
     if request.method == "GET":
-        return render_template("edit_recipe.html", recipe=single_recipe)
+        return render_template("edit_recipe.html", recipe=single_recipe, errors=[], form_data=[])
 
     if request.method == "POST":
+        form_data = request.form
+        errors = validate_form(request.form)
+
+        if errors:
+            return render_template("edit_recipe.html", recipe=single_recipe, errors=errors, form_data=form_data)
+
         title = request.form["title"]
-        if len(title) > 50:
-            abort(403)
         instructions = request.form["instructions"]
-        if len(instructions) > 1000:
-            abort(403)
 
         try:
             recipes.edit_recipe(recipe_id, title, instructions)

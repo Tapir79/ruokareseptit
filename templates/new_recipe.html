@@ -8,11 +8,17 @@
     <form action="/create_recipe" method="post">
       <p>
         Otsikko: <br />
-        <input type="text" name="title" maxlength="50"/>
+        <input type="text" name="title" value="{{ form_data.title if form_data else '' }}" maxlength="30" required/>
+        {% if errors.title %}
+        <span style="color: red;">{{ errors.title }}</span>
+        {% endif %}
       </p>
       <p>
         Ohjeteksti: <br />
-        <textarea name="instructions" rows="8" cols="60" maxlength="1000"></textarea>
+        <textarea name="instructions" rows="8" cols="60" maxlength="1000" required> {{ form_data.instructions if form_data else '' }} </textarea>
+        {% if errors.instructions %}
+        <span style="color: red;">{{ errors.instructions }}</span>
+        {% endif %}
       </p>
       <input type="submit" value="Luo resepti" />
     </form>

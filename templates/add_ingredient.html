@@ -14,13 +14,27 @@
         Ohjeteksti: <br />
         {{recipe.instructions}}
       </p>
+      {% if recipe_ingredients %}
+      <h2>Ainesosat</h2>
+      <ul>
+        {% for ingredient in recipe_ingredients %}
+        <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
       <p>
         Ainesosan nimi: <br />
         <input type="text" name="name" maxlength="30" />
+        {% if errors.name %}
+        <span style="color: red;">{{ errors.name }}</span>
+        {% endif %}
       </p>
       <p>
         Määrä: <br />
         <input type="text" name="amount" maxlength="20" />
+        {% if errors.amount %}
+        <span style="color: red;">{{ errors.amount }}</span>
+        {% endif %}
       </p>
       <input type="submit" value="Tallenna" />
     </form>
