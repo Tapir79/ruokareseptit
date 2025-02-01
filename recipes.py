@@ -3,7 +3,7 @@ import db
 def get_recipes():
     sql = """SELECT id, 
                     title, 
-                    instructions, 
+                    description,
                     user_id 
              FROM recipes 
              ORDER BY id DESC"""
@@ -13,7 +13,7 @@ def get_recipes():
 def get_recipe(recipe_id):
     sql = """SELECT recipes.id, 
                     recipes.title, 
-                    recipes.instructions, 
+                    recipes.description,
                     recipes.user_id, 
                     users.username 
              FROM recipes JOIN users ON recipes.user_id = users.id
@@ -31,19 +31,19 @@ def get_recipe_ingredients(recipe_id):
     result = db.query(sql, [recipe_id])
     return result
 
-def add_recipe(title, instructions, user_id):
-    sql = """INSERT INTO recipes (title, instructions, user_id)
+def add_recipe(title, description, user_id):
+    sql = """INSERT INTO recipes (title, description, user_id)
              VALUES (?, ?, ?)"""
-    db.execute(sql, [title, instructions, user_id])
+    db.execute(sql, [title, description, user_id])
     last_insert_id = db.last_insert_id()
     return last_insert_id
 
 
-def edit_recipe(recipe_id, title, instructions):
+def edit_recipe(recipe_id, title, description):
     sql = """UPDATE recipes SET title = ?, 
-                                instructions = ?
+                                description = ?
                             WHERE id = ?"""
-    db.execute(sql, [title, instructions, recipe_id])
+    db.execute(sql, [title, description, recipe_id])
 
 def remove_recipe(recipe_id):
     sql = """DELETE FROM recipes WHERE id = ?"""
@@ -58,11 +58,11 @@ def remove_recipe(recipe_id):
 def find_recipes(query):
     sql = """SELECT recipes.id,
                     recipes.title,
-                    recipes.instructions,
+                    recipes.description,
                     recipes.user_id,
                     users.username
              FROM recipes JOIN users ON recipes.user_id = users.id
-             WHERE recipes.title LIKE ? OR recipes.instructions LIKE ?
+             WHERE recipes.title LIKE ? OR recipes.description LIKE ?
              ORDER BY recipes.id DESC"""
 
     search_term = f"%{ query }%"

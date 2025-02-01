@@ -69,10 +69,10 @@ def create_recipe():
             return render_template("new_recipe.html", errors=errors, form_data=form_data)
 
         title = request.form["title"]
-        instructions = request.form["instructions"]
+        description = request.form["description"]
         user_id = session["user_id"]
         try:
-            recipe_id = recipes.add_recipe(title, instructions, user_id)
+            recipe_id = recipes.add_recipe(title, description, user_id)
         except sqlite3.IntegrityError:
             print("VIRHE: reseptin tallennus epäonnistui")
         return redirect("/recipe/" + str(recipe_id))
@@ -122,10 +122,10 @@ def edit_recipe(recipe_id):
             return render_template("edit_recipe.html", recipe=single_recipe, errors=errors, form_data=form_data)
 
         title = request.form["title"]
-        instructions = request.form["instructions"]
+        description = request.form["description"]
 
         try:
-            recipes.edit_recipe(recipe_id, title, instructions)
+            recipes.edit_recipe(recipe_id, title, description)
         except sqlite3.IntegrityError:
             print("VIRHE: reseptin muokkaus epäonnistui")
         return redirect("/recipe/" + str(recipe_id))

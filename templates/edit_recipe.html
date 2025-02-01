@@ -12,12 +12,10 @@
     {% endif %}
   </p>
   <p>
-    Ohjeteksti: <br />
-    <textarea name="instructions" rows="8" cols="60" maxlength="1000">
-      {{recipe.instructions}}
-    </textarea>
-    {% if errors.instructions %}
-    <span style="color: red">{{ errors.instructions }}</span>
+    Kuvaus: <br />
+    <textarea name="description" rows="8" cols="60" maxlength="1000">{{recipe.description}}</textarea>
+    {% if errors.description %}
+    <span style="color: red">{{ errors.description }}</span>
     {% endif %}
   </p>
   <input type="submit" value="Tallenna" />

@@ -17,12 +17,12 @@
     {% endif %}
   </p>
   <p>
-    Ohjeteksti: <br />
-    <textarea name="instructions" rows="8" cols="60" maxlength="1000" required>
-      {{ form_data.instructions if form_data else '' }}
+    Kuvaus: <br />
+    <textarea name="description" rows="8" cols="60" maxlength="1000" required>
+      {{ form_data.description if form_data else '' }}
     </textarea>
-    {% if errors.instructions %}
-    <span style="color: red">{{ errors.instructions }}</span>
+    {% if errors.description %}
+    <span style="color: red">{{ errors.description }}</span>
     {% endif %}
   </p>
   <input type="submit" value="Luo resepti" />
