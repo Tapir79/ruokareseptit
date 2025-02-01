@@ -1,27 +1,22 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Resepti</title>
-  </head>
+{% extends "layout.html" %}
+{% block title %} Resepti - {{recipe.title}} {% endblock %}
+{% block content %}
+<h2>{{recipe.title}}</h2>
 
-  <body>
-    <h1>{{recipe.title}}</h1>
-    {% if session.user_id == recipe.user_id %}
-    <a href="/edit_recipe/{{ recipe.id }}">Muokkaa reseptiä</a>
-    <a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
-    {% endif %}
-    <p>{{ recipe.instructions }}</p>
-    <p>Laatinut: {{ recipe.username}}</p>
+{% if session.user_id == recipe.user_id %}
+<a href="/edit_recipe/{{ recipe.id }}">Muokkaa reseptiä</a> |
+<a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
+{% endif %}
+<p>{{ recipe.instructions }}</p>
+<p>Laatinut: {{ recipe.username}}</p>
 
-    {% if recipe_ingredients %}
-    <h2>Ainesosat</h2>
-    <ul>
-      {% for ingredient in recipe_ingredients %}
-      <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    <a href="/add_ingredient/{{ recipe.id }}">Lisää aineisosa</a>
-    <a href="/">Takaisin</a>
-  </body>
-</html>
+{% if recipe_ingredients %}
+<h3>Ainesosat</h3>
+<ul>
+  {% for ingredient in recipe_ingredients %}
+  <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<a href="/add_ingredient/{{ recipe.id }}">Lisää aineisosa</a>
+{% endblock %}

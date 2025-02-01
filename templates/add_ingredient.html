@@ -1,42 +1,39 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Reseptin muokkaaminen - uusi ainesosa</title>
-  </head> 
-  <body>
-    <h1>Lisää uusi ainesosa reseptille {{ recipe.title }}</h1>
-    <form action="/add_ingredient/{{ recipe.id }}" method="post">
-      <p>
-        Otsikko: <br />
-        {{recipe.title}}
-      </p>
-      <p>
-        Ohjeteksti: <br />
-        {{recipe.instructions}}
-      </p>
-      {% if recipe_ingredients %}
-      <h2>Ainesosat</h2>
-      <ul>
-        {% for ingredient in recipe_ingredients %}
-        <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-      <p>
-        Ainesosan nimi: <br />
-        <input type="text" name="name" minlength="1" maxlength="30" />
-        {% if errors.name %}
-        <span style="color: red;">{{ errors.name }}</span>
-        {% endif %}
-      </p>
-      <p>
-        Määrä: <br />
-        <input type="text" name="amount" minlength="1" maxlength="20" />
-        {% if errors.amount %}
-        <span style="color: red;">{{ errors.amount }}</span>
-        {% endif %}
-      </p>
-      <input type="submit" value="Tallenna" />
-    </form>
-  </body>
-</html>
+{% extends "layout.html" %}
+{% block title %} Lisää uusi ainesosa {% endblock %}
+{% block content %}
+<h2>Lisää uusi ainesosa reseptille {{ recipe.title }}</h2>
+
+<form action="/add_ingredient/{{ recipe.id }}" method="post">
+  <p>
+    Otsikko: <br />
+    {{recipe.title}}
+  </p>
+  <p>
+    Ohjeteksti: <br />
+    {{recipe.instructions}}
+  </p>
+  {% if recipe_ingredients %}
+  <h2>Ainesosat</h2>
+  <ul>
+    {% for ingredient in recipe_ingredients %}
+    <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <p>
+    Ainesosan nimi: <br />
+    <input type="text" name="name" minlength="1" maxlength="30" />
+    {% if errors.name %}
+    <span style="color: red;">{{ errors.name }}</span>
+    {% endif %}
+  </p>
+  <p>
+    Määrä: <br />
+    <input type="text" name="amount" minlength="1" maxlength="20" />
+    {% if errors.amount %}
+    <span style="color: red;">{{ errors.amount }}</span>
+    {% endif %}
+  </p>
+  <input type="submit" value="Tallenna" />
+</form>
+{% endblock %}

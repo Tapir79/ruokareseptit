@@ -1,26 +1,26 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Reseptin muokkaaminen</title>
-  </head>
-  <body>
-    <h1>Muokkaa reseptiä</h1>
-    <form action="/edit_recipe/{{ recipe.id }}" method="post">
-      <p>
-        Otsikko: <br />
-        <input type="text" name="title" maxlength="50" value="{{recipe.title}}" />
-        {% if errors.title %}
-        <span style="color: red;">{{ errors.title }}</span>
-        {% endif %}
-      </p>
-      <p>
-        Ohjeteksti: <br />
-        <textarea name="instructions" rows="8" cols="60" maxlength="1000">{{recipe.instructions}}</textarea>
-        {% if errors.instructions %}
-        <span style="color: red;">{{ errors.instructions }}</span>
-        {% endif %}
-      </p>
-      <input type="submit" value="Tallenna" />
-    </form>
-  </body>
-</html>
+{% extends "layout.html" %}
+{% block title %} Reseptin muokkaus {% endblock %}
+{% block content %}
+<h2>Muokkaa reseptiä</h2>
+
+<form action="/edit_recipe/{{ recipe.id }}" method="post">
+  <p>
+    Otsikko: <br />
+    <input type="text" name="title" maxlength="50" value="{{recipe.title}}" />
+    {% if errors.title %}
+    <span style="color: red">{{ errors.title }}</span>
+    {% endif %}
+  </p>
+  <p>
+    Ohjeteksti: <br />
+    <textarea name="instructions" rows="8" cols="60" maxlength="1000">
+      {{recipe.instructions}}
+    </textarea>
+    {% if errors.instructions %}
+    <span style="color: red">{{ errors.instructions }}</span>
+    {% endif %}
+  </p>
+  <input type="submit" value="Tallenna" />
+</form>
+
+{% endblock %}
