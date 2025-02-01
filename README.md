@@ -12,7 +12,7 @@
 * Käyttäjä pystyy suodattamaan ja järjestämään reseptejä arvosanan perusteella. []
 * Käyttäjä pystyy antamaan reseptille kommentin ja arvosanan. Reseptistä näytetään kommentit ja keskimääräinen arvosana. []
 * Käyttäjä voi lisätä kuvan reseptiin []
-* Käyttäjäsivu näyttää, montako reseptiä käyttäjä on lisännyt ja listan käyttäjän lisäämistä resepteistä. []
+* Käyttäjäsivu näyttää, montako reseptiä käyttäjä on lisännyt ja listan käyttäjän lisäämistä resepteistä. [X]
 
 
 # Sovelluksen asennus

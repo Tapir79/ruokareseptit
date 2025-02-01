@@ -32,8 +32,7 @@ def validate_form(form_data):
 
     return errors
 
-
-
+# app routes
 @app.route("/")
 def index():
     all_recipes = recipes.get_recipes()
@@ -150,10 +149,21 @@ def remove_recipe(recipe_id):
         else:
             return redirect("/recipe/" + str(recipe_id))
 
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    user_recipes = users.get_user_recipes(user_id)
+    if not user_recipes:
+        abort(404)
+    if not user:
+        abort(404)
+    print(user)
+    return render_template("show_user.html", user=user, user_recipes=user_recipes)
 
 
 
-# login/logout/register
+
+# login/logout/register app routes
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":

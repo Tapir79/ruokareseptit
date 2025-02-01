@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %} Käyttäjäsivu - {{user.username}} {% endblock %}
+{% block content %}
+{% if user %}
+<h2>Käyttäjän {{user.username}} tiedot</h2>
+
+{% if user_recipes %}
+<h3>Käyttäjä {{user.username}} on luonut {{ user_recipes | count }} reseptiä:</h3>
+<ul>
+  {% for recipe in user_recipes %}
+  <li><a href="/recipe/{{ recipe.id }}">{{ recipe.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endif %}
+{% endblock %}

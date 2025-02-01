@@ -8,7 +8,7 @@
 <a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
 {% endif %}
 <p>{{ recipe.description }}</p>
-<p>Laatinut: {{ recipe.username}}</p>
+<p>Laatinut: <a href="/user/{{ session.user_id }}">{{ session.username }}</a> </p>
 
 {% if recipe_ingredients %}
 <h3>Ainesosat</h3>
