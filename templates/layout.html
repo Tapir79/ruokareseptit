@@ -3,30 +3,35 @@
 
 <head>
   <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
-  <h1>Ruokareseptit</h1>
-
-  {% if session.user_id %}
-  <p>
-    Tervetuloa <a href="/user/{{ session.user_id }}">{{ session.username }}</a> <br />
-  </p>
+<h1>
+  <img src="{{ url_for('static', filename='icons/spoon-and-fork-fork-svgrepo-com.svg') }}" width="40" height="40" alt="Logo"> Ruokareseptit
+</h1>
+<small>Icon by <a href="https://www.svgrepo.com" target="_blank">SVG Repo</a></small>
+{% if session.user_id %}
+<p>
+  <img src="{{ url_for('static', filename='icons/profile.svg') }}" width="20" height="20" alt="Profile"> <a href="/user/{{ session.user_id }}">{{ session.username }}</a> |
+  <a href="/logout">Kirjaudu ulos</a>
+</p>
+{% else %}
+<p>
+  <img src="{{ url_for('static', filename='icons/profile.svg') }}" width="20" height="20" alt="Profile"> <a href="/login">Kirjaudu sisään</a> |
+  <a href="/register">Luo tunnus</a>
+</p>
   {% endif %}
 
-  <p>
-    <a href="/">Etusivu</a> |
-    <a href="/find_recipe">Etsi resepti</a> |
-  {% if session.user_id %}
-    <a href="/create_recipe">Uusi resepti</a> |
-    <a href="/logout">Kirjaudu ulos</a>
-  {% else %}
-    <a href="/login">Kirjaudu sisään</a> |
-    <a href="/register">Luo tunnus</a>
-  {% endif %}
-  </p>
+<p>
+  <a href="/">Etusivu</a> |
+  <a href="/find_recipe">Etsi resepti</a> |
+{% if session.user_id %}
+  <a href="/create_recipe">Uusi resepti</a>
+{% endif %}
+</p>
 
-  {% block content %}{% endblock %}  
+{% block content %}{% endblock %}  
 </body>
 
 </html>
