@@ -24,7 +24,8 @@ def get_recipe(recipe_id):
 def get_recipe_ingredients(recipe_id):
     sql = """SELECT recipes.id,
                     recipe_ingredients.amount,
-                    ingredients.name
+                    ingredients.name,
+                    ingredients.id as ingredient_id
              FROM recipes JOIN recipe_ingredients ON recipe_ingredients.recipe_id = recipes.id
              JOIN ingredients ON recipe_ingredients.ingredient_id = ingredients.id
              WHERE recipes.id = ?"""
@@ -45,14 +46,18 @@ def edit_recipe(recipe_id, title, description):
                             WHERE id = ?"""
     db.execute(sql, [title, description, recipe_id])
 
-def remove_recipe(recipe_id):
-    sql = """DELETE FROM recipes WHERE id = ?"""
-    db.execute(sql, [recipe_id])
 
+def remove_unused_ingredients():
     sql_unused_ingredients = """DELETE FROM ingredients
                                 WHERE id NOT IN
                                     (SELECT ingredient_id FROM recipe_ingredients)"""
     db.execute(sql_unused_ingredients)
+
+def remove_recipe(recipe_id):
+    sql = """DELETE FROM recipes WHERE id = ?"""
+    db.execute(sql, [recipe_id])
+
+    remove_unused_ingredients()
 
 
 def find_recipes(query):
@@ -82,3 +87,15 @@ def add_ingredient(recipe_id, name, amount):
     sql = """INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount)
              VALUES (?, ?, ?)"""
     db.execute(sql, [recipe_id, ingredient_id, amount])
+
+def edit_ingredient(recipe_id, ingredient_id, new_amount):
+    sql_update_amount = """UPDATE recipe_ingredients 
+                           SET amount = ? 
+                           WHERE recipe_id = ? AND ingredient_id = ?"""
+    db.execute(sql_update_amount, [new_amount, recipe_id, ingredient_id])
+
+def delete_ingredient(recipe_id, ingredient_id):
+    sql_delete_recipe_ingredient = """DELETE FROM recipe_ingredients 
+                                      WHERE recipe_id = ? AND ingredient_id = ?"""
+    db.execute(sql_delete_recipe_ingredient, [recipe_id, ingredient_id])
+    remove_unused_ingredients()

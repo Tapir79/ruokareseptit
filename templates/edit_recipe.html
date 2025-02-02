@@ -18,8 +18,29 @@
     <span style="color: red">{{ errors.description }}</span>
     {% endif %}
   </p>
-  <input type="submit" value="Tallenna" />
-  <input type="submit" name="back" value="Keskeytä" />
+  
+  <p>
+    Aineisosat: <br />
+    {% if recipe_ingredients %}
+    <ul>
+    {% for ingredient in recipe_ingredients %}
+    <li>
+      {{ ingredient.name }}
+      <input type="text" name="ingredient_amount_{{ ingredient.ingredient_id }}" value="{{ ingredient.amount }}" maxlength="20" />
+      <label>
+        <input type="checkbox" name="delete_ingredient_{{ ingredient.ingredient_id }}" value="true" />
+        Poista
+      </label>
+    </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <input type="submit" value="Tallenna" />
+    <input type="submit" name="back" value="Keskeytä" />
 </form>
+    <a href="/add_ingredient/{{ recipe.id }}">Lisää aineisosa</a>
+  </p>
+
+
 
 {% endblock %}
