@@ -9,7 +9,6 @@ from utils.validations import validate_input, user_ids_must_match, recipe_must_e
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
-# app routes
 @app.route("/")
 def index():
     all_recipes = recipes.get_recipes()
@@ -17,12 +16,8 @@ def index():
 
 @app.route("/find_recipe")
 def find_recipe():
-    query = request.args.get("query")
-    if query:
-        results = recipes.find_recipes(query)
-    else:
-        query = ""
-        results = []
+    query = request.args.get("query", "").strip()
+    results = recipes.find_recipes(query) if query else []
     return render_template("find_recipe.html", query=query, results=results)
 
 @app.route("/recipe/<int:recipe_id>")
