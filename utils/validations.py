@@ -49,7 +49,7 @@ def validate_input(field_name, value):
 
     return None 
 
-def user_ids_must_match(recipe_user_id):
+def user_ids_must_match(recipe_user_id, session):
     if recipe_user_id != session["user_id"]:
         abort(403)
 
@@ -57,7 +57,7 @@ def recipe_must_exist(recipe):
     if not recipe:
         abort(404)
 
-def require_login():
+def require_login(session):
     if "user_id" not in session:
         abort(403)
 

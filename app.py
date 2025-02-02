@@ -4,7 +4,7 @@ from flask import abort, redirect, render_template, request, session
 import config
 import recipes
 import users
-from utils.validations import validate_input, user_ids_must_match, recipe_must_exist, require_login, validate_form
+from utils.validations import user_ids_must_match, recipe_must_exist, require_login, validate_form
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -28,7 +28,7 @@ def recipe(recipe_id):
 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
-    require_login()
+    require_login(session)
     if request.method == "GET":
         return render_template("new_recipe.html", errors=[], form_data=[])
 
@@ -50,11 +50,11 @@ def create_recipe():
 
 @app.route("/add_ingredient/<int:recipe_id>", methods=["GET", "POST"])
 def add_ingredient(recipe_id):
-    require_login()
+    require_login(session)
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
     recipe_must_exist(single_recipe)
-    user_ids_must_match(single_recipe["user_id"])
+    user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
         return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=[], form_data=[])
@@ -77,10 +77,10 @@ def add_ingredient(recipe_id):
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
-    require_login()
+    require_login(session)
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
-    user_ids_must_match(single_recipe["user_id"])
+    user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
         return render_template("edit_recipe.html", recipe=single_recipe, errors=[], form_data=[])
@@ -103,10 +103,10 @@ def edit_recipe(recipe_id):
 
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
-    require_login()
+    require_login(session)
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
-    user_ids_must_match(single_recipe["user_id"])
+    user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
         return render_template("remove_recipe.html", recipe=single_recipe)
