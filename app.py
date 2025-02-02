@@ -60,21 +60,25 @@ def add_ingredient(recipe_id):
         return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=[], form_data=[])
 
     if request.method == "POST":
-        form_data = request.form
-        errors = validate_form(request.form)
+        if "back" in request.form:
+            errors = []
+            return redirect(f"/recipe/{recipe_id}")
+        else:
+            form_data = request.form
+            errors = validate_form(request.form)
 
-        if errors:
-            return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
+            if errors:
+                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
 
-        name = request.form["name"]
-        amount = request.form["amount"]
+            name = request.form["name"]
+            amount = request.form["amount"]
 
-        try:
-            recipes.add_ingredient(recipe_id, name, amount)
-        except Exception as e:
-            errors["name"] = str(e)
-            return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
-        return redirect("/recipe/" + str(recipe_id))
+            try:
+                recipes.add_ingredient(recipe_id, name, amount)
+            except Exception as e:
+                errors["name"] = str(e)
+                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
+            return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
@@ -87,20 +91,25 @@ def edit_recipe(recipe_id):
         return render_template("edit_recipe.html", recipe=single_recipe, errors=[], form_data=[])
 
     if request.method == "POST":
-        form_data = request.form
-        errors = validate_form(request.form)
+        if "back" in request.form:
+            errors = []
+            return redirect(f"/recipe/{recipe_id}")
 
-        if errors:
-            return render_template("edit_recipe.html", recipe=single_recipe, errors=errors, form_data=form_data)
+        else:
+            form_data = request.form
+            errors = validate_form(request.form)
+            if errors:
+                return render_template("edit_recipe.html", recipe=single_recipe, errors=errors, form_data=form_data)
 
-        title = request.form["title"]
-        description = request.form["description"]
+            title = form_data["title"]
+            description = form_data["description"]
 
-        try:
-            recipes.edit_recipe(recipe_id, title, description)
-        except sqlite3.IntegrityError:
-            print("VIRHE: reseptin muokkaus epäonnistui")
-        return redirect("/recipe/" + str(recipe_id))
+            try:
+                recipes.edit_recipe(recipe_id, title, description)
+            except sqlite3.IntegrityError:
+                print("VIRHE: reseptin muokkaus epäonnistui")
+
+            return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
@@ -130,7 +139,7 @@ def show_user(user_id):
         abort(404)
     if not user:
         abort(404)
-    print(user)
+
     return render_template("show_user.html", user=user, user_recipes=user_recipes)
 
 
