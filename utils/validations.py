@@ -48,3 +48,26 @@ def validate_input(field_name, value):
         return f"{field_name} on oltava enintään {rules['max_value']} merkkiä pitkä."
 
     return None 
+
+def user_ids_must_match(recipe_user_id):
+    if recipe_user_id != session["user_id"]:
+        abort(403)
+
+def recipe_must_exist(recipe):
+    if not recipe:
+        abort(404)
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
+def validate_form(form_data):
+    """Validates multiple form fields."""
+    errors = {}
+
+    for field, value in form_data.items():
+        error = validate_input(field, value)
+        if error:
+            errors[field] = error
+
+    return errors

@@ -4,33 +4,10 @@ from flask import abort, redirect, render_template, request, session
 import config
 import recipes
 import users
-from validate import validate_input
+from utils.validations import validate_input, user_ids_must_match, recipe_must_exist, require_login, validate_form
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
-
-def user_ids_must_match(recipe_user_id):
-    if recipe_user_id != session["user_id"]:
-        abort(403)
-
-def recipe_must_exist(recipe):
-    if not recipe:
-        abort(404)
-
-def require_login():
-    if "user_id" not in session:
-        abort(403)
-
-def validate_form(form_data):
-    """Validates multiple form fields."""
-    errors = {}
-
-    for field, value in form_data.items():
-        error = validate_input(field, value)
-        if error:
-            errors[field] = error
-
-    return errors
 
 # app routes
 @app.route("/")
@@ -159,8 +136,6 @@ def show_user(user_id):
         abort(404)
     print(user)
     return render_template("show_user.html", user=user, user_recipes=user_recipes)
-
-
 
 
 # login/logout/register app routes
