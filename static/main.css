@@ -4,3 +4,11 @@ body {
     font-family: sans-serif;
     background-color: #f2f2f2;
   }
+
+.disabled-link {
+    pointer-events: none; /* Prevents clicking */
+    color: gray; /* Makes the link look disabled */
+    text-decoration: none; /* Optional: Removes underline */
+    cursor: default; /* Changes cursor to normal */
+    opacity: 0.6; /* Makes it look disabled */
+}

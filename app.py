@@ -62,7 +62,7 @@ def add_ingredient(recipe_id):
     if request.method == "POST":
         if "back" in request.form:
             errors = []
-            return redirect(f"/edit_recipe/{recipe_id}")
+            return redirect(f"/recipe/{recipe_id}")
         else:
             form_data = request.form
             errors = validate_form(request.form)
@@ -78,7 +78,7 @@ def add_ingredient(recipe_id):
             except Exception as e:
                 errors["name"] = str(e)
                 return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
-            return redirect(f"/edit_recipe/{recipe_id}")
+            return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
