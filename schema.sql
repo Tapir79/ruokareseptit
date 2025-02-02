@@ -22,3 +22,10 @@ CREATE TABLE recipe_ingredients (
     recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE,
     ingredient_id INTEGER REFERENCES ingredients ON DELETE CASCADE
 );
+
+CREATE TABLE recipe_instructions (
+    id INTEGER PRIMARY KEY,
+    instruction TEXT NOT NULL,
+    step_number INTEGER NOT NULL,
+    recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
+);

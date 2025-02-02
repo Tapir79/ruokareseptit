@@ -25,6 +25,15 @@
 </ul>
 {% endif %}
 
+{% if recipe_instructions %}
+<h3>Ohjeet</h3>
+<ul>
+  {% for instruction in recipe_instructions %}
+  <li>{{ instruction.step_number }} - {{ instruction.instruction }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
 {% block extra_content %}{% endblock %}
 
 {% endblock %}

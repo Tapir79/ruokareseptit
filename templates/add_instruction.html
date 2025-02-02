@@ -1,0 +1,17 @@
+{% extends "recipe_base.html" %}
+
+{% block extra_content %}
+<h3>Lisää ohjeen vaihe reseptille {{ recipe.title }}</h3>
+
+<form action="/add_instruction/{{ recipe.id }}" method="post">
+  <p>
+    Ohje: <br />
+    <input type="text" name="instruction" maxlength="100" required />
+    {% if errors.instruction %}
+    <span style="color: red;">{{ errors.instruction }}</span>
+    {% endif %}
+  </p>
+  <input type="submit" name="save" value="Tallenna" />
+  <input type="submit" name="back" value="Keskeytä" />
+</form>
+{% endblock %}

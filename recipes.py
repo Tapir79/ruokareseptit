@@ -99,3 +99,21 @@ def delete_ingredient(recipe_id, ingredient_id):
                                       WHERE recipe_id = ? AND ingredient_id = ?"""
     db.execute(sql_delete_recipe_ingredient, [recipe_id, ingredient_id])
     remove_unused_ingredients()
+
+def get_recipe_instructions(recipe_id):
+    sql = """SELECT instruction, step_number, recipe_id FROM recipe_instructions
+             WHERE recipe_id = ?
+             ORDER BY step_number ASC"""
+    return db.query(sql, [recipe_id])
+
+def add_instruction(recipe_id, instruction):
+    sql = """SELECT step_number FROM recipe_instructions WHERE recipe_id = ?
+             ORDER BY step_number DESC LIMIT 1"""
+    result = db.query(sql, [recipe_id])
+
+    latest_step = result[0]["step_number"] if result else 0
+    step_number = latest_step + 1
+
+    sql = """INSERT INTO recipe_instructions (instruction, step_number, recipe_id)
+             VALUES (?, ?, ?)"""
+    db.execute(sql, [instruction, step_number, recipe_id])
