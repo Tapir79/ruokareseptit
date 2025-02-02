@@ -1,24 +1,6 @@
-{% extends "layout.html" %}
-{% block title %} Lisää uusi ainesosa {% endblock %}
-{% block content %}
-<h2>{{recipe.title}}</h2>
+{% extends "recipe_base.html" %}
 
-{% if session.user_id == recipe.user_id %}
-<a href="/edit_recipe/{{ recipe.id }}"  class="btn disabled-link">Muokkaa reseptiä</a> |
-<a href="/remove_recipe/{{ recipe.id }}"  class="btn disabled-link">Poista resepti</a>
-{% endif %}
-<p>{{ recipe.description }}</p>
-<p>Laatinut: <a href="/user/{{ session.user_id }}">{{ session.username }}</a> </p>
-
-{% if recipe_ingredients %}
-<h3>Ainesosat</h3>
-<ul>
-  {% for ingredient in recipe_ingredients %}
-  <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-
+{% block extra_content %}
 <h3>Lisää uusi ainesosa reseptille {{ recipe.title }}</h3>
 
 <form action="/add_ingredient/{{ recipe.id }}" method="post">

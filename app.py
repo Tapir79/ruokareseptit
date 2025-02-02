@@ -57,7 +57,7 @@ def add_ingredient(recipe_id):
     user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
-        return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=[], form_data=[])
+        return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=[], form_data=[], edit_disabled="disabled-link")
 
     if request.method == "POST":
         if "back" in request.form:
@@ -68,7 +68,7 @@ def add_ingredient(recipe_id):
             errors = validate_form(request.form)
 
             if errors:
-                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
+                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data, edit_disabled="disabled-link")
 
             name = request.form["name"]
             amount = request.form["amount"]
@@ -77,7 +77,7 @@ def add_ingredient(recipe_id):
                 recipes.add_ingredient(recipe_id, name, amount)
             except Exception as e:
                 errors["name"] = str(e)
-                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
+                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data, edit_disabled="disabled-link")
             return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])

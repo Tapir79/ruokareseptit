@@ -1,22 +1,5 @@
-{% extends "layout.html" %}
-{% block title %} Resepti - {{recipe.title}} {% endblock %}
-{% block content %}
-<h2>{{recipe.title}}</h2>
+{% extends "recipe_base.html" %}
 
-{% if session.user_id == recipe.user_id %}
-<a href="/edit_recipe/{{ recipe.id }}">Muokkaa reseptiä</a> |
-<a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
-{% endif %}
-<p>{{ recipe.description }}</p>
-<p>Laatinut: <a href="/user/{{ session.user_id }}">{{ session.username }}</a> </p>
-
-{% if recipe_ingredients %}
-<h3>Ainesosat</h3>
-<ul>
-  {% for ingredient in recipe_ingredients %}
-  <li>{{ ingredient.name }} - {{ingredient.amount}}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-<a href="/add_ingredient/{{ recipe.id }}">Lisää uusi aineisosa</a>
+{% block extra_content %}
+<a href="/add_ingredient/{{ recipe.id }}">Lisää uusi ainesosa</a>
 {% endblock %}
