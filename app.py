@@ -71,8 +71,9 @@ def add_ingredient(recipe_id):
 
         try:
             recipes.add_ingredient(recipe_id, name, amount)
-        except sqlite3.IntegrityError:
-            print("VIRHE: reseptin muokkaus epäonnistui")
+        except Exception as e:
+            errors["name"] = str(e)
+            return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
         return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])

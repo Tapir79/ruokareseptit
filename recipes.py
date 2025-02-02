@@ -69,6 +69,12 @@ def find_recipes(query):
     return db.query(sql, [search_term, search_term])
 
 def add_ingredient(recipe_id, name, amount):
+    sql = """SELECT name FROM ingredients WHERE name = ?"""
+    result = db.query(sql, [name])
+    if result:
+        ingredient_name = result[0]["name"]
+        raise Exception(f"{ingredient_name} on jo lisätty")
+
     sql = """INSERT INTO ingredients (name) VALUES (?)"""
     db.execute(sql, [name])
     ingredient_id = db.last_insert_id()
