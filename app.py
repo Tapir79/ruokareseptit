@@ -25,7 +25,10 @@ def recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
-    return render_template("show_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+    return render_template("show_recipe.html",
+                           recipe=single_recipe,
+                           recipe_ingredients=recipe_ingredients,
+                           recipe_instructions=recipe_instructions)
 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
@@ -59,28 +62,46 @@ def add_ingredient(recipe_id):
     user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
-        return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=[], form_data=[], edit_disabled="disabled-link")
+        return render_template("add_ingredient.html",
+                               recipe=single_recipe,
+                               recipe_ingredients=recipe_ingredients,
+                               recipe_instructions=recipe_instructions,
+                               errors=[],
+                               form_data=[],
+                               edit_disabled="disabled-link")
 
     if request.method == "POST":
         if "back" in request.form:
             errors = []
             return redirect(f"/recipe/{recipe_id}")
-        else:
-            form_data = request.form
-            errors = validate_form(request.form)
 
-            if errors:
-                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data, edit_disabled="disabled-link")
+        form_data = request.form
+        errors = validate_form(request.form)
 
-            name = request.form["name"]
-            amount = request.form["amount"]
+        if errors:
+            return render_template("add_ingredient.html",
+                                    recipe=single_recipe,
+                                    recipe_ingredients=recipe_ingredients,
+                                    recipe_instructions=recipe_instructions,
+                                    errors=errors,
+                                    form_data=form_data,
+                                    edit_disabled="disabled-link")
 
-            try:
-                recipes.add_ingredient(recipe_id, name, amount)
-            except Exception as e:
-                errors["name"] = str(e)
-                return render_template("add_ingredient.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data, edit_disabled="disabled-link")
-            return redirect(f"/recipe/{recipe_id}")
+        name = request.form["name"]
+        amount = request.form["amount"]
+
+        try:
+            recipes.add_ingredient(recipe_id, name, amount)
+        except Exception as e:
+            errors["name"] = str(e)
+            return render_template("add_ingredient.html",
+                                    recipe=single_recipe,
+                                    recipe_ingredients=recipe_ingredients,
+                                    recipe_instructions=recipe_instructions,
+                                    errors=errors,
+                                    form_data=form_data,
+                                    edit_disabled="disabled-link")
+        return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/add_instruction/<int:recipe_id>", methods=["GET", "POST"])
 def add_instruction(recipe_id):
@@ -92,7 +113,13 @@ def add_instruction(recipe_id):
     user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
-        return render_template("add_instruction.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=[], form_data=[], edit_disabled="disabled-link")
+        return render_template("add_instruction.html",
+                               recipe=single_recipe,
+                               recipe_ingredients=recipe_ingredients,
+                               recipe_instructions=recipe_instructions,
+                               errors=[],
+                               form_data=[],
+                               edit_disabled="disabled-link")
 
     if request.method == "POST":
         if "back" in request.form:
@@ -103,7 +130,12 @@ def add_instruction(recipe_id):
             errors = validate_form(request.form)
 
             if errors:
-                return render_template("add_instruction.html", recipe=single_recipe, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data, edit_disabled="disabled-link")
+                return render_template("add_instruction.html",
+                                       recipe=single_recipe,
+                                       recipe_instructions=recipe_instructions,
+                                       errors=errors,
+                                       form_data=form_data,
+                                       edit_disabled="disabled-link")
 
             instruction = request.form["instruction"]
 
@@ -111,7 +143,12 @@ def add_instruction(recipe_id):
                 recipes.add_instruction(recipe_id, instruction)
             except Exception as e:
                 errors["instruction"] = str(e)
-                return render_template("add_instruction.html", recipe=single_recipe, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data, edit_disabled="disabled-link")
+                return render_template("add_instruction.html",
+                                       recipe=single_recipe,
+                                       recipe_instructions=recipe_instructions,
+                                       errors=errors,
+                                       form_data=form_data,
+                                       edit_disabled="disabled-link")
             return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
@@ -124,47 +161,58 @@ def edit_recipe(recipe_id):
     user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
-        return render_template("edit_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=[], form_data=[])
+        return render_template("edit_recipe.html",
+                               recipe=single_recipe,
+                               recipe_ingredients=recipe_ingredients,
+                               recipe_instructions=recipe_instructions,
+                               errors=[],
+                               form_data=[])
 
     if request.method == "POST":
         if "back" in request.form:
             errors = []
             return redirect(f"/recipe/{recipe_id}")
 
-        else:
-            form_data = request.form
-            errors = validate_form(request.form)
-            if errors:
-                return render_template("edit_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data)
 
-            title = form_data["title"]
-            description = form_data["description"]
+        form_data = request.form
+        errors = validate_form(request.form)
+        if errors:
+            return render_template("edit_recipe.html",
+                                    recipe=single_recipe,
+                                    recipe_ingredients=recipe_ingredients,
+                                    recipe_instructions=recipe_instructions,
+                                    errors=errors,
+                                    form_data=form_data)
 
-            try:
-                recipes.edit_recipe(recipe_id, title, description) 
-                for ingredient in recipe_ingredients:
-                    ingredient_id = ingredient["ingredient_id"]
-                    new_amount = form_data[f"ingredient_amount_{ingredient_id}"]
-                    delete_ingredient = form_data.get(f"delete_ingredient_{ingredient_id}", False)
-                    
-                    if delete_ingredient:
-                        recipes.delete_ingredient(recipe_id, ingredient_id)
-                    else:
-                        recipes.edit_ingredient(recipe_id, ingredient_id, new_amount)
+        title = form_data["title"]
+        description = form_data["description"]
 
-                for instruction in recipe_instructions:
-                    instruction_id = instruction["id"]
-                    new_instruction = form_data[f"instruction_{instruction_id}"]
-                    delete_instruction = form_data.get(f"delete_instruction_{instruction_id}", False)
-                    if delete_instruction:
-                        recipes.delete_instruction(recipe_id, instruction_id)
-                    else:
-                        recipes.edit_instruction(recipe_id, instruction_id, new_instruction)
-                    
-            except sqlite3.IntegrityError:
-                print("VIRHE: reseptin muokkaus epäonnistui")
+        try:
+            recipes.edit_recipe(recipe_id, title, description)
+            for ingredient in recipe_ingredients:
+                ingredient_id = ingredient["ingredient_id"]
+                new_amount = form_data[f"ingredient_amount_{ingredient_id}"]
+                delete_ingredient = form_data.get(f"delete_ingredient_{ingredient_id}", False)
 
-            return redirect(f"/recipe/{recipe_id}")
+                if delete_ingredient:
+                    recipes.delete_ingredient(recipe_id, ingredient_id)
+                else:
+                    recipes.edit_ingredient(recipe_id, ingredient_id, new_amount)
+
+            for instruction in recipe_instructions:
+                instruction_id = instruction["id"]
+                new_instruction = form_data[f"instruction_{instruction_id}"]
+                delete_instruction = form_data.get(f"delete_instruction_{instruction_id}",
+                                                    False)
+                if delete_instruction:
+                    recipes.delete_instruction(recipe_id, instruction_id)
+                else:
+                    recipes.edit_instruction(recipe_id, instruction_id, new_instruction)
+
+        except sqlite3.IntegrityError:
+            print("VIRHE: reseptin muokkaus epäonnistui")
+
+        return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/remove_recipe/<int:recipe_id>", methods= ["GET", "POST"])
 def remove_recipe(recipe_id):
@@ -183,8 +231,8 @@ def remove_recipe(recipe_id):
             except sqlite3.IntegrityError:
                 print("VIRHE: reseptin poistaminen epäonnistui")
             return redirect("/")
-        else:
-            return redirect("/recipe/" + str(recipe_id))
+
+        return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
@@ -212,9 +260,8 @@ def login():
             session["user_id"] = user_id
             session["username"] = username
             return redirect("/")
-        else:
-            print("VIRHE: väärä tunnus tai salasana")
-            return redirect("/login")
+
+        return redirect("/login")
 
 
 @app.route("/logout")
@@ -237,7 +284,7 @@ def create_user():
     password2 = request.form["password2"]
     if password1 != password2:
         print("VIRHE: salasanat eivät ole samat")
-        redirect("/register")
+        return redirect("/register")
     try:
         users.create_user(username, password1)
     except sqlite3.IntegrityError:
