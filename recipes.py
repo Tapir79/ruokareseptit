@@ -74,29 +74,42 @@ def find_recipes(query):
     return db.query(sql, [search_term, search_term])
 
 def add_ingredient(recipe_id, name, amount):
-    sql = """SELECT name FROM ingredients WHERE name = ?"""
-    result = db.query(sql, [name])
+    sql_recipe_ingredient_exists = """SELECT ingredients.name
+                                      FROM recipe_ingredients JOIN ingredients
+                                      ON recipe_ingredients.ingredient_id = ingredients.id
+                                      WHERE recipe_ingredients.recipe_id = ? and ingredients.name = ?"""
+    result = db.query(sql_recipe_ingredient_exists, [recipe_id, name])
     if result:
         ingredient_name = result[0]["name"]
         raise Exception(f"{ingredient_name} on jo lisätty")
 
-    sql = """INSERT INTO ingredients (name) VALUES (?)"""
-    db.execute(sql, [name])
-    ingredient_id = db.last_insert_id()
+    sql_ingredient_exists = """SELECT id, name
+                               FROM ingredients
+                               WHERE name = ?"""
+    result = db.query(sql_ingredient_exists, [name])
+
+    if result:
+        ingredient_id = result[0]["id"]
+    else:
+        sql_insert_ingredient = """INSERT INTO ingredients (name) VALUES (?)"""
+        db.execute(sql_insert_ingredient, [name])
+        ingredient_id = db.last_insert_id()
 
     sql = """INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount)
              VALUES (?, ?, ?)"""
     db.execute(sql, [recipe_id, ingredient_id, amount])
 
 def edit_ingredient(recipe_id, ingredient_id, new_amount):
-    sql_update_amount = """UPDATE recipe_ingredients 
-                           SET amount = ? 
-                           WHERE recipe_id = ? AND ingredient_id = ?"""
+    sql_update_amount = """UPDATE recipe_ingredients
+                           SET amount = ?
+                           WHERE recipe_id = ?
+                           AND ingredient_id = ?"""
     db.execute(sql_update_amount, [new_amount, recipe_id, ingredient_id])
 
 def delete_ingredient(recipe_id, ingredient_id):
-    sql_delete_recipe_ingredient = """DELETE FROM recipe_ingredients 
-                                      WHERE recipe_id = ? AND ingredient_id = ?"""
+    sql_delete_recipe_ingredient = """DELETE FROM recipe_ingredients
+                                      WHERE recipe_id = ?
+                                      AND ingredient_id = ?"""
     db.execute(sql_delete_recipe_ingredient, [recipe_id, ingredient_id])
     remove_unused_ingredients()
 
