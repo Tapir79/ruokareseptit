@@ -14,7 +14,7 @@
 {% endif %}
 
 <p>{{ recipe.description }}</p>
-<p>Laatinut: <a href="/user/{{ session.user_id }}">{{ session.username }}</a></p>
+<p>Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a></p>
 
 {% if recipe_ingredients %}
 <h3>Ainesosat</h3>
