@@ -27,11 +27,11 @@
 
 {% if recipe_instructions %}
 <h3>Ohjeet</h3>
-<ul>
+<ol>
   {% for instruction in recipe_instructions %}
-  <li>{{ instruction.step_number }} - {{ instruction.instruction }}</li>
+  <li>{{ instruction.instruction }}</li>
   {% endfor %}
-</ul>
+</ol>
 {% endif %}
 
 {% block extra_content %}{% endblock %}

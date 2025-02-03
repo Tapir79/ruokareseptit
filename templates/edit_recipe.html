@@ -35,6 +35,21 @@
     {% endfor %}
     </ul>
     {% endif %}
+
+    Ohjeet: <br />
+    {% if recipe_instructions %}
+    <ol>
+    {% for instruction in recipe_instructions %}
+    <li>
+      <input type="text" name="instruction_{{ instruction.id }}" value="{{ instruction.instruction }}" maxlength="20" />
+      <label>
+        <input type="checkbox" name="delete_instruction_{{ instruction.id }}" value="true" />
+        Poista
+      </label>
+    </li>
+    {% endfor %}
+    </ol>
+    {% endif %}
     <input type="submit" value="Tallenna" />
     <input type="submit" name="back" value="Keskeytä" />
   </p>

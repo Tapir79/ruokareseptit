@@ -101,7 +101,7 @@ def delete_ingredient(recipe_id, ingredient_id):
     remove_unused_ingredients()
 
 def get_recipe_instructions(recipe_id):
-    sql = """SELECT instruction, step_number, recipe_id FROM recipe_instructions
+    sql = """SELECT id, instruction, step_number, recipe_id FROM recipe_instructions
              WHERE recipe_id = ?
              ORDER BY step_number ASC"""
     return db.query(sql, [recipe_id])
@@ -117,3 +117,14 @@ def add_instruction(recipe_id, instruction):
     sql = """INSERT INTO recipe_instructions (instruction, step_number, recipe_id)
              VALUES (?, ?, ?)"""
     db.execute(sql, [instruction, step_number, recipe_id])
+
+def edit_instruction(recipe_id, instruction_id, new_instruction):
+    sql_update_instruction = """UPDATE recipe_instructions
+                           SET instruction = ?
+                           WHERE recipe_id = ? AND id = ?"""
+    db.execute(sql_update_instruction, [new_instruction, recipe_id, instruction_id])
+
+def delete_instruction(recipe_id, instruction_id):
+    sql_delete_instruction = """DELETE FROM recipe_instructions
+                                      WHERE recipe_id = ? AND id = ?"""
+    db.execute(sql_delete_instruction, [recipe_id, instruction_id])

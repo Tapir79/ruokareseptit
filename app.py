@@ -106,7 +106,7 @@ def add_instruction(recipe_id):
                 return render_template("add_instruction.html", recipe=single_recipe, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data, edit_disabled="disabled-link")
 
             instruction = request.form["instruction"]
-            
+
             try:
                 recipes.add_instruction(recipe_id, instruction)
             except Exception as e:
@@ -119,11 +119,12 @@ def edit_recipe(recipe_id):
     require_login(session)
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
+    recipe_instructions = recipes.get_recipe_instructions(recipe_id)
     recipe_must_exist(single_recipe)
     user_ids_must_match(single_recipe["user_id"], session)
 
     if request.method == "GET":
-        return render_template("edit_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=[], form_data=[])
+        return render_template("edit_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=[], form_data=[])
 
     if request.method == "POST":
         if "back" in request.form:
@@ -134,7 +135,7 @@ def edit_recipe(recipe_id):
             form_data = request.form
             errors = validate_form(request.form)
             if errors:
-                return render_template("edit_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, errors=errors, form_data=form_data)
+                return render_template("edit_recipe.html", recipe=single_recipe, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions, errors=errors, form_data=form_data)
 
             title = form_data["title"]
             description = form_data["description"]
@@ -150,6 +151,15 @@ def edit_recipe(recipe_id):
                         recipes.delete_ingredient(recipe_id, ingredient_id)
                     else:
                         recipes.edit_ingredient(recipe_id, ingredient_id, new_amount)
+
+                for instruction in recipe_instructions:
+                    instruction_id = instruction["id"]
+                    new_instruction = form_data[f"instruction_{instruction_id}"]
+                    delete_instruction = form_data.get(f"delete_instruction_{instruction_id}", False)
+                    if delete_instruction:
+                        recipes.delete_instruction(recipe_id, instruction_id)
+                    else:
+                        recipes.edit_instruction(recipe_id, instruction_id, new_instruction)
                     
             except sqlite3.IntegrityError:
                 print("VIRHE: reseptin muokkaus epäonnistui")
