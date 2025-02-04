@@ -237,9 +237,10 @@ def remove_recipe(recipe_id):
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
     user = users.get_user(user_id)
+    print(user["username"])
     user_recipes = users.get_user_recipes(user_id)
     if not user_recipes:
-        abort(404)
+        user_recipes = []
     if not user:
         abort(404)
 
