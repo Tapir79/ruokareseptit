@@ -1,6 +1,9 @@
 {% extends "recipe_base.html" %}
 
 {% block extra_content %}
+
+{% if session.user_id == recipe.user_id %}
 <a href="/add_instruction/{{ recipe.id }}">Lisää ohjeita</a>
 <a href="/add_ingredient/{{ recipe.id }}">Lisää uusi ainesosa</a>
+{% endif %}
 {% endblock %}
