@@ -1,54 +1,63 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/main.css" />
+  </head>
 
-<head>
-  <title>{% block title %}{% endblock %}</title>
-  <link rel="stylesheet" href="/static/main.css">
-</head>
+  <body>
+    <!-- Full-width Dark Header -->
+    <header class="top-header">
+      <div class="header-container">
+        <h1 class="logo">
+          <img
+            src="{{ url_for('static', filename='icons/coffee.svg') }}"
+            width="40"
+            height="40"
+            alt="Coffee logo"
+          />
+          Ruokareseptit
+        </h1>
 
-<body>
+        <div class="nav-links">
+          {% if session.user_id %}
+          <p>
+            <img
+              src="{{ url_for('static', filename='icons/profile.svg') }}"
+              width="20"
+              height="20"
+              alt="Profile"
+            />
+            <a href="/user/{{ session.user_id }}">{{ session.username }}</a> |
+            <a href="/logout">Kirjaudu ulos</a>
+          </p>
+          {% else %}
+          <p>
+            <img
+              src="{{ url_for('static', filename='icons/profile.svg') }}"
+              width="20"
+              height="20"
+              alt="Profile"
+            />
+            <a href="/login">Kirjaudu sisään</a> |
+            <a href="/register">Luo tunnus</a>
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </header>
 
-  <!-- Full-width Dark Header -->
-  <header class="top-header">
-    <div class="header-container">
-      <h1 class="logo">
-        <img src="{{ url_for('static', filename='icons/spoon-and-fork-fork-svgrepo-com.svg') }}" width="40" height="40" alt="Logo"> Ruokareseptit
-      </h1>
-
-      <div class="nav-links">
-        {% if session.user_id %}
-        <p>
-          <img src="{{ url_for('static', filename='icons/profile.svg') }}" width="20" height="20" alt="Profile">
-          <a href="/user/{{ session.user_id }}">{{ session.username }}</a> |
-          <a href="/logout">Kirjaudu ulos</a>
-        </p>
-        {% else %}
-        <p>
-          <img src="{{ url_for('static', filename='icons/profile.svg') }}" width="20" height="20" alt="Profile">
-          <a href="/login">Kirjaudu sisään</a> |
-          <a href="/register">Luo tunnus</a>
-        </p>
+    <!-- Full-width Navigation Bar -->
+    <nav class="main-nav">
+      <div class="nav-container">
+        <a href="/">Etusivu</a> |
+        <a href="/find_recipe">Etsi resepti</a>
+        {% if session.user_id %} | <a href="/create_recipe">Uusi resepti</a>
         {% endif %}
       </div>
-    </div>
-  </header>
+    </nav>
 
-  <!-- Full-width Navigation Bar -->
-  <nav class="main-nav">
-    <div class="nav-container">
-      <a href="/">Etusivu</a> |
-      <a href="/find_recipe">Etsi resepti</a>
-      {% if session.user_id %}
-      | <a href="/create_recipe">Uusi resepti</a>
-      {% endif %}
-    </div>
-  </nav>
-
-  <!-- Main Content Section -->
-  <main class="site-content">
-    {% block content %}{% endblock %}
-  </main>
-
-</body>
-
+    <!-- Main Content Section -->
+    <main class="site-content">{% block content %}{% endblock %}</main>
+  </body>
 </html>

@@ -1,0 +1,22 @@
+<svg 
+    width="100" height="100" viewBox="0 0 100 100"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    stroke="black"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round">
+
+    <!-- Mug Body (Adjusted Position & Size) -->
+    <rect x="20" y="35" width="45" height="50" rx="5" fill="white" stroke="black"/>
+    
+    <!-- Handle (Closer to Mug) -->
+    <path d="M65 45 Q78 55, 65 65" stroke="black" fill="none"/>
+    
+    <!-- Steam (Taller & Centered) -->
+    <path d="M30 25 Q27 18, 30 10" stroke="black"/>
+    <path d="M40 28 Q37 20, 40 12" stroke="black"/>
+    <path d="M50 26 Q47 18, 50 10" stroke="black"/>
+    
+</svg>
+
