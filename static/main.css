@@ -27,6 +27,9 @@ body {
   font-size: 1.8em;
   margin: 0;
   color: black;
+  display: flex;             /* Enables flexbox */
+  align-items: center;       /* Aligns text and image to the same line */
+  gap: 10px;   
 }
 
 /* Navigation bar below header */
