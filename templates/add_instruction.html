@@ -6,7 +6,7 @@
 <form action="/add_instruction/{{ recipe.id }}" method="post">
   <p>
     Ohje: <br />
-    <input type="text" name="instruction" maxlength="100" required />
+    <input type="text" name="instruction" maxlength="150" />
     {% if errors.instruction %}
     <span style="color: red;">{{ errors.instruction }}</span>
     {% endif %}

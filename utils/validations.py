@@ -5,7 +5,7 @@ VALIDATION_RULES = {
     "description": {"type": "string", "max_length": 1000, "required": True},
     "name": {"type": "string", "max_length": 30, "required": True},
     "amount": {"type": "string", "max_length": 20, "required": True},
-    "instruction": {"type": "string", "max_length": 100, "required": True},
+    "instruction": {"type": "string", "max_length": 150, "required": True}
 }
 
 from flask import abort

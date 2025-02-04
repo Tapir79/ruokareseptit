@@ -16,24 +16,30 @@
 <p>{{ recipe.description }}</p>
 <p>Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a></p>
 
-{% if recipe_ingredients %}
+<div class="recipe-container">
+<div class="recipe-column">
 <h3>Ainesosat</h3>
+{% if recipe_ingredients %}
 <ul>
   {% for ingredient in recipe_ingredients %}
   <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
   {% endfor %}
 </ul>
 {% endif %}
+</div>
 
-{% if recipe_instructions %}
+<div class="recipe-column">
 <h3>Ohjeet</h3>
+{% if recipe_instructions %}
+
 <ol>
   {% for instruction in recipe_instructions %}
   <li>{{ instruction.instruction }}</li>
   {% endfor %}
 </ol>
 {% endif %}
-
+</div>
+</div>
 {% block extra_content %}{% endblock %}
 
 {% endblock %}
