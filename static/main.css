@@ -1,27 +1,131 @@
+/* General Styling */
 body {
-    margin: auto;
-    max-width: 50em;
-    font-family: sans-serif;
-    background-color: #f2f2f2; /* Light yellow background */
-  }
-
-.disabled-link {
-    pointer-events: none; /* Prevents clicking */
-    color: gray; /* Makes the link look disabled */
-    text-decoration: none; /* Optional: Removes underline */
-    cursor: default; /* Changes cursor to normal */
-    opacity: 0.6; /* Makes it look disabled */
+  margin: 0;
+  font-family: sans-serif;
 }
 
+/* Full-width header */
+.top-header {
+  background: #dbdada;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+}
+
+/* Centered content inside header */
+.header-container {
+  max-width: 50em;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.8em;
+  margin: 0;
+  color: black;
+}
+
+/* Navigation bar below header */
+.main-nav {
+  background: #57595c;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* Links Styling */
+.nav-container,
+.nav-links p {
+  max-width: 50em;
+  margin: auto;
+  font-size: 1em;
+  text-align: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 1.1em;
+}
+
+nav a {
+  color: white !important;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 1.1em;
+}
+
+nav a:hover {
+  text-decoration: underline;
+  color: #e2e0e0;
+}
+
+/* Main Content */
+.site-content {
+  max-width: 50em;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+}
+
+/* Disabled links */
+.disabled-link {
+  pointer-events: none;
+  color: gray;
+  text-decoration: none;
+  opacity: 0.6;
+}
+
+/* Recipe Header */
+.recipe-header {
+  max-width: 50em;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Recipe title & buttons */
+.recipe-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Recipe Buttons */
+.recipe-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.recipe-buttons a {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Recipe Text */
+.recipe-description {
+  font-size: 1.1em;
+  margin: 10px 0;
+}
+
+.recipe-author {
+  font-size: 1em;
+  color: #555;
+}
+
+/* Recipe Layout */
 .recipe-container {
   display: flex;
-  gap: 20px; /* Adds spacing between columns */
+  gap: 20px;
+  align-items: flex-start;
 }
 
 .recipe-column {
-  flex: 1; /* Makes both columns equal width */
+  flex: 1;
   padding: 10px;
-  border: 1px solid #ddd; /* Adds a light border */
-  border-radius: 5px;
-  background-color: #f9f9f9; /* Light gray background */
 }

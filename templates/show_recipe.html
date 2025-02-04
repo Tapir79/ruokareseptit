@@ -1,16 +1,12 @@
-{% extends "recipe_base.html" %}
-
-{% block extra_content %}
-
-{% if session.user_id == recipe.user_id %}
+{% extends "recipe_base.html" %} {% block extra_content %} {% if session.user_id
+== recipe.user_id %}
 
 <div class="recipe-container">
-<div class="recipe-column">
-<a href="/add_ingredient/{{ recipe.id }}">Lisää uusi ainesosa</a>
+  <div class="recipe-column">
+    <a href="/add_ingredient/{{ recipe.id }}">Lisää uusi ainesosa</a>
+  </div>
+  <div class="recipe-column">
+    <a href="/add_instruction/{{ recipe.id }}">Lisää ohjeita</a>
+  </div>
 </div>
-<div class="recipe-column">
-<a href="/add_instruction/{{ recipe.id }}">Lisää ohjeita</a>
-</div>
-</div>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}

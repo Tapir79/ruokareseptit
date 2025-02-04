@@ -1,45 +1,65 @@
-{% extends "layout.html" %}
-{% block title %} Resepti - {{ recipe.title }} {% endblock %}
-{% block content %}
+{% extends "layout.html" %} {% block title %} Resepti - {{ recipe.title }} {%
+endblock %} {% block content %}
 
-<h2>{{ recipe.title }}</h2>
+<div class="recipe-header">
+  <div class="recipe-title-container">
+    <h2>{{ recipe.title }}</h2>
 
-{% if session.user_id == recipe.user_id %}
-<a href="/edit_recipe/{{ recipe.id }}" class="btn {{ edit_disabled|default('') }}">
-<img src="{{ url_for('static', filename='icons/edit.svg') }}" width="20" height="20" alt="Muokkaa">
-</a> 
-<a href="/remove_recipe/{{ recipe.id }}" class="btn {{ edit_disabled|default('') }}"> 
-<img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista">
-</a>
-{% endif %}
-
-<p>{{ recipe.description }}</p>
-<p>Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a></p>
+    {% if session.user_id == recipe.user_id %}
+    <div class="recipe-buttons">
+      <a
+        href="/edit_recipe/{{ recipe.id }}"
+        class="btn {{ edit_disabled|default('') }}"
+      >
+        <img
+          src="{{ url_for('static', filename='icons/edit.svg') }}"
+          width="20"
+          height="20"
+          alt="Muokkaa"
+        />
+      </a>
+      <a
+        href="/remove_recipe/{{ recipe.id }}"
+        class="btn {{ edit_disabled|default('') }}"
+      >
+        <img
+          src="{{ url_for('static', filename='icons/delete.svg') }}"
+          width="20"
+          height="20"
+          alt="Poista"
+        />
+      </a>
+    </div>
+    {% endif %}
+  </div>
+  <p class="recipe-description">{{ recipe.description }}</p>
+  <p class="recipe-author">
+    Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
+  </p>
+</div>
 
 <div class="recipe-container">
-<div class="recipe-column">
-<h3>Ainesosat</h3>
-{% if recipe_ingredients %}
-<ul>
-  {% for ingredient in recipe_ingredients %}
-  <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-</div>
+  <div class="recipe-column">
+    <h3>Ainesosat</h3>
+    {% if recipe_ingredients %}
+    <ul>
+      {% for ingredient in recipe_ingredients %}
+      <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
 
-<div class="recipe-column">
-<h3>Ohjeet</h3>
-{% if recipe_instructions %}
+  <div class="recipe-column">
+    <h3>Ohjeet</h3>
+    {% if recipe_instructions %}
 
-<ol>
-  {% for instruction in recipe_instructions %}
-  <li>{{ instruction.instruction }}</li>
-  {% endfor %}
-</ol>
-{% endif %}
+    <ol>
+      {% for instruction in recipe_instructions %}
+      <li>{{ instruction.instruction }}</li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+  </div>
 </div>
-</div>
-{% block extra_content %}{% endblock %}
-
-{% endblock %}
+{% block extra_content %}{% endblock %} {% endblock %}
