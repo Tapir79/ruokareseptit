@@ -1,21 +1,29 @@
-{% extends "recipe_base.html" %}
-
-{% block extra_content %}
+{% extends "recipe_base.html" %} {% block extra_content %}
 <h3>Lisää uusi ainesosa reseptille {{ recipe.title }}</h3>
 
 <form action="/add_ingredient/{{ recipe.id }}" method="post">
   <p>
     Ainesosan nimi: <br />
-    <input type="text" name="name" maxlength="30" />
+    <input
+      type="text"
+      name="name"
+      maxlength="30"
+      value="{{ form_data.name if form_data and 'name' in form_data else '' }}"
+    />
     {% if errors.name %}
-    <span style="color: red;">{{ errors.name }}</span>
+    <span style="color: red">{{ errors.name }}</span>
     {% endif %}
   </p>
   <p>
     Määrä: <br />
-    <input type="text" name="amount" maxlength="20" />
+    <input
+      type="text"
+      name="amount"
+      maxlength="20"
+      value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}"
+    />
     {% if errors.amount %}
-    <span style="color: red;">{{ errors.amount }}</span>
+    <span style="color: red">{{ errors.amount }}</span>
     {% endif %}
   </p>
   <input type="submit" name="save" value="Tallenna" />

@@ -17,7 +17,7 @@ def index():
 @app.route("/find_recipe")
 def find_recipe():
     query = request.args.get("query", "").strip()
-    results = recipes.find_recipes(query) if query else []
+    results = recipes.find_recipes(query) if query else {}
     return render_template("find_recipe.html", query=query, results=results)
 
 @app.route("/recipe/<int:recipe_id>")
@@ -34,7 +34,7 @@ def recipe(recipe_id):
 def create_recipe():
     require_login(session)
     if request.method == "GET":
-        return render_template("new_recipe.html", errors=[], form_data=[])
+        return render_template("new_recipe.html", errors={}, form_data={})
 
     if request.method == "POST":
         form_data = request.form
@@ -66,13 +66,13 @@ def add_ingredient(recipe_id):
                                recipe=single_recipe,
                                recipe_ingredients=recipe_ingredients,
                                recipe_instructions=recipe_instructions,
-                               errors=[],
-                               form_data=[],
+                               errors={},
+                               form_data={},
                                edit_disabled="disabled-link")
 
     if request.method == "POST":
         if "back" in request.form:
-            errors = []
+            errors = {}
             return redirect(f"/recipe/{recipe_id}")
 
         form_data = request.form
@@ -117,21 +117,23 @@ def add_instruction(recipe_id):
                                recipe=single_recipe,
                                recipe_ingredients=recipe_ingredients,
                                recipe_instructions=recipe_instructions,
-                               errors=[],
-                               form_data=[],
+                               errors={},
+                               form_data={},
                                edit_disabled="disabled-link")
 
     if request.method == "POST":
         if "back" in request.form:
-            errors = []
+            errors = {}
             return redirect(f"/recipe/{recipe_id}")
         else:
             form_data = request.form
             errors = validate_form(request.form)
 
             if errors:
+                print(recipe_ingredients)
                 return render_template("add_instruction.html",
                                        recipe=single_recipe,
+                                       recipe_ingredients=recipe_ingredients,
                                        recipe_instructions=recipe_instructions,
                                        errors=errors,
                                        form_data=form_data,
@@ -145,6 +147,7 @@ def add_instruction(recipe_id):
                 errors["instruction"] = str(e)
                 return render_template("add_instruction.html",
                                        recipe=single_recipe,
+                                       recipe_ingredients=recipe_ingredients,
                                        recipe_instructions=recipe_instructions,
                                        errors=errors,
                                        form_data=form_data,
@@ -170,7 +173,7 @@ def edit_recipe(recipe_id):
 
     if request.method == "POST":
         if "back" in request.form:
-            errors = []
+            errors = {}
             return redirect(f"/recipe/{recipe_id}")
 
 
@@ -237,10 +240,9 @@ def remove_recipe(recipe_id):
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
     user = users.get_user(user_id)
-    print(user["username"])
     user_recipes = users.get_user_recipes(user_id)
     if not user_recipes:
-        user_recipes = []
+        user_recipes = {}
     if not user:
         abort(404)
 
