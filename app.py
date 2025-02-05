@@ -251,10 +251,20 @@ def show_user(user_id):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("login.html", errors={}, form_data={})
     if request.method == "POST":
+        form_data = request.form
+        errors = {}
         username = request.form["username"]
         password = request.form["password"]
+
+        if not username:
+            errors["username"] = "Tunnus ei voi olla tyhjä."
+        if not password:
+            errors["password"] = "Salasana ei voi olla tyhjä."
+
+        if errors:
+            return render_template("login.html", errors=errors, form_data=form_data)
 
         user_id = users.check_login(username, password)
         if user_id:
