@@ -251,9 +251,8 @@ def show_user(user_id):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html", errors={}, form_data={})
+        return render_template("login.html", errors={})
     if request.method == "POST":
-        form_data = request.form
         errors = {}
         username = request.form["username"]
         password = request.form["password"]
@@ -264,7 +263,7 @@ def login():
             errors["password"] = "Salasana ei voi olla tyhjä."
 
         if errors:
-            return render_template("login.html", errors=errors, form_data=form_data)
+            return render_template("login.html", errors=errors)
 
         user_id = users.check_login(username, password)
         if user_id:
@@ -283,23 +282,33 @@ def logout():
     return redirect("/")
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html", errors={})
 
+    if request.method == "POST":
+        errors = {}
+        username = request.form["username"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
 
-@app.route("/create_user", methods=["POST"])
-def create_user():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-    if password1 != password2:
-        print("VIRHE: salasanat eivät ole samat")
-        return redirect("/register")
-    try:
-        users.create_user(username, password1)
-    except sqlite3.IntegrityError:
-        print("VIRHE: tunnus on jo varattu")
-        return redirect("/register")
-    print("Tunnus luotu")
-    return redirect("/")
+        if not username:
+            errors["username"] = "Tunnus ei voi olla tyhjä."
+        if not password1:
+            errors["password1"] = "Tunnus ei voi olla tyhjä."
+        if not password2:
+            errors["password2"] = "Tunnus ei voi olla tyhjä."
+        if password1 != password2:
+            errors["password1"] = "Salasanat eivät täsmää"
+
+        if errors:
+            return render_template("register.html", errors=errors)
+
+        try:
+            users.create_user(username, password1)
+        except sqlite3.IntegrityError:
+            errors["username"] = "Tunnus on jo varattu."
+            return render_template("register.html", errors=errors)
+        print("Tunnus luotu")
+        return redirect("/")

@@ -10,7 +10,7 @@
 <form action="/login" method="post">
   <p>
     Tunnus: <br />
-    <input type="text" name="username" value="{{ form_data.username|default('') }}" required />
+    <input type="text" name="username" required />
       {% if errors.username %}
       <span style="color: red;">{{ errors.username }}</span>
       {% endif %}
