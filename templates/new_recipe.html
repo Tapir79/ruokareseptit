@@ -1,6 +1,5 @@
-{% extends "layout.html" %}
-{% block title %} Uuden reseptin lisääminen {% endblock %}
-{% block content %}
+{% extends "layout.html" %} {% block title %} Uuden reseptin lisääminen {%
+endblock %} {% block content %}
 <h1>Uusi resepti</h1>
 <form action="/create_recipe" method="post">
   <p>
@@ -8,9 +7,8 @@
     <input
       type="text"
       name="title"
-      value="{{ form_data.title if form_data else '' }}"
+      value="{{ form_data.title if form_data and 'title' else '' }}"
       maxlength="30"
-      required
     />
     {% if errors.title %}
     <span style="color: red">{{ errors.title }}</span>
@@ -18,13 +16,56 @@
   </p>
   <p>
     Kuvaus: <br />
-    <textarea name="description" rows="8" cols="60" maxlength="1000" required>
+    <textarea name="description" rows="8" cols="60" maxlength="1000"
+    value="{{ form_data.description if form_data and 'description' else '' }}">
       {{ form_data.description if form_data else '' }}
     </textarea>
     {% if errors.description %}
     <span style="color: red">{{ errors.description }}</span>
     {% endif %}
   </p>
-  <input type="submit" value="Luo resepti" />
+
+  <p>
+  <h3>Ainekset</h3>
+  {% if recipe_ingredients %}
+  <ul>
+    {% for ingredient in recipe_ingredients %}
+    <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <p>
+    Ainesosan nimi: <br />
+    {% if errors.name %}
+    <input
+      type="text"
+      name="name"
+      maxlength="30"
+      value="{{ form_data.name if form_data and 'name' in form_data else '' }}"
+    />
+    <span style="color: red">{{ errors.name }}</span>
+    {% else %}
+    <input type="text" name="name" maxlength="30" />
+    {% endif %}
+  </p>
+  <p>
+    Määrä: <br />
+    {% if errors.amount %}
+    <input
+      type="text"
+      name="amount"
+      maxlength="20"
+      value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}"
+    />
+    <span style="color: red">{{ errors.amount }}</span>
+    {% else %}
+    <input type="text" name="amount" maxlength="20" />
+    {% endif %}
+  </p>
+  <input type="submit" name="ingredient" value="Lisää uusi aines" />
+</p>
+
+  <input type="submit" name="save" value="Luo resepti" />
 </form>
 {% endblock %}

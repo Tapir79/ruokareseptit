@@ -32,6 +32,7 @@ def get_recipe_ingredients(recipe_id):
     result = db.query(sql, [recipe_id])
     return result
 
+
 def add_recipe(title, description, user_id):
     sql = """INSERT INTO recipes (title, description, user_id)
              VALUES (?, ?, ?)"""
@@ -72,6 +73,10 @@ def find_recipes(query):
 
     search_term = f"%{ query }%"
     return db.query(sql, [search_term, search_term])
+
+def add_ingredients(recipe_id, recipe_ingredients):
+    for ingredient in recipe_ingredients:
+        add_ingredient(recipe_id, ingredient["name"], ingredient["amount"])
 
 def add_ingredient(recipe_id, name, amount):
     sql_recipe_ingredient_exists = """SELECT ingredients.name
