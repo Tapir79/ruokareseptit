@@ -288,10 +288,13 @@ def login():
         if not password:
             errors["password"] = "Salasana ei voi olla tyhjä."
 
-        if errors:
-            return render_template("login.html", errors=errors)
+        user_id, error_message = users.check_login(username, password)
+        if error_message:
+            errors["username"] = error_message
 
-        user_id = users.check_login(username, password)
+        if errors:
+            return render_template("login.html", errors=errors)  
+
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
