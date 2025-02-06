@@ -311,6 +311,8 @@ def logout():
         del session["user_id"]
         del session["username"]
 
+    return redirect("/")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
