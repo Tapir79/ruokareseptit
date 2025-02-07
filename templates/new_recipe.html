@@ -27,7 +27,12 @@ endblock %} {% block content %}
   {% if recipe_ingredients %}
   <ul>
     {% for ingredient in recipe_ingredients %}
-    <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
+    <li>{{ ingredient.name }} - {{ ingredient.amount }}
+      <label>
+        <input type="hidden" name="delete_ingredient" value="{{ ingredient.name }}" />
+        <input type="submit" value="Poista" />
+      </label>
+    </li>
     {% endfor %}
   </ul>
   {% endif %}
@@ -67,20 +72,20 @@ endblock %} {% block content %}
   {% if recipe_instructions %}
   <ul>
     {% for instruction in recipe_instructions %}
-    <li>{{ instruction.instruction }}</li>
+    <li>{{ instruction.instruction_name }}</li>
     {% endfor %}
   </ul>
   {% endif %}
   {% if errors.instruction %}
   <input
     type="text"
-    name="instruction"
+    name="instruction_name"
     maxlength="150"
-    value="{{ form_data.instruction if form_data and 'instruction' in form_data else '' }}"
+    value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}"
   />
   <span style="color: red">{{ errors.instruction }}</span>
   {% else %}
-  <input type="text" name="instruction" maxlength="150" />
+  <input type="text" name="instruction_name" maxlength="150" />
   {% endif %}
   <input type="submit" name="instruction" value="Lisää uusi ohje" />
 </p>

@@ -14,7 +14,7 @@ VALIDATION_RULES_NEW_RECIPE_INGREDIENT_EDIT = {
 }
 
 VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT = {
-    "instruction": {"type": "string", "max_length": 150, "required": True}
+    "instruction_name": {"type": "string", "max_length": 150, "required": True}
 }
 
 
@@ -46,7 +46,7 @@ def validate_input(field_name, value):
     rules = VALIDATION_RULES.get(field_name)
 
     if not rules:
-        print("No validation rules for the given field:" + field_name)
+        print(f"No validation rules for the given field: {field_name}")
         return None  
 
     # Required field check
@@ -77,25 +77,43 @@ def validate_input(field_name, value):
 
     return None 
 
+def validate_new_recipe_instruction_input(field_name, value, recipe_instructions=[]):
 
-
-def validate_new_recipe_input(field_name, value, edit_mode, recipe_ingredients=[]):
-    if edit_mode == "ingredient":
-        rules = VALIDATION_RULES_NEW_RECIPE_INGREDIENT_EDIT.get(field_name)
-        already_added = check_already_added_ingredient(value, recipe_ingredients)
-        if already_added:
-            return already_added
-
-    elif edit_mode == "instruction":
-        rules = VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT.get(field_name)
-    else:
-        rules = VALIDATION_RULES_NEW_RECIPE.get(field_name)
+    rules = VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT.get(field_name)
 
     if not rules:
         print(f"No validation rules for the given field: {field_name}")
         return None
 
     return (
+        #todo check already added ingredient
+        check_required(rules, value) or
+        check_max_length(rules, value)
+    )
+
+def validate_new_recipe_input(field_name, value):
+
+    rules = VALIDATION_RULES_NEW_RECIPE.get(field_name)
+
+    if not rules:
+        print(f"No validation rules for the given field: {field_name}")
+        return None
+
+    return (
+        check_required(rules, value) or
+        check_max_length(rules, value)
+    )
+
+def validate_new_recipe_ingredient_input(field_name, value, recipe_ingredients=[]):
+
+    rules = VALIDATION_RULES_NEW_RECIPE_INGREDIENT_EDIT.get(field_name)
+
+    if not rules:
+        print(f"No validation rules for the given field: {field_name}")
+        return None
+
+    return (
+        check_already_added_ingredient(value, recipe_ingredients) or
         check_required(rules, value) or
         check_max_length(rules, value)
     )
@@ -124,11 +142,34 @@ def validate_form(form_data):
 
     return errors
 
-def validate_new_recipe_form(form_data, edit_mode, recipe_ingredients=[], recipe_instructions=[]):
+
+
+
+def validate_new_recipe_form_ingredients(form_data, recipe_ingredients=[]):
     errors = {}
 
     for field, value in form_data.items():
-        error = validate_new_recipe_input(field, value, edit_mode, recipe_ingredients, recipe_instructions)
+        error = validate_new_recipe_ingredient_input(field, value, recipe_ingredients)
+        if error:
+            errors[field] = error
+
+    return errors
+
+def validate_new_recipe_form_instructions(form_data):
+    errors = {}
+
+    for field, value in form_data.items():
+        error = validate_new_recipe_instruction_input(field, value)
+        if error:
+            errors[field] = error
+
+    return errors
+
+def validate_new_recipe_save_form(form_data):
+    errors = {}
+
+    for field, value in form_data.items():
+        error = validate_new_recipe_input(field, value)
         if error:
             errors[field] = error
 

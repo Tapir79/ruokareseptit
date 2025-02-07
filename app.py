@@ -4,7 +4,7 @@ from flask import abort, redirect, render_template, request, session
 import config
 import recipes
 import users
-from utils.validations import user_ids_must_match, recipe_must_exist, require_login, validate_form, validate_new_recipe_form
+from utils.validations import user_ids_must_match, recipe_must_exist, require_login, validate_form, validate_new_recipe_form_ingredients, validate_new_recipe_form_instructions, validate_new_recipe_save_form
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -52,7 +52,7 @@ def create_recipe():
 
         if "save" in request.form:
             form_data = request.form
-            errors = validate_new_recipe_form(form_data, "save")
+            errors = validate_new_recipe_save_form(form_data)
 
             if errors:
                 return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
@@ -70,19 +70,26 @@ def create_recipe():
             delete_temporary_session_attributes()
             return redirect("/recipe/" + str(recipe_id))
 
-        if "instruction" in request.form:
-            errors = validate_new_recipe_form(form_data, "instruction", recipe_instructions)
+        if "instruction" in request.form and form_data["instruction"] != "":
+            errors = validate_new_recipe_form_instructions(form_data)
             if not errors:
-                recipe_instructions.append({"instruction": form_data["instruction"]})
+                recipe_instructions.append({"instruction_name": form_data["instruction_name"]})
                 session["recipe_instructions"] = recipe_instructions
             return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
-        if "ingredient" in request.form:
-            errors = validate_new_recipe_form(form_data, "ingredient", recipe_ingredients)
+        if "ingredient" in request.form and form_data["ingredient"] != "":
+            errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
             if not errors:
                 recipe_ingredients.append({"name": form_data["name"], "amount": form_data["amount"]})
                 session["recipe_ingredients"] = recipe_ingredients
             return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+
+        if "delete_ingredient" in request.form and form_data["delete_ingredient"] != "":
+            ingredient_to_remove = request.form["delete_ingredient"]
+            recipe_ingredients = [ing for ing in recipe_ingredients if ing["name"] != ingredient_to_remove]
+            session["recipe_ingredients"] = recipe_ingredients
+            session.modified = True  # Ensure session updates persist
+            return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
 
 @app.route("/add_ingredient/<int:recipe_id>", methods=["GET", "POST"])
@@ -163,7 +170,6 @@ def add_instruction(recipe_id):
             errors = validate_form(request.form)
 
             if errors:
-                print(recipe_ingredients)
                 return render_template("add_instruction.html",
                                        recipe=single_recipe,
                                        recipe_ingredients=recipe_ingredients,
