@@ -33,8 +33,8 @@ endblock %} {% block content %}
   {% endif %}
 
   <p>
-    Ainesosan nimi: <br />
-    {% if errors.name %}
+    Aineksen nimi: <br />
+    {% if errors.name or errors.amount %}
     <input
       type="text"
       name="name"
@@ -48,7 +48,7 @@ endblock %} {% block content %}
   </p>
   <p>
     Määrä: <br />
-    {% if errors.amount %}
+    {% if errors.name or errors.amount %}
     <input
       type="text"
       name="amount"
@@ -61,6 +61,28 @@ endblock %} {% block content %}
     {% endif %}
   </p>
   <input type="submit" name="ingredient" value="Lisää uusi aines" />
+</p>
+<p>
+  Ohje: <br />
+  {% if recipe_instructions %}
+  <ul>
+    {% for instruction in recipe_instructions %}
+    <li>{{ instruction.instruction }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if errors.instruction %}
+  <input
+    type="text"
+    name="instruction"
+    maxlength="150"
+    value="{{ form_data.instruction if form_data and 'instruction' in form_data else '' }}"
+  />
+  <span style="color: red">{{ errors.instruction }}</span>
+  {% else %}
+  <input type="text" name="instruction" maxlength="150" />
+  {% endif %}
+  <input type="submit" name="instruction" value="Lisää uusi ohje" />
 </p>
 
   <input type="submit" name="save" value="Luo resepti" />

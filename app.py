@@ -12,6 +12,8 @@ app.secret_key = config.secret_key
 def delete_temporary_session_attributes():
     if "recipe_ingredients" in session:
         del session["recipe_ingredients"]
+    if "recipe_instructions" in session:
+        del session["recipe_instructions"]
 
 @app.route("/")
 def index():
@@ -40,27 +42,20 @@ def create_recipe():
 
     if request.method == "GET":
         delete_temporary_session_attributes()
-        return render_template("new_recipe.html", errors={}, form_data={}, recipe_ingredients={})
+        return render_template("new_recipe.html", errors={}, form_data={}, recipe_ingredients={}, recipe_instructions={})
 
     if request.method == "POST":
 
         form_data = request.form
         recipe_ingredients = session.get("recipe_ingredients", [])
-
-        if "ingredient" in request.form:
-            form_data = request.form
-            errors = validate_new_recipe_form(form_data, "ingredient", recipe_ingredients)
-            if not errors:
-                recipe_ingredients.append({"name": form_data["name"], "amount": form_data["amount"]})
-                session["recipe_ingredients"] = recipe_ingredients
-            return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients)
+        recipe_instructions = session.get("recipe_instructions", [])
 
         if "save" in request.form:
             form_data = request.form
             errors = validate_new_recipe_form(form_data, "save")
 
             if errors:
-                return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients)
+                return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
             title = request.form["title"]
             description = request.form["description"]
@@ -68,12 +63,26 @@ def create_recipe():
             try:
                 recipe_id = recipes.add_recipe(title, description, user_id)
                 recipes.add_ingredients(recipe_id, recipe_ingredients)
+                recipes.add_instructions(recipe_id, recipe_instructions)
             except sqlite3.IntegrityError:
                 print("VIRHE: reseptin tallennus epäonnistui")
 
             delete_temporary_session_attributes()
             return redirect("/recipe/" + str(recipe_id))
 
+        if "instruction" in request.form:
+            errors = validate_new_recipe_form(form_data, "instruction", recipe_instructions)
+            if not errors:
+                recipe_instructions.append({"instruction": form_data["instruction"]})
+                session["recipe_instructions"] = recipe_instructions
+            return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+
+        if "ingredient" in request.form:
+            errors = validate_new_recipe_form(form_data, "ingredient", recipe_ingredients)
+            if not errors:
+                recipe_ingredients.append({"name": form_data["name"], "amount": form_data["amount"]})
+                session["recipe_ingredients"] = recipe_ingredients
+            return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
 
 @app.route("/add_ingredient/<int:recipe_id>", methods=["GET", "POST"])

@@ -124,6 +124,10 @@ def get_recipe_instructions(recipe_id):
              ORDER BY step_number ASC"""
     return db.query(sql, [recipe_id])
 
+def add_instructions(recipe_id, recipe_instructions):
+    for instruction in recipe_instructions:
+        add_instruction(recipe_id, instruction["instruction"])
+
 def add_instruction(recipe_id, instruction):
     sql = """SELECT step_number FROM recipe_instructions WHERE recipe_id = ?
              ORDER BY step_number DESC LIMIT 1"""
