@@ -76,17 +76,19 @@ endblock %} {% block content %}
     {% endfor %}
   </ul>
   {% endif %}
-  {% if errors.instruction %}
+  <p>
+  {% if errors.instruction_name %}
   <input
     type="text"
     name="instruction_name"
     maxlength="150"
     value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}"
   />
-  <span style="color: red">{{ errors.instruction }}</span>
+  <span style="color: red">{{ errors.instruction_name }}</span>
   {% else %}
   <input type="text" name="instruction_name" maxlength="150" />
   {% endif %}
+</p>
   <input type="submit" name="instruction" value="Lisää uusi ohje" />
 </p>
 

@@ -118,33 +118,6 @@ def validate_new_recipe_ingredient_input(field_name, value, recipe_ingredients=[
         check_max_length(rules, value)
     )
 
-
-def user_ids_must_match(recipe_user_id, session):
-    if recipe_user_id != session["user_id"]:
-        abort(403)
-
-def recipe_must_exist(recipe):
-    if not recipe:
-        abort(404)
-
-def require_login(session):
-    if "user_id" not in session:
-        abort(403)
-
-def validate_form(form_data):
-    """Validates multiple form fields."""
-    errors = {}
-
-    for field, value in form_data.items():
-        error = validate_input(field, value)
-        if error:
-            errors[field] = error
-
-    return errors
-
-
-
-
 def validate_new_recipe_form_ingredients(form_data, recipe_ingredients=[]):
     errors = {}
 
@@ -170,6 +143,30 @@ def validate_new_recipe_save_form(form_data):
 
     for field, value in form_data.items():
         error = validate_new_recipe_input(field, value)
+        if error:
+            errors[field] = error
+
+    return errors
+
+
+def user_ids_must_match(recipe_user_id, session):
+    if recipe_user_id != session["user_id"]:
+        abort(403)
+
+def recipe_must_exist(recipe):
+    if not recipe:
+        abort(404)
+
+def require_login(session):
+    if "user_id" not in session:
+        abort(403)
+
+def validate_form(form_data):
+    """Validates multiple form fields."""
+    errors = {}
+
+    for field, value in form_data.items():
+        error = validate_input(field, value)
         if error:
             errors[field] = error
 
