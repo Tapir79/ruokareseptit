@@ -29,8 +29,7 @@ endblock %} {% block content %}
     {% for ingredient in recipe_ingredients %}
     <li>{{ ingredient.name }} - {{ ingredient.amount }}
       <label>
-        <input type="hidden" name="delete_ingredient" value="{{ ingredient.name }}" />
-        <input type="submit" value="Poista" />
+        <input type="submit" name="delete_ingredient_{{ ingredient.id }}" value="Poista" />
       </label>
     </li>
     {% endfor %}
@@ -72,7 +71,11 @@ endblock %} {% block content %}
   {% if recipe_instructions %}
   <ul>
     {% for instruction in recipe_instructions %}
-    <li>{{ instruction.instruction_name }}</li>
+    <li>{{ instruction.instruction_name }}
+      <label>
+        <input type="submit" name="delete_instruction_{{ instruction.id }}" value="Poista" />
+      </label>
+    </li>
     {% endfor %}
   </ul>
   {% endif %}

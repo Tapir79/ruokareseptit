@@ -126,7 +126,7 @@ def get_recipe_instructions(recipe_id):
 
 def add_instructions(recipe_id, recipe_instructions):
     for instruction in recipe_instructions:
-        add_instruction(recipe_id, instruction["instruction"])
+        add_instruction(recipe_id, instruction["instruction_name"])
 
 def add_instruction(recipe_id, instruction):
     sql = """SELECT step_number FROM recipe_instructions WHERE recipe_id = ?

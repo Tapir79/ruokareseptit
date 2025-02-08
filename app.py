@@ -73,23 +73,51 @@ def create_recipe():
         if "instruction" in request.form and form_data["instruction"] != "":
             errors = validate_new_recipe_form_instructions(form_data)
             if not errors:
-                recipe_instructions.append({"instruction_name": form_data["instruction_name"]})
+                new_id = max((instr["id"] for instr in recipe_instructions), default=0) + 1
+                recipe_instructions.append({"id": new_id, "instruction_name": form_data["instruction_name"]})
                 session["recipe_instructions"] = recipe_instructions
             return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
         if "ingredient" in request.form and form_data["ingredient"] != "":
             errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
             if not errors:
-                recipe_ingredients.append({"name": form_data["name"], "amount": form_data["amount"]})
+                new_id = max((ing["id"] for ing in recipe_ingredients), default=0) + 1
+                recipe_ingredients.append({"id": new_id, "name": form_data["name"], "amount": form_data["amount"]})
                 session["recipe_ingredients"] = recipe_ingredients
             return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
-        if "delete_ingredient" in request.form and form_data["delete_ingredient"] != "":
-            ingredient_to_remove = request.form["delete_ingredient"]
-            recipe_ingredients = [ing for ing in recipe_ingredients if ing["name"] != ingredient_to_remove]
-            session["recipe_ingredients"] = recipe_ingredients
-            session.modified = True  # Ensure session updates persist
-            return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+        delete_ingredient_key = next((key for key in request.form.keys() if key.startswith("delete_ingredient_")), None)
+        if delete_ingredient_key:
+
+            ingredient_id_to_remove = delete_ingredient_key[len("delete_ingredient_"):]
+
+            if ingredient_id_to_remove.isdigit():
+                ingredient_id_to_remove = int(ingredient_id_to_remove)
+
+                recipe_ingredients = [ing for ing in recipe_ingredients if ing["id"] != ingredient_id_to_remove]
+
+                session["recipe_ingredients"] = recipe_ingredients
+                session.modified = True
+
+                return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+
+
+        delete_instruction_key = next((key for key in request.form.keys() if key.startswith("delete_instruction_")), None)
+        if delete_instruction_key:
+
+            instruction_id_to_remove = delete_instruction_key[len("delete_instruction_"):]
+
+            if instruction_id_to_remove.isdigit():
+                instruction_id_to_remove = int(instruction_id_to_remove)
+
+                recipe_instructions = [ins for ins in recipe_instructions if ins["id"] != instruction_id_to_remove]
+
+                session["recipe_instructions"] = recipe_instructions
+                session.modified = True
+
+                return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+
+        return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
 
 @app.route("/add_ingredient/<int:recipe_id>", methods=["GET", "POST"])
