@@ -41,11 +41,12 @@ def add_recipe(title, description, user_id):
     return last_insert_id
 
 
-def edit_recipe(recipe_id, title, description):
+def edit_recipe(recipe_id, title, description, user_id):
     sql = """UPDATE recipes SET title = ?, 
                                 description = ?
-                            WHERE id = ?"""
-    db.execute(sql, [title, description, recipe_id])
+                            WHERE id = ?
+                            AND user_id = ?"""
+    db.execute(sql, [title, description, recipe_id, user_id])
 
 
 def remove_unused_ingredients():
@@ -118,8 +119,33 @@ def delete_ingredient(recipe_id, ingredient_id):
     db.execute(sql_delete_recipe_ingredient, [recipe_id, ingredient_id])
     remove_unused_ingredients()
 
+
+def add_edit_or_remove_instructions(recipe_id, recipe_instructions):
+    db_instructions = get_recipe_instructions(recipe_id)
+    db_instructions_dict = {instr["id"]: instr for instr in db_instructions}
+    new_instructions = []
+    edited_instructions = []
+    for instr in recipe_instructions:
+        if instr.get("id") not in db_instructions_dict:
+            new_instructions.append(instr)
+        else:
+            edited_instructions.append(instr)
+
+    input_instruction_ids = {instr["id"] for instr in recipe_instructions if "id" in instr}
+    deleted_instructions = [
+        instr for instr in db_instructions if instr["id"] not in input_instruction_ids
+    ]
+
+    for instruction in deleted_instructions:
+        delete_instruction(recipe_id, instruction["id"])
+    for instruction in edited_instructions:
+        print(instruction["id"], instruction["instruction_name"])
+        edit_instruction(recipe_id, instruction["id"], instruction["instruction_name"])
+    for instruction in new_instructions:
+        add_instruction(recipe_id, instruction["instruction_name"])
+
 def get_recipe_instructions(recipe_id):
-    sql = """SELECT id, instruction, step_number, recipe_id FROM recipe_instructions
+    sql = """SELECT id, instruction as instruction_name, step_number, recipe_id FROM recipe_instructions
              WHERE recipe_id = ?
              ORDER BY step_number ASC"""
     return db.query(sql, [recipe_id])

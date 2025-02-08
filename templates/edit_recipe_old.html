@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %} Reseptin muokkaus {% endblock %}
+{% block content %}
+<h2>Muokkaa reseptiä</h2>
+
+<form action="/edit_recipe/{{ recipe.id }}" method="post">
+  <p>
+    Otsikko: <br />
+    <input type="text" name="title" maxlength="50" value="{{recipe.title}}" />
+    {% if errors.title %}
+    <span style="color: red">{{ errors.title }}</span>
+    {% endif %}
+  </p>
+  <p>
+    Kuvaus: <br />
+    <textarea name="description" rows="8" cols="60" maxlength="1000">{{recipe.description}}</textarea>
+    {% if errors.description %}
+    <span style="color: red">{{ errors.description }}</span>
+    {% endif %}
+  </p>
+  
+  <p>
+    Aineisosat: <br />
+    {% if recipe_ingredients %}
+    <ul>
+    {% for ingredient in recipe_ingredients %}
+    <li>
+      {{ ingredient.name }}
+      <input type="text" name="ingredient_amount_{{ ingredient.ingredient_id }}" value="{{ ingredient.amount }}" maxlength="20" />
+      <label>
+        <input type="checkbox" name="delete_ingredient_{{ ingredient.ingredient_id }}" value="true" />
+        Poista
+      </label>
+    </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    Ohjeet: <br />
+    {% if recipe_instructions %}
+    <ol>
+    {% for instruction in recipe_instructions %}
+    <li>
+      <input type="text" name="instruction_{{ instruction.id }}" value="{{ instruction.instruction }}" maxlength="20" />
+      <label>
+        <input type="checkbox" name="delete_instruction_{{ instruction.id }}" value="true" />
+        Poista
+      </label>
+    </li>
+    {% endfor %}
+    </ol>
+    {% endif %}
+    <input type="submit" value="Tallenna" />
+    <input type="submit" name="back" value="Keskeytä" />
+  </p>
+</form>
+{% endblock %}

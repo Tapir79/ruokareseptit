@@ -56,7 +56,7 @@ endblock %} {% block content %}
 
     <ol>
       {% for instruction in recipe_instructions %}
-      <li>{{ instruction.instruction }}</li>
+      <li>{{ instruction.instruction_name }}</li>
       {% endfor %}
     </ol>
     {% endif %}
