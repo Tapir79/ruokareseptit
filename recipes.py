@@ -40,6 +40,29 @@ def add_recipe(title, description, user_id):
     last_insert_id = db.last_insert_id()
     return last_insert_id
 
+def edit_or_remove_ingredients(recipe_id, recipe_ingredients):
+    db_ingredients = get_recipe_ingredients(recipe_id)
+    db_ingredients_dict = {ing["ingredient_id"]: ing for ing in db_ingredients}
+    new_ingredients = []
+    edited_ingredients = []
+    for ing in recipe_ingredients:
+        if ing.get("ingredient_id") not in db_ingredients_dict:
+            new_ingredients.append(ing)
+        else:
+            edited_ingredients.append(ing)
+
+    input_ingredient_ids = {ing["ingredient_id"] for ing in recipe_ingredients}
+    deleted_ingredients = [
+        ing for ing in db_ingredients if ing["ingredient_id"] not in input_ingredient_ids
+    ]
+
+    for ingredient in deleted_ingredients:
+        delete_ingredient(recipe_id, ingredient["ingredient_id"])
+    for ingredient in edited_ingredients:
+        edit_ingredient(recipe_id, ingredient["ingredient_id"], ingredient["amount"])
+    for ingredient in new_ingredients:
+        add_ingredient(recipe_id, ingredient["name"], ingredient["amount"])
+
 
 def edit_recipe(recipe_id, title, description, user_id):
     sql = """UPDATE recipes SET title = ?, 
@@ -47,7 +70,6 @@ def edit_recipe(recipe_id, title, description, user_id):
                             WHERE id = ?
                             AND user_id = ?"""
     db.execute(sql, [title, description, recipe_id, user_id])
-
 
 def remove_unused_ingredients():
     sql_unused_ingredients = """DELETE FROM ingredients
@@ -60,7 +82,6 @@ def remove_recipe(recipe_id):
     db.execute(sql, [recipe_id])
 
     remove_unused_ingredients()
-
 
 def find_recipes(query):
     sql = """SELECT recipes.id,
@@ -79,31 +100,33 @@ def add_ingredients(recipe_id, recipe_ingredients):
     for ingredient in recipe_ingredients:
         add_ingredient(recipe_id, ingredient["name"], ingredient["amount"])
 
-def add_ingredient(recipe_id, name, amount):
-    sql_recipe_ingredient_exists = """SELECT ingredients.name
-                                      FROM recipe_ingredients JOIN ingredients
-                                      ON recipe_ingredients.ingredient_id = ingredients.id
-                                      WHERE recipe_ingredients.recipe_id = ? and ingredients.name = ?"""
-    result = db.query(sql_recipe_ingredient_exists, [recipe_id, name])
-    if result:
-        ingredient_name = result[0]["name"]
-        raise Exception(f"{ingredient_name} on jo lisätty")
 
-    sql_ingredient_exists = """SELECT id, name
-                               FROM ingredients
-                               WHERE name = ?"""
+def add_ingredient(recipe_id, name, amount):
+    # Check if the ingredient exists in the 'ingredients' table
+    sql_ingredient_exists = """SELECT id FROM ingredients WHERE name = ?"""
     result = db.query(sql_ingredient_exists, [name])
 
     if result:
-        ingredient_id = result[0]["id"]
+        ingredient_id = result[0]["id"]  # Pick existing ingredient ID
     else:
+        # Insert new ingredient if it does not exist
         sql_insert_ingredient = """INSERT INTO ingredients (name) VALUES (?)"""
         db.execute(sql_insert_ingredient, [name])
         ingredient_id = db.last_insert_id()
 
-    sql = """INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount)
-             VALUES (?, ?, ?)"""
-    db.execute(sql, [recipe_id, ingredient_id, amount])
+    # Check if the ingredient is already linked to the recipe
+    sql_recipe_ingredient_exists = """SELECT 1 FROM recipe_ingredients
+                                      WHERE recipe_id = ? AND ingredient_id = ?"""
+    result = db.query(sql_recipe_ingredient_exists, [recipe_id, ingredient_id])
+
+    if not result:
+        # If ingredient is NOT in the recipe, insert it
+        sql_insert_recipe_ingredient = """INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount)
+                                          VALUES (?, ?, ?)"""
+        db.execute(sql_insert_recipe_ingredient, [recipe_id, ingredient_id, amount])
+        print(f"Ainesosa '{name}' lisätty reseptiin ID {recipe_id}.")
+    else:
+        print(f"Ainesosa '{name}' on jo lisätty reseptiin ID {recipe_id}.")  # Do nothing if already added
 
 def edit_ingredient(recipe_id, ingredient_id, new_amount):
     sql_update_amount = """UPDATE recipe_ingredients

@@ -261,10 +261,16 @@ def edit_recipe(recipe_id):
         for instr in recipes.get_recipe_instructions(recipe_id)]
 
     # update instructions with form data
-    for i in recipe_instructions:
-        if "instruction_" + str(i["id"]) in form_data:
-            i["instruction_name"] = form_data["instruction_" + str(i["id"])]
+    for ins in recipe_instructions:
+        updated_name =  "instruction_" + str(ins["id"])
+        if updated_name in form_data:
+            ins["instruction_name"] = form_data[updated_name]
 
+    # update ingredients with form data
+    for ing in recipe_ingredients:
+        updated_amount = "ingredient_" + str(ing["ingredient_id"])
+        if updated_amount in form_data:
+            ing["amount"] = form_data[updated_amount]
 
     # Handle recipe update
     if "save" in request.form:
@@ -279,7 +285,7 @@ def edit_recipe(recipe_id):
         try:
             recipes.edit_recipe(recipe_id, title, description, user_id)
             recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
-            #recipes.edit_or_remove_ingredients(recipe_id, recipe_ingredients)
+            recipes.edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         except sqlite3.IntegrityError:
             print("VIRHE: reseptin päivitys epäonnistui")
 
@@ -300,40 +306,31 @@ def edit_recipe(recipe_id):
 
         if instruction_id_to_remove.isdigit():
             instruction_id_to_remove = int(instruction_id_to_remove)
-
             recipe_instructions = [ins for ins in recipe_instructions if ins["id"] != instruction_id_to_remove]
-
             session["recipe_instructions"] = recipe_instructions
             session.modified = True
-
             return render_template("edit_recipe.html", recipe=recipe, errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
+    if "ingredient" in request.form and form_data["ingredient"] != "":
+        errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
+        if not errors:
+            new_id = session["max_ingredient_id"]
+            session["max_ingredient_id"] = int(new_id) + 1
+            recipe_ingredients.append({"ingredient_id": new_id, "name": form_data["name"], "amount": form_data["amount"]})
+            session["recipe_ingredients"] = recipe_ingredients
+        return render_template("edit_recipe.html", recipe=recipe, errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
-    # if "ingredient" in request.form and form_data["ingredient"] != "":
-    #     errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
-    #     if not errors:
-    #         new_id = max((ing["ingredient_id"] for ing in recipe_ingredients), default=0) + 1
-    #         recipe_ingredients.append({"ingredient_id": new_id, "name": form_data["name"], "amount": form_data["amount"]})
-    #         session["recipe_ingredients"] = recipe_ingredients
-    #     return render_template("edit_recipe.html", recipe=recipe, errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+    delete_ingredient_key = next((key for key in request.form.keys() if key.startswith("delete_ingredient_")), None)
+    if delete_ingredient_key:
 
-    # delete_ingredient_key = next((key for key in request.form.keys() if key.startswith("delete_ingredient_")), None)
-    # if delete_ingredient_key:
+        ingredient_id_to_remove = delete_ingredient_key[len("delete_ingredient_"):]
 
-    #     ingredient_id_to_remove = delete_ingredient_key[len("delete_ingredient_"):]
-
-    #     if ingredient_id_to_remove.isdigit():
-    #         ingredient_id_to_remove = int(ingredient_id_to_remove)
-
-    #         recipe_ingredients = [ing for ing in recipe_ingredients if ing["ingredient_id"] != ingredient_id_to_remove]
-
-    #         session["recipe_ingredients"] = recipe_ingredients
-    #         session.modified = True
-
-    #         return render_template("edit_recipe.html", recipe=recipe, errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
-
-
-
+        if ingredient_id_to_remove.isdigit():
+            ingredient_id_to_remove = int(ingredient_id_to_remove)
+            recipe_ingredients = [ing for ing in recipe_ingredients if ing["ingredient_id"] != ingredient_id_to_remove]
+            session["recipe_ingredients"] = recipe_ingredients
+            session.modified = True
+            return render_template("edit_recipe.html", recipe=recipe, errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
     return render_template("edit_recipe.html", recipe=recipe, errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 

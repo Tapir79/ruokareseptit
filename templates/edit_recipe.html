@@ -24,9 +24,14 @@
   <ul>
     {% for ingredient in recipe_ingredients %}
     <li>
-      {{ ingredient.name }} - {{ ingredient.amount }}
+      {{ ingredient.name }} - <input
+      type="text"
+      name="ingredient_{{ ingredient.ingredient_id }}"
+      maxlength="20"
+      value="{{ ingredient.amount }}"
+    />
       <label>
-        <input type="submit" name="delete_ingredient_{{ ingredient.id }}" value="Poista" />
+        <input type="submit" name="delete_ingredient_{{ ingredient.ingredient_id }}" value="Poista" />
       </label>
     </li>
     {% endfor %}

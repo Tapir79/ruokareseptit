@@ -20,10 +20,7 @@ VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT = {
 
 VALIDATION_RULES_NEW_RECIPE = {
     "title": {"type": "string", "max_length": 30, "min_length": 1, "required": True},
-    "description": {"type": "string", "max_length": 1000, "required": True},
-    "name": {"type": "string", "max_length": 30, "required": False},
-    "amount": {"type": "string", "max_length": 20, "required": False},
-    "instruction": {"type": "string", "max_length": 150, "required": False}
+    "description": {"type": "string", "max_length": 1000, "required": True}
 }
 
 from flask import abort
