@@ -5,40 +5,22 @@ import config
 import recipes
 import users
 from utils.validations import user_ids_must_match, recipe_must_exist, require_login, validate_form, validate_new_recipe_form_ingredients, validate_new_recipe_form_instructions, validate_new_recipe_save_form
+from services.recipe_service import delete_temporary_session_attributes, get_index, search_recipe, show_recipe, show_new_recipe, save_new_recipe, handle_session_instructions, handle_session_ingredients
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
-def delete_temporary_session_attributes():
-    if "recipe_ingredients" in session:
-        del session["recipe_ingredients"]
-    if "recipe_instructions" in session:
-        del session["recipe_instructions"]
-    if "max_instruction_id" in session:
-        del session["max_instruction_id"]
-    if "max_ingredient_id" in session:
-        del  session["max_ingredient_id"]
-
 @app.route("/")
 def index():
-    all_recipes = recipes.get_recipes()
-    return render_template("index.html", recipes=all_recipes)
+    return get_index()
 
 @app.route("/find_recipe")
 def find_recipe():
-    query = request.args.get("query", "").strip()
-    results = recipes.find_recipes(query) if query else {}
-    return render_template("find_recipe.html", query=query, results=results)
+    return search_recipe()
 
 @app.route("/recipe/<int:recipe_id>")
 def recipe(recipe_id):
-    single_recipe = recipes.get_recipe(recipe_id)
-    recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
-    recipe_instructions = recipes.get_recipe_instructions(recipe_id)
-    return render_template("show_recipe.html",
-                           recipe=single_recipe,
-                           recipe_ingredients=recipe_ingredients,
-                           recipe_instructions=recipe_instructions)
+    return show_recipe(recipe_id)
 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
@@ -46,7 +28,7 @@ def create_recipe():
 
     if request.method == "GET":
         delete_temporary_session_attributes()
-        return render_template("new_recipe.html", errors={}, form_data={}, recipe_ingredients={}, recipe_instructions={})
+        return show_new_recipe()
 
     if request.method == "POST":
 
@@ -55,71 +37,15 @@ def create_recipe():
         recipe_instructions = session.get("recipe_instructions", [])
 
         if "save" in request.form:
-            form_data = request.form
-            errors = validate_new_recipe_save_form(form_data)
+            return save_new_recipe(form_data, recipe_ingredients, recipe_instructions)
 
-            if errors:
-                return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+        instructions_response = handle_session_instructions(form_data, recipe_ingredients, recipe_instructions)
+        if instructions_response:
+            return instructions_response
 
-            title = request.form["title"]
-            description = request.form["description"]
-            user_id = session["user_id"]
-            try:
-                recipe_id = recipes.add_recipe(title, description, user_id)
-                recipes.add_ingredients(recipe_id, recipe_ingredients)
-                recipes.add_instructions(recipe_id, recipe_instructions)
-            except sqlite3.IntegrityError:
-                print("VIRHE: reseptin tallennus epäonnistui")
-
-            delete_temporary_session_attributes()
-            return redirect("/recipe/" + str(recipe_id))
-
-        if "instruction" in request.form and form_data["instruction"] != "":
-            errors = validate_new_recipe_form_instructions(form_data)
-            if not errors:
-                new_id = max((instr["id"] for instr in recipe_instructions), default=0) + 1
-                recipe_instructions.append({"id": new_id, "instruction_name": form_data["instruction_name"]})
-                session["recipe_instructions"] = recipe_instructions
-            return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
-
-        if "ingredient" in request.form and form_data["ingredient"] != "":
-            errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
-            if not errors:
-                new_id = max((ing["id"] for ing in recipe_ingredients), default=0) + 1
-                recipe_ingredients.append({"id": new_id, "name": form_data["name"], "amount": form_data["amount"]})
-                session["recipe_ingredients"] = recipe_ingredients
-            return render_template("new_recipe.html", errors=errors, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
-
-        delete_ingredient_key = next((key for key in request.form.keys() if key.startswith("delete_ingredient_")), None)
-        if delete_ingredient_key:
-
-            ingredient_id_to_remove = delete_ingredient_key[len("delete_ingredient_"):]
-
-            if ingredient_id_to_remove.isdigit():
-                ingredient_id_to_remove = int(ingredient_id_to_remove)
-
-                recipe_ingredients = [ing for ing in recipe_ingredients if ing["id"] != ingredient_id_to_remove]
-
-                session["recipe_ingredients"] = recipe_ingredients
-                session.modified = True
-
-                return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
-
-
-        delete_instruction_key = next((key for key in request.form.keys() if key.startswith("delete_instruction_")), None)
-        if delete_instruction_key:
-
-            instruction_id_to_remove = delete_instruction_key[len("delete_instruction_"):]
-
-            if instruction_id_to_remove.isdigit():
-                instruction_id_to_remove = int(instruction_id_to_remove)
-
-                recipe_instructions = [ins for ins in recipe_instructions if ins["id"] != instruction_id_to_remove]
-
-                session["recipe_instructions"] = recipe_instructions
-                session.modified = True
-
-                return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
+        ingredients_response = handle_session_ingredients(form_data, recipe_ingredients, recipe_instructions)
+        if ingredients_response:
+            return ingredients_response
 
         return render_template("new_recipe.html", errors={}, form_data=form_data, recipe_ingredients=recipe_ingredients, recipe_instructions=recipe_instructions)
 
