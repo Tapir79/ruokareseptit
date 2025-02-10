@@ -7,9 +7,7 @@ from utils.validations import (
     validate_new_recipe_form_ingredients,
     recipe_must_exist,
 )
-from utils.validations import (
-    user_ids_must_match
-)
+from utils.validations import user_ids_must_match
 
 
 def delete_temporary_session_attributes():
@@ -22,13 +20,16 @@ def delete_temporary_session_attributes():
     if "max_ingredient_id" in session:
         del session["max_ingredient_id"]
 
+
 def get_index():
     return render_template("index.html", recipes=recipes.get_recipes())
+
 
 def search_recipe():
     query = request.args.get("query", "").strip()
     results = recipes.find_recipes(query) if query else {}
     return render_template("find_recipe.html", query=query, results=results)
+
 
 def show_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
@@ -41,6 +42,7 @@ def show_recipe(recipe_id):
         recipe_instructions=recipe_instructions,
     )
 
+
 def show_new_recipe():
     return render_template(
         "new_recipe.html",
@@ -49,6 +51,7 @@ def show_new_recipe():
         recipe_ingredients={},
         recipe_instructions={},
     )
+
 
 def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     """Handles the logic for saving a new recipe."""
@@ -149,6 +152,7 @@ def get_delete_instruction_id(form_data):
         return int(instruction_id) if instruction_id.isdigit() else None
 
     return None
+
 
 def handle_new_recipe_session_ingredients(
     form_data, recipe_ingredients, recipe_instructions
@@ -350,11 +354,15 @@ def handle_edit_recipe_session_instructions(
 def handle_edit_recipe_session_ingredients(
     recipe, form_data, recipe_ingredients, recipe_instructions
 ):
+    """Handles adding and deleting session-based ingredients in recipe editing."""
+
+    # Handle Adding a New Ingredient
     if "ingredient" in request.form and form_data["ingredient"] != "":
         errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
         if not errors:
             new_id = session["max_ingredient_id"]
             session["max_ingredient_id"] = int(new_id) + 1
+
             recipe_ingredients.append(
                 {
                     "ingredient_id": new_id,
@@ -363,42 +371,54 @@ def handle_edit_recipe_session_ingredients(
                 }
             )
             session["recipe_ingredients"] = recipe_ingredients
-        return render_template(
-            "edit_recipe.html",
-            recipe=recipe,
-            errors=errors,
-            form_data=form_data,
-            recipe_ingredients=recipe_ingredients,
-            recipe_instructions=recipe_instructions,
+
+        return render_edit_recipe(
+            recipe, errors, form_data, recipe_ingredients, recipe_instructions
         )
 
+    # Handle Deleting an Ingredient
+    ingredient_id_to_remove = get_delete_ingredient_id()
+    if ingredient_id_to_remove:
+        recipe_ingredients = [
+            ing
+            for ing in recipe_ingredients
+            if ing["ingredient_id"] != ingredient_id_to_remove
+        ]
+        session["recipe_ingredients"] = recipe_ingredients
+        session.modified = True
+
+        return render_edit_recipe(
+            recipe, {}, form_data, recipe_ingredients, recipe_instructions
+        )
+
+    return None  # Return None if no action was taken
+
+
+def get_delete_ingredient_id():
+    """Extracts the ID of an ingredient marked for deletion."""
     delete_ingredient_key = next(
         (key for key in request.form.keys() if key.startswith("delete_ingredient_")),
         None,
     )
     if delete_ingredient_key:
-
-        ingredient_id_to_remove = delete_ingredient_key[len("delete_ingredient_") :]
-
-        if ingredient_id_to_remove.isdigit():
-            ingredient_id_to_remove = int(ingredient_id_to_remove)
-            recipe_ingredients = [
-                ing
-                for ing in recipe_ingredients
-                if ing["ingredient_id"] != ingredient_id_to_remove
-            ]
-            session["recipe_ingredients"] = recipe_ingredients
-            session.modified = True
-            return render_template(
-                "edit_recipe.html",
-                recipe=recipe,
-                errors={},
-                form_data=form_data,
-                recipe_ingredients=recipe_ingredients,
-                recipe_instructions=recipe_instructions,
-            )
-
+        ingredient_id = delete_ingredient_key[len("delete_ingredient_") :]
+        return int(ingredient_id) if ingredient_id.isdigit() else None
     return None
+
+
+def render_edit_recipe(
+    recipe, errors, form_data, recipe_ingredients, recipe_instructions
+):
+    """Helper function to render the edit recipe page with given data."""
+    return render_template(
+        "edit_recipe.html",
+        recipe=recipe,
+        errors=errors,
+        form_data=form_data,
+        recipe_ingredients=recipe_ingredients,
+        recipe_instructions=recipe_instructions,
+    )
+
 
 def delete_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
