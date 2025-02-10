@@ -24,26 +24,23 @@ from services.recipe_service import (
     save_edited_recipe,
     handle_edit_recipe_session_instructions,
     handle_edit_recipe_session_ingredients,
+    delete_recipe,
 )
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
-
 @app.route("/")
 def index():
     return get_index()
-
 
 @app.route("/find_recipe")
 def find_recipe():
     return search_recipe()
 
-
 @app.route("/recipe/<int:recipe_id>")
 def recipe(recipe_id):
     return show_recipe(recipe_id)
-
 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
@@ -94,7 +91,6 @@ def edit_recipe(recipe_id):
     recipe_ingredients = get_updated_session_ingredients(recipe_id, form_data)
     recipe_instructions = get_updated_session_instructions(recipe_id, form_data)
 
-    # Handle recipe update
     if "save" in request.form:
         return save_edited_recipe(
             recipe, form_data, recipe_ingredients, recipe_instructions, recipe_id
@@ -125,22 +121,7 @@ def edit_recipe(recipe_id):
 @app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def remove_recipe(recipe_id):
     require_login(session)
-    single_recipe = recipes.get_recipe(recipe_id)
-    recipe_must_exist(single_recipe)
-    user_ids_must_match(single_recipe["user_id"], session)
-
-    if request.method == "GET":
-        return render_template("remove_recipe.html", recipe=single_recipe)
-
-    if request.method == "POST":
-        if "remove" in request.form:
-            try:
-                recipes.remove_recipe(recipe_id)
-            except sqlite3.IntegrityError:
-                print("VIRHE: reseptin poistaminen epäonnistui")
-            return redirect("/")
-
-        return redirect("/recipe/" + str(recipe_id))
+    return delete_recipe(recipe_id)
 
 
 @app.route("/user/<int:user_id>")

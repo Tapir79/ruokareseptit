@@ -7,6 +7,9 @@ from utils.validations import (
     validate_new_recipe_form_ingredients,
     recipe_must_exist,
 )
+from utils.validations import (
+    user_ids_must_match
+)
 
 
 def delete_temporary_session_attributes():
@@ -19,16 +22,13 @@ def delete_temporary_session_attributes():
     if "max_ingredient_id" in session:
         del session["max_ingredient_id"]
 
-
 def get_index():
     return render_template("index.html", recipes=recipes.get_recipes())
-
 
 def search_recipe():
     query = request.args.get("query", "").strip()
     results = recipes.find_recipes(query) if query else {}
     return render_template("find_recipe.html", query=query, results=results)
-
 
 def show_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
@@ -41,7 +41,6 @@ def show_recipe(recipe_id):
         recipe_instructions=recipe_instructions,
     )
 
-
 def show_new_recipe():
     return render_template(
         "new_recipe.html",
@@ -50,7 +49,6 @@ def show_new_recipe():
         recipe_ingredients={},
         recipe_instructions={},
     )
-
 
 def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     """Handles the logic for saving a new recipe."""
@@ -151,7 +149,6 @@ def get_delete_instruction_id(form_data):
         return int(instruction_id) if instruction_id.isdigit() else None
 
     return None
-
 
 def handle_new_recipe_session_ingredients(
     form_data, recipe_ingredients, recipe_instructions
@@ -402,3 +399,21 @@ def handle_edit_recipe_session_ingredients(
             )
 
     return None
+
+def delete_recipe(recipe_id):
+    single_recipe = recipes.get_recipe(recipe_id)
+    recipe_must_exist(single_recipe)
+    user_ids_must_match(single_recipe["user_id"], session)
+
+    if request.method == "GET":
+        return render_template("remove_recipe.html", recipe=single_recipe)
+
+    if request.method == "POST":
+        if "remove" in request.form:
+            try:
+                recipes.remove_recipe(recipe_id)
+            except sqlite3.IntegrityError:
+                print("VIRHE: reseptin poistaminen epäonnistui")
+            return redirect("/")
+
+        return redirect("/recipe/" + str(recipe_id))
