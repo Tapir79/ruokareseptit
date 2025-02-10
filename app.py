@@ -1,9 +1,6 @@
-import sqlite3
 from flask import Flask
-from flask import abort, redirect, render_template, request, session
+from flask import render_template, request, session
 import config
-import recipes
-import users
 from utils.validations import (
     require_login,
 )
