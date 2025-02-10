@@ -305,50 +305,64 @@ def save_edited_recipe(
 def handle_edit_recipe_session_instructions(
     recipe, form_data, recipe_ingredients, recipe_instructions
 ):
+    """Handles adding and deleting session-based instructions in recipe editing."""
+
+    # Handle Adding a New Instruction
     if "instruction" in request.form and form_data["instruction"] != "":
         errors = validate_new_recipe_form_instructions(form_data)
         if not errors:
             new_id = session["max_instruction_id"]
             session["max_instruction_id"] = int(new_id) + 1
+
             recipe_instructions.append(
                 {"id": new_id, "instruction_name": form_data["instruction_name"]}
             )
             session["recipe_instructions"] = recipe_instructions
-        return render_template(
-            "edit_recipe.html",
-            recipe=recipe,
-            errors=errors,
-            form_data=form_data,
-            recipe_ingredients=recipe_ingredients,
-            recipe_instructions=recipe_instructions,
+
+        return render_edit_recipe(
+            recipe, errors, form_data, recipe_ingredients, recipe_instructions
         )
 
+    # Handle Deleting an Instruction
+    instruction_id_to_remove = get_delete_instruction_id()
+    if instruction_id_to_remove:
+        recipe_instructions = [
+            ins for ins in recipe_instructions if ins["id"] != instruction_id_to_remove
+        ]
+        session["recipe_instructions"] = recipe_instructions
+        session.modified = True
+
+        return render_edit_recipe(
+            recipe, {}, form_data, recipe_ingredients, recipe_instructions
+        )
+
+    return None  # Return None if no action was taken
+
+
+def get_delete_instruction_id():
+    """Extracts the ID of an instruction marked for deletion."""
     delete_instruction_key = next(
         (key for key in request.form.keys() if key.startswith("delete_instruction_")),
         None,
     )
     if delete_instruction_key:
-        instruction_id_to_remove = delete_instruction_key[len("delete_instruction_") :]
-
-        if instruction_id_to_remove.isdigit():
-            instruction_id_to_remove = int(instruction_id_to_remove)
-            recipe_instructions = [
-                ins
-                for ins in recipe_instructions
-                if ins["id"] != instruction_id_to_remove
-            ]
-            session["recipe_instructions"] = recipe_instructions
-            session.modified = True
-            return render_template(
-                "edit_recipe.html",
-                recipe=recipe,
-                errors={},
-                form_data=form_data,
-                recipe_ingredients=recipe_ingredients,
-                recipe_instructions=recipe_instructions,
-            )
-
+        instruction_id = delete_instruction_key[len("delete_instruction_") :]
+        return int(instruction_id) if instruction_id.isdigit() else None
     return None
+
+
+def render_edit_recipe(
+    recipe, errors, form_data, recipe_ingredients, recipe_instructions
+):
+    """Helper function to render the edit recipe page with given data."""
+    return render_template(
+        "edit_recipe.html",
+        recipe=recipe,
+        errors=errors,
+        form_data=form_data,
+        recipe_ingredients=recipe_ingredients,
+        recipe_instructions=recipe_instructions,
+    )
 
 
 def handle_edit_recipe_session_ingredients(
