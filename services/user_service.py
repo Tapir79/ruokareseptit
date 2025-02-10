@@ -1,6 +1,6 @@
 import sqlite3
 from flask import abort, redirect, render_template, request, session
-import users
+import db.users as users
 
 def get_login():
     return render_template("login.html", errors={})

@@ -1,6 +1,6 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 
-import db
+import db.db as db
 
 def get_user(user_id):
     sql = """SELECT users.id, users.username

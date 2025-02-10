@@ -1,6 +1,6 @@
 import sqlite3
 from flask import redirect, render_template, request, session
-import recipes
+import db.recipes as recipes
 from utils.validations import (
     validate_new_recipe_save_form,
     validate_new_recipe_form_instructions,

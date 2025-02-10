@@ -1,4 +1,4 @@
-import db
+import db.db as db
 
 def get_recipes():
     sql = """SELECT id, 
