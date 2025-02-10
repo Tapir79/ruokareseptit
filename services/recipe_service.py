@@ -91,97 +91,6 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         )
 
 
-def handle_new_recipe_session_instructions(
-    form_data, recipe_ingredients, recipe_instructions
-):
-    """Handles the logic for adding and deleting session instructions when creating a new recipe"""
-
-    if "instruction" in request.form and form_data["instruction"] != "":
-        errors = validate_new_recipe_form_instructions(form_data)
-
-        if not errors:
-            new_id = max((instr["id"] for instr in recipe_instructions), default=0) + 1
-            recipe_instructions.append(
-                {"id": new_id, "instruction_name": form_data["instruction_name"]}
-            )
-            session["recipe_instructions"] = recipe_instructions
-
-        return render_template(
-            "new_recipe.html",
-            errors=errors,
-            form_data=form_data,
-            recipe_ingredients=recipe_ingredients,
-            recipe_instructions=recipe_instructions,
-        )
-
-    delete_instruction_key = next(
-        (key for key in request.form.keys() if key.startswith("delete_instruction_")),
-        None,
-    )
-    if delete_instruction_key:
-
-        instruction_id_to_remove = get_delete_instruction_id(form_data)
-
-        if instruction_id_to_remove:
-            recipe_instructions = [
-                ins
-                for ins in recipe_instructions
-                if ins["id"] != instruction_id_to_remove
-            ]
-            session["recipe_instructions"] = recipe_instructions
-            session.modified = True
-
-            return render_template(
-                "new_recipe.html",
-                errors={},
-                form_data=form_data,
-                recipe_ingredients=recipe_ingredients,
-                recipe_instructions=recipe_instructions,
-            )
-
-    return None
-
-
-def get_delete_instruction_id(form_data):
-    """Extracts the ID of an instruction marked for deletion."""
-    delete_instruction_key = next(
-        (key for key in form_data.keys() if key.startswith("delete_instruction_")), None
-    )
-    if delete_instruction_key:
-        instruction_id = delete_instruction_key[len("delete_instruction_") :]
-        return int(instruction_id) if instruction_id.isdigit() else None
-
-    return None
-
-
-def handle_new_recipe_session_ingredients(form_data, recipe_ingredients, recipe_instructions):
-    """Handles adding and deleting session-based ingredients for a new recipe."""
-
-    # Handle Adding a New Ingredient
-    if "ingredient" in request.form and form_data["ingredient"] != "":
-        errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
-        if not errors:
-            new_id = max((ing["id"] for ing in recipe_ingredients), default=0) + 1
-            recipe_ingredients.append({
-                "id": new_id,
-                "name": form_data["name"],
-                "amount": form_data["amount"]
-            })
-            session["recipe_ingredients"] = recipe_ingredients
-
-        return render_new_recipe(errors, form_data, recipe_ingredients, recipe_instructions)
-
-    # Handle Deleting an Ingredient
-    ingredient_id_to_remove = get_delete_ingredient_id(form_data)
-    if ingredient_id_to_remove:
-        recipe_ingredients = [ing for ing in recipe_ingredients if ing["id"] != ingredient_id_to_remove]
-        session["recipe_ingredients"] = recipe_ingredients
-        session.modified = True
-
-        return render_new_recipe({}, form_data, recipe_ingredients, recipe_instructions)
-
-    return None  # Return None if no action was taken
-
 def render_new_recipe(errors, form_data, recipe_ingredients, recipe_instructions):
     """Helper function to render the new recipe page with given data."""
     return render_template(
@@ -189,8 +98,74 @@ def render_new_recipe(errors, form_data, recipe_ingredients, recipe_instructions
         errors=errors,
         form_data=form_data,
         recipe_ingredients=recipe_ingredients,
-        recipe_instructions=recipe_instructions
+        recipe_instructions=recipe_instructions,
     )
+
+
+def handle_new_recipe_session_ingredients(
+    form_data, recipe_ingredients, recipe_instructions
+):
+    """Handles adding and deleting session-based ingredients for a new recipe."""
+
+    # Handle Adding a New Ingredient
+    if "ingredient" in request.form and form_data["ingredient"] != "":
+        errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
+        if not errors:
+            new_id = max((ing["id"] for ing in recipe_ingredients), default=0) + 1
+            recipe_ingredients.append(
+                {"id": new_id, "name": form_data["name"], "amount": form_data["amount"]}
+            )
+            session["recipe_ingredients"] = recipe_ingredients
+
+        return render_new_recipe(
+            errors, form_data, recipe_ingredients, recipe_instructions
+        )
+
+    # Handle Deleting an Ingredient
+    ingredient_id_to_remove = get_delete_ingredient_id(form_data)
+    if ingredient_id_to_remove:
+        recipe_ingredients = [
+            ing for ing in recipe_ingredients if ing["id"] != ingredient_id_to_remove
+        ]
+        session["recipe_ingredients"] = recipe_ingredients
+        session.modified = True
+
+        return render_new_recipe({}, form_data, recipe_ingredients, recipe_instructions)
+
+    return None  # Return None if no action was taken
+
+
+def handle_new_recipe_session_instructions(
+    form_data, recipe_ingredients, recipe_instructions
+):
+    """Handles adding and deleting session-based instructions when creating a new recipe."""
+
+    # Handle Adding a New Instruction
+    if "instruction" in request.form and form_data["instruction"] != "":
+        errors = validate_new_recipe_form_instructions(form_data)
+        if not errors:
+            new_id = max((instr["id"] for instr in recipe_instructions), default=0) + 1
+            recipe_instructions.append(
+                {"id": new_id, "instruction_name": form_data["instruction_name"]}
+            )
+            session["recipe_instructions"] = recipe_instructions
+
+        return render_new_recipe(
+            errors, form_data, recipe_ingredients, recipe_instructions
+        )
+
+    # Handle Deleting an Instruction
+    instruction_id_to_remove = get_delete_instruction_id(form_data)
+    if instruction_id_to_remove:
+        recipe_instructions = [
+            ins for ins in recipe_instructions if ins["id"] != instruction_id_to_remove
+        ]
+        session["recipe_instructions"] = recipe_instructions
+        session.modified = True
+
+        return render_new_recipe({}, form_data, recipe_ingredients, recipe_instructions)
+
+    return None  # Return None if no action was taken
 
 
 def show_edit_recipe(recipe_id):
@@ -384,32 +359,6 @@ def handle_edit_recipe_session_ingredients(
     return None  # Return None if no action was taken
 
 
-def get_delete_ingredient_id(form_data):
-    """Extracts the ID of an ingredient marked for deletion."""
-    delete_ingredient_key = next(
-        (key for key in form_data.keys() if key.startswith("delete_ingredient_")),
-        None,
-    )
-    if delete_ingredient_key:
-        ingredient_id = delete_ingredient_key[len("delete_ingredient_") :]
-        return int(ingredient_id) if ingredient_id.isdigit() else None
-    return None
-
-
-def render_edit_recipe(
-    recipe, errors, form_data, recipe_ingredients, recipe_instructions
-):
-    """Helper function to render the edit recipe page with given data."""
-    return render_template(
-        "edit_recipe.html",
-        recipe=recipe,
-        errors=errors,
-        form_data=form_data,
-        recipe_ingredients=recipe_ingredients,
-        recipe_instructions=recipe_instructions,
-    )
-
-
 def delete_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
@@ -427,3 +376,27 @@ def delete_recipe(recipe_id):
             return redirect("/")
 
         return redirect("/recipe/" + str(recipe_id))
+
+
+def get_delete_ingredient_id(form_data):
+    """Extracts the ID of an ingredient marked for deletion."""
+    delete_ingredient_key = next(
+        (key for key in form_data.keys() if key.startswith("delete_ingredient_")),
+        None,
+    )
+    if delete_ingredient_key:
+        ingredient_id = delete_ingredient_key[len("delete_ingredient_") :]
+        return int(ingredient_id) if ingredient_id.isdigit() else None
+    return None
+
+
+def get_delete_instruction_id(form_data):
+    """Extracts the ID of an instruction marked for deletion."""
+    delete_instruction_key = next(
+        (key for key in form_data.keys() if key.startswith("delete_instruction_")), None
+    )
+    if delete_instruction_key:
+        instruction_id = delete_instruction_key[len("delete_instruction_") :]
+        return int(instruction_id) if instruction_id.isdigit() else None
+
+    return None
