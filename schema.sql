@@ -8,6 +8,7 @@ CREATE TABLE recipes (
     id INTEGER PRIMARY KEY,
     title TEXT,
     description TEXT,
+    cuisine_id INTEGER REFERENCES cuisines,
     user_id INTEGER REFERENCES users
 );
 
@@ -29,3 +30,19 @@ CREATE TABLE recipe_instructions (
     step_number INTEGER NOT NULL,
     recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
 );
+
+CREATE TABLE cuisines (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+);
+
+-- TODO move into separate init db file
+INSERT INTO cuisines (name) VALUES 
+    ('Pohjoismainen'),
+    ('Eurooppalainen'),
+    ('Aasialainen'),
+    ('Lähi-idän keittiö'),
+    ('Afrikkalainen'),
+    ('Latinalaisamerikkalainen'),
+    ('Pohjoisamerikkalainen'),
+    ('Australialainen & Oseanialainen');

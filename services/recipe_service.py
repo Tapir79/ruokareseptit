@@ -44,12 +44,14 @@ def show_recipe(recipe_id):
 
 
 def show_new_recipe():
+    cuisines = recipes.get_cuisines()
     return render_template(
         "new_recipe.html",
         errors={},
         form_data={},
         recipe_ingredients={},
         recipe_instructions={},
+        cuisines=cuisines
     )
 
 
@@ -69,10 +71,22 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
 
     title = form_data["title"]
     description = form_data["description"]
+    cuisine_id = int(form_data["cuisine"])
     user_id = session["user_id"]
 
+    cuisine_check = recipes.cuisine_exists(cuisine_id)
+    if not cuisine_check:
+        print(f"VIRHE: Valittu cuisine_id={cuisine_id} ei ole olemassa!")
+        return render_template(
+            "new_recipe.html",
+            errors={"cuisine": "Valittu ruokakulttuuri ei ole kelvollinen"},
+            form_data=form_data,
+            recipe_ingredients=recipe_ingredients,
+            recipe_instructions=recipe_instructions,
+        )
+
     try:
-        recipe_id = recipes.add_recipe(title, description, user_id)
+        recipe_id = recipes.add_recipe(title, description, cuisine_id, user_id)
         recipes.add_ingredients(recipe_id, recipe_ingredients)
         recipes.add_instructions(recipe_id, recipe_instructions)
 
@@ -83,7 +97,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     except sqlite3.IntegrityError:
         print("VIRHE: reseptin tallennus epäonnistui")
         return render_template(
-            "create_recipe.html",
+            "new_recipe.html",
             errors={"general": "Reseptin tallennus epäonnistui"},
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
@@ -257,7 +271,7 @@ def save_edited_recipe(
     try:
         recipes.edit_recipe(recipe_id, title, description, user_id)
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
-        recipes.edit_or_remove_ingredients(recipe_id, recipe_ingredients)
+        recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         return redirect(f"/recipe/{recipe_id}")
     except sqlite3.IntegrityError:
         print("VIRHE: reseptin päivitys epäonnistui")
