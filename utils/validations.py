@@ -20,7 +20,8 @@ VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT = {
 
 VALIDATION_RULES_NEW_RECIPE = {
     "title": {"type": "string", "max_length": 30, "min_length": 1, "required": True},
-    "description": {"type": "string", "max_length": 1000, "required": True}
+    "description": {"type": "string", "max_length": 1000, "required": True},
+    "cuisine":{"type": "int", "required": True}
 }
 
 from flask import abort
@@ -137,7 +138,6 @@ def validate_new_recipe_form_instructions(form_data):
 
 def validate_new_recipe_save_form(form_data):
     errors = {}
-
     for field, value in form_data.items():
         error = validate_new_recipe_input(field, value)
         if error:

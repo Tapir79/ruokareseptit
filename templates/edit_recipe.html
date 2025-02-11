@@ -19,6 +19,24 @@
     {% endif %}
   </p>
 
+  <p>
+    <label for="cuisine">Ruokakulttuuri:</label>
+    <select name="cuisine" id="cuisine">
+      {% for cuisine in cuisines %}
+      <option value="{{ cuisine.id }}"
+        {% if (form_data and form_data.cuisine | string == cuisine.id | string)
+        or (not form_data and recipe.cuisine_id | string == cuisine.id | string) %}
+          selected
+        {% endif %}>
+        {{ cuisine.name }}
+      </option>
+      {% endfor %}
+    </select>
+    {% if errors.cuisine %}
+    <span style="color: red">{{ errors.cuisine }}</span>
+    {% endif %}
+</p>
+
   <h3>Ainekset</h3>
   {% if recipe_ingredients %}
   <ul>

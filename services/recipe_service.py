@@ -68,6 +68,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
         )
 
     title = form_data["title"]
@@ -190,6 +191,8 @@ def show_edit_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(recipe)
     session["recipe"] = dict(recipe)
+    cuisines = recipes.get_cuisines()
+    session["cuisines"] = [dict(cuisine) for cuisine in cuisines]
     recipe_ingredients = session["recipe_ingredients"] = [
         {
             "ingredient_id": ing["ingredient_id"],
@@ -218,6 +221,7 @@ def show_edit_recipe(recipe_id):
         form_data={},
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
+        cuisines=session["cuisines"],
     )
 
 
@@ -266,14 +270,16 @@ def save_edited_recipe(
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
         )
 
     title = request.form["title"]
     description = request.form["description"]
     user_id = session["user_id"]
+    cuisine_id = form_data["cuisine"]
 
     try:
-        recipes.edit_recipe(recipe_id, title, description, user_id)
+        recipes.edit_recipe(recipe_id, title, description, cuisine_id, user_id)
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
         recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         return redirect(f"/recipe/{recipe_id}")
@@ -331,6 +337,7 @@ def render_edit_recipe(
         form_data=form_data,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
+        cuisines=session["cuisines"],
     )
 
 

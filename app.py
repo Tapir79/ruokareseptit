@@ -100,6 +100,7 @@ def edit_recipe(recipe_id):
     form_data = request.form
     recipe_ingredients = get_updated_session_ingredients(recipe_id, form_data)
     recipe_instructions = get_updated_session_instructions(recipe_id, form_data)
+    cuisines = session["cuisines"]
 
     if "save" in request.form:
         return save_edited_recipe(
@@ -125,6 +126,7 @@ def edit_recipe(recipe_id):
         form_data=form_data,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
+        cuisines=cuisines,
     )
 
 

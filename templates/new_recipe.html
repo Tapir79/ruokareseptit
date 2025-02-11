@@ -25,7 +25,6 @@ endblock %} {% block content %}
   <p>
     <label for="cuisine">Ruokakulttuuri:</label>
     <select name="cuisine" id="cuisine">
-      <option value="" disabled selected>Valitse ruokakulttuuri</option>
       {% for cuisine in cuisines %}
       <option value="{{ cuisine.id }}"
         {% if form_data.cuisine == cuisine.id|string %} selected {% endif %}>

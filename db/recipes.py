@@ -16,6 +16,7 @@ def get_recipe(recipe_id):
                     recipes.title, 
                     recipes.description,
                     recipes.user_id, 
+                    cuisines.id as cuisine_id,
                     cuisines.name as cuisine,
                     users.username 
              FROM recipes JOIN users ON recipes.user_id = users.id
@@ -45,13 +46,13 @@ def add_recipe(title, description, cuisine_id, user_id):
     return last_insert_id
 
 
-# TODO cuisine_id
-def edit_recipe(recipe_id, title, description, user_id):
+def edit_recipe(recipe_id, title, description, cuisine_id, user_id):
     sql = """UPDATE recipes SET title = ?, 
                                 description = ?,
+                                cuisine_id = ?
                             WHERE id = ?
                             AND user_id = ?"""
-    db.execute(sql, [title, description, recipe_id, user_id])
+    db.execute(sql, [title, description, cuisine_id, recipe_id, user_id])
 
 
 def remove_unused_ingredients():
