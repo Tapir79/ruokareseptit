@@ -1,5 +1,6 @@
 import db.db as db
 
+
 def get_recipes():
     sql = """SELECT id, 
                     title, 
@@ -8,6 +9,7 @@ def get_recipes():
              FROM recipes 
              ORDER BY id DESC"""
     return db.query(sql)
+
 
 def get_recipe(recipe_id):
     sql = """SELECT recipes.id, 
@@ -22,6 +24,7 @@ def get_recipe(recipe_id):
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
 
+
 def get_recipe_ingredients(recipe_id):
     sql = """SELECT recipes.id,
                     recipe_ingredients.amount,
@@ -33,12 +36,14 @@ def get_recipe_ingredients(recipe_id):
     result = db.query(sql, [recipe_id])
     return result
 
+
 def add_recipe(title, description, cuisine_id, user_id):
     sql = """INSERT INTO recipes (title, description, cuisine_id, user_id)
              VALUES (?, ?, ?, ?)"""
     db.execute(sql, [title, description, cuisine_id, user_id])
     last_insert_id = db.last_insert_id()
     return last_insert_id
+
 
 # TODO cuisine_id
 def edit_recipe(recipe_id, title, description, user_id):
@@ -55,11 +60,13 @@ def remove_unused_ingredients():
                                     (SELECT ingredient_id FROM recipe_ingredients)"""
     db.execute(sql_unused_ingredients)
 
+
 def remove_recipe(recipe_id):
     sql = """DELETE FROM recipes WHERE id = ?"""
     db.execute(sql, [recipe_id])
 
     remove_unused_ingredients()
+
 
 def find_recipes(query):
     sql = """SELECT recipes.id,
@@ -74,9 +81,11 @@ def find_recipes(query):
     search_term = f"%{ query }%"
     return db.query(sql, [search_term, search_term])
 
+
 def add_ingredients(recipe_id, recipe_ingredients):
     for ingredient in recipe_ingredients:
         add_ingredient(recipe_id, ingredient["name"], ingredient["amount"])
+
 
 def add_ingredient(recipe_id, name, amount):
     # Check if the ingredient exists in the 'ingredients' table
@@ -103,7 +112,10 @@ def add_ingredient(recipe_id, name, amount):
         db.execute(sql_insert_recipe_ingredient, [recipe_id, ingredient_id, amount])
         print(f"Ainesosa '{name}' lisätty reseptiin ID {recipe_id}.")
     else:
-        print(f"Ainesosa '{name}' on jo lisätty reseptiin ID {recipe_id}.")  # Do nothing if already added
+        print(
+            f"Ainesosa '{name}' on jo lisätty reseptiin ID {recipe_id}."
+        )  # Do nothing if already added
+
 
 def edit_ingredient(recipe_id, ingredient_id, new_amount):
     sql_update_amount = """UPDATE recipe_ingredients
@@ -112,6 +124,7 @@ def edit_ingredient(recipe_id, ingredient_id, new_amount):
                            AND ingredient_id = ?"""
     db.execute(sql_update_amount, [new_amount, recipe_id, ingredient_id])
 
+
 def delete_ingredient(recipe_id, ingredient_id):
     sql_delete_recipe_ingredient = """DELETE FROM recipe_ingredients
                                       WHERE recipe_id = ?
@@ -119,15 +132,18 @@ def delete_ingredient(recipe_id, ingredient_id):
     db.execute(sql_delete_recipe_ingredient, [recipe_id, ingredient_id])
     remove_unused_ingredients()
 
+
 def get_recipe_instructions(recipe_id):
     sql = """SELECT id, instruction as instruction_name, step_number, recipe_id FROM recipe_instructions
              WHERE recipe_id = ?
              ORDER BY step_number ASC"""
     return db.query(sql, [recipe_id])
 
+
 def add_instructions(recipe_id, recipe_instructions):
     for instruction in recipe_instructions:
         add_instruction(recipe_id, instruction["instruction_name"])
+
 
 def add_instruction(recipe_id, instruction):
     sql = """SELECT step_number FROM recipe_instructions WHERE recipe_id = ?
@@ -141,11 +157,13 @@ def add_instruction(recipe_id, instruction):
              VALUES (?, ?, ?)"""
     db.execute(sql, [instruction, step_number, recipe_id])
 
+
 def edit_instruction(recipe_id, instruction_id, new_instruction):
     sql_update_instruction = """UPDATE recipe_instructions
                            SET instruction = ?
                            WHERE recipe_id = ? AND id = ?"""
     db.execute(sql_update_instruction, [new_instruction, recipe_id, instruction_id])
+
 
 def delete_instruction(recipe_id, instruction_id):
     sql_delete_instruction = """DELETE FROM recipe_instructions
@@ -166,7 +184,9 @@ def add_edit_or_remove_ingredients(recipe_id, recipe_ingredients):
 
     input_ingredient_ids = {ing["ingredient_id"] for ing in recipe_ingredients}
     deleted_ingredients = [
-        ing for ing in db_ingredients if ing["ingredient_id"] not in input_ingredient_ids
+        ing
+        for ing in db_ingredients
+        if ing["ingredient_id"] not in input_ingredient_ids
     ]
 
     for ingredient in deleted_ingredients:
@@ -175,6 +195,7 @@ def add_edit_or_remove_ingredients(recipe_id, recipe_ingredients):
         edit_ingredient(recipe_id, ingredient["ingredient_id"], ingredient["amount"])
     for ingredient in new_ingredients:
         add_ingredient(recipe_id, ingredient["name"], ingredient["amount"])
+
 
 def add_edit_or_remove_instructions(recipe_id, recipe_instructions):
     db_instructions = get_recipe_instructions(recipe_id)
@@ -187,7 +208,9 @@ def add_edit_or_remove_instructions(recipe_id, recipe_instructions):
         else:
             edited_instructions.append(instr)
 
-    input_instruction_ids = {instr["id"] for instr in recipe_instructions if "id" in instr}
+    input_instruction_ids = {
+        instr["id"] for instr in recipe_instructions if "id" in instr
+    }
     deleted_instructions = [
         instr for instr in db_instructions if instr["id"] not in input_instruction_ids
     ]
@@ -200,9 +223,11 @@ def add_edit_or_remove_instructions(recipe_id, recipe_instructions):
     for instruction in new_instructions:
         add_instruction(recipe_id, instruction["instruction_name"])
 
+
 def get_cuisines():
     """Fetch all cuisines from the database."""
     return db.query("SELECT id, name FROM cuisines")
+
 
 def cuisine_exists(cuisine_id):
     return db.query("SELECT id FROM cuisines WHERE id = ?", [str(cuisine_id)])

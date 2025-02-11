@@ -22,7 +22,7 @@ from services.recipe_service import (
     delete_recipe,
 )
 
-from services.user_service import(
+from services.user_service import (
     get_login,
     user_login,
     user_logout,
@@ -61,6 +61,7 @@ def create_recipe():
     form_data = request.form
     recipe_ingredients = session.get("recipe_ingredients", [])
     recipe_instructions = session.get("recipe_instructions", [])
+    cuisines = session["cuisines"]
 
     if "save" in request.form:
         return save_new_recipe(form_data, recipe_ingredients, recipe_instructions)
@@ -83,6 +84,7 @@ def create_recipe():
         form_data=form_data,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
+        cuisines=cuisines,
     )
 
 

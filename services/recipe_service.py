@@ -45,13 +45,14 @@ def show_recipe(recipe_id):
 
 def show_new_recipe():
     cuisines = recipes.get_cuisines()
+    session["cuisines"] = [dict(cuisine) for cuisine in cuisines]
     return render_template(
         "new_recipe.html",
         errors={},
         form_data={},
         recipe_ingredients={},
         recipe_instructions={},
-        cuisines=cuisines
+        cuisines=session["cuisines"],
     )
 
 
@@ -73,6 +74,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     description = form_data["description"]
     cuisine_id = int(form_data["cuisine"])
     user_id = session["user_id"]
+    cuisines = session["cuisines"]
 
     cuisine_check = recipes.cuisine_exists(cuisine_id)
     if not cuisine_check:
@@ -83,6 +85,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
+            cuisines=cuisines,
         )
 
     try:
@@ -113,6 +116,7 @@ def render_new_recipe(errors, form_data, recipe_ingredients, recipe_instructions
         form_data=form_data,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
+        cuisines=session["cuisines"],
     )
 
 
