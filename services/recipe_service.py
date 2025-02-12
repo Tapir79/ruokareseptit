@@ -19,6 +19,8 @@ def delete_temporary_session_attributes():
         del session["max_instruction_id"]
     if "max_ingredient_id" in session:
         del session["max_ingredient_id"]
+    if "recipe" in session:
+        del session["recipe"]
 
 
 def get_index():
@@ -35,12 +37,30 @@ def show_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
+    recipe_ratings = recipes.get_ratings(recipe_id)
+    session["recipe"] = dict(single_recipe)
+
     return render_template(
         "show_recipe.html",
         recipe=single_recipe,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
+        recipe_ratings = recipe_ratings
     )
+
+def save_rating(recipe_id, form_data, rated_by):
+    comment = form_data["comment"]
+    try:
+        recipes.save_rating(recipe_id, comment, rated_by)
+    except sqlite3.IntegrityError:
+        print("VIRHE: reseptin tallennus epäonnistui")
+        return render_template(
+            "show_recipe.html",
+            errors={"general": "Arvostelun tallennus epäonnistui"},
+            form_data=form_data,
+        )
+
+    return redirect(f"/recipe/{recipe_id}")
 
 
 def show_new_recipe():

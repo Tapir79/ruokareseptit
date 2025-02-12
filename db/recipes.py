@@ -232,3 +232,18 @@ def get_cuisines():
 
 def cuisine_exists(cuisine_id):
     return db.query("SELECT id FROM cuisines WHERE id = ?", [str(cuisine_id)])
+
+
+def save_rating(recipe_id, comment, rated_by):
+    sql = """INSERT INTO ratings (comment, rated_by, recipe_id)
+             VALUES (?, ?, ?)"""
+    db.execute(sql, [comment, rated_by, recipe_id])
+    last_insert_id = db.last_insert_id()
+    return last_insert_id
+
+
+def get_ratings(recipe_id):
+    sql = """SELECT comment, stars, rated_by, recipe_id
+             FROM ratings
+             WHERE recipe_id = ?"""
+    return db.query(sql, [recipe_id])

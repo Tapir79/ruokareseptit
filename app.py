@@ -9,6 +9,7 @@ from services.recipe_service import (
     get_index,
     search_recipe,
     show_recipe,
+    save_rating,
     show_new_recipe,
     save_new_recipe,
     handle_new_recipe_session_instructions,
@@ -45,8 +46,18 @@ def find_recipe():
     return search_recipe()
 
 
-@app.route("/recipe/<int:recipe_id>")
+@app.route("/recipe/<int:recipe_id>", methods=["GET", "POST"])
 def recipe(recipe_id):
+    if request.method == "GET":
+        delete_temporary_session_attributes()
+        return show_recipe(recipe_id)
+
+    logged_in_user = session["user_id"]
+    recipe = session["recipe"]
+    recipe_created_by = recipe["user_id"]
+
+    if logged_in_user != recipe_created_by:
+        save_rating(recipe_id, request.form, logged_in_user)
     return show_recipe(recipe_id)
 
 

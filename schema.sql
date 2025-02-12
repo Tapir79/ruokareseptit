@@ -31,6 +31,14 @@ CREATE TABLE recipe_instructions (
     recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
 );
 
+CREATE TABLE ratings (
+    id INTEGER PRIMARY KEY,
+    comment TEXT,
+    stars INTEGER, -- TODO
+    rated_by INTEGER REFERENCES users,
+    recipe_id INTEGER REFERENCES recipes
+);
+
 CREATE TABLE cuisines (
     id INTEGER PRIMARY KEY,
     name TEXT
