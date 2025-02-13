@@ -20,6 +20,8 @@ def create_user(username, password):
     password_hash = generate_password_hash(password)
     sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
     db.execute(sql, [username, password_hash])
+    last_insert_id = db.last_insert_id()
+    return last_insert_id
 
 
 def check_login(username, password):

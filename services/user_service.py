@@ -69,9 +69,13 @@ def register_user(form_data):
         return render_template("register.html", errors=errors)
 
     try:
-        users.create_user(username, password1)
+        user_id = users.create_user(username, password1)
+        session["user_id"] = user_id
+        session["username"] = username
+        # TODO flash tunnus luotu
+        return redirect("/")
+        
     except sqlite3.IntegrityError:
         errors["username"] = "Tunnus on jo varattu."
         return render_template("register.html", errors=errors)
-    print("Tunnus luotu")
-    return redirect("/")
+    
