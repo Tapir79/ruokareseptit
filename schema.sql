@@ -36,7 +36,7 @@ CREATE TABLE ratings (
     comment TEXT,
     stars INTEGER, -- TODO
     rated_by INTEGER REFERENCES users,
-    recipe_id INTEGER REFERENCES recipes,
+    recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE,
     UNIQUE (rated_by, recipe_id)
 );
 
