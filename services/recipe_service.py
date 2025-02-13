@@ -39,24 +39,45 @@ def show_recipe(recipe_id):
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
     recipe_ratings = recipes.get_ratings(recipe_id)
     session["recipe"] = dict(single_recipe)
+    rating = []
+    if "user_id" in session:
+        user_id = session["user_id"]
+        rating = get_user_rating(recipe_id, user_id)
 
     return render_template(
         "show_recipe.html",
         recipe=single_recipe,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
-        recipe_ratings = recipe_ratings
+        recipe_ratings = recipe_ratings,
+        rating = rating
     )
+
+def get_user_rating(recipe_id, rated_by):
+    result = recipes.get_user_rating(recipe_id, rated_by)
+    if result:
+        return result
+    return None
 
 def save_rating(recipe_id, form_data, rated_by):
     comment = form_data["comment"]
+    existing_rating = recipes.get_user_rating(recipe_id, rated_by)
+
     try:
-        recipes.save_rating(recipe_id, comment, rated_by)
+        if existing_rating:
+            existing_rating_id = existing_rating["id"]
+            recipes.update_rating(existing_rating_id, comment)
+        else:
+            recipes.save_rating(recipe_id, comment, rated_by)
     except sqlite3.IntegrityError:
         print("VIRHE: reseptin tallennus epäonnistui")
+        if existing_rating:
+            action = "päivitys"
+        else:
+            action = "tallennus"
         return render_template(
             "show_recipe.html",
-            errors={"general": "Arvostelun tallennus epäonnistui"},
+            errors={"general": f"Arvostelun {action} epäonnistui"},
             form_data=form_data,
         )
 
