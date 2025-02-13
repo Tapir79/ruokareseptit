@@ -1,3 +1,5 @@
+from flask import abort
+
 
 VALIDATION_RULES_NEW_RECIPE_INGREDIENT_EDIT = {
     "name": {"type": "string", "max_length": 30, "required": True},
@@ -8,14 +10,11 @@ VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT = {
     "instruction_name": {"type": "string", "max_length": 150, "required": True}
 }
 
-
 VALIDATION_RULES_NEW_RECIPE = {
     "title": {"type": "string", "max_length": 30, "min_length": 1, "required": True},
     "description": {"type": "string", "max_length": 1000, "required": True},
     "cuisine":{"type": "int", "required": True}
 }
-
-from flask import abort
 
 def check_required(rules, value):
     if rules.get("required") and not value:
