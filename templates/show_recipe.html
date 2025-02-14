@@ -69,26 +69,27 @@ endblock %} {% block content %}
   <h3>Arvostele resepti:</h3>
 
   <form action="/recipe/{{ recipe.id }}" method="POST">
-    {% if rating %}
-    Kommentti <br />
-    <textarea name="comment" rows="8" cols="60" maxlength="1000">{{rating.comment}}</textarea>
+    {% if rating %} Kommentti <br />
+    <textarea name="comment" rows="8" cols="60" maxlength="1000">
+{{rating.comment}}</textarea
+    >
     <label>
       <input type="submit" value="Muokkaa" />
     </label>
     {% else %}
-    <textarea name="comment" rows="8" cols="60" maxlength="1000">{{ rating.comment }}</textarea>
+    <textarea name="comment" rows="8" cols="60" maxlength="1000">
+{{ rating.comment }}</textarea
+    >
     <label>
       <input type="submit" value="Lähetä" />
     </label>
     {% endif %}
   </form>
-
 </div>
-{% endif %}
-
-{% if recipe_ratings %}
-{% for rating in recipe_ratings %}
-<div>{{ rating.comment}} - {{ rating.username }} - {{ rating.created_at }}</div>
-{% endfor %}
-{% endif %}
-{% block extra_content %}{% endblock %} {% endblock %}
+{% endif %} {% if recipe_ratings %} {% for rating in recipe_ratings %}
+<div>
+  {{ rating.comment}} -
+  <a href="/user/{{ rating.rated_by }}">{{ rating.username }}</a>
+  - {{ rating.created_at }}
+</div>
+{% endfor %} {% endif %} {% block extra_content %}{% endblock %} {% endblock %}
