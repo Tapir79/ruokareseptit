@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block title %} Ruokareseptit - etusivu {% endblock %}
 {% block content %}
+
+{% if not session.username %}
+<h1><a href="/register">Luo tunnus</a> ja lisää omia reseptejä!</h1>
+{% endif %}
+
 <h2>Reseptilista</h2>
 
 <ul>
