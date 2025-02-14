@@ -27,7 +27,7 @@ from services.user_service import (
     get_login,
     user_login,
     user_logout,
-    show_user,
+    show_user_statistics,
     get_user_registration,
     register_user,
 )
@@ -149,7 +149,7 @@ def remove_recipe(recipe_id):
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
-    return show_user(user_id)
+    return show_user_statistics(user_id)
 
 
 @app.route("/login", methods=["GET", "POST"])

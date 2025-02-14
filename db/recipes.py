@@ -26,6 +26,15 @@ def get_recipe(recipe_id):
     return result[0] if result else None
 
 
+def get_recipes_by_user(user_id):
+    sql = """SELECT recipes.id,
+                    recipes.title
+             FROM users JOIN recipes ON users.id = recipes.user_id
+             WHERE users.id = ?"""
+    result = db.query(sql, [user_id])
+    return result if result else None
+
+
 def get_recipe_ingredients(recipe_id):
     sql = """SELECT recipes.id,
                     recipe_ingredients.amount,

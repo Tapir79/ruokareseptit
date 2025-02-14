@@ -1,14 +1,15 @@
 import sqlite3
 from flask import abort, redirect, render_template, request, session
 import db.users as users
+import db.recipes as recipes
 
 def get_login():
     return render_template("login.html", errors={})
 
 
-def show_user(user_id, users):
+def show_user_statistics(user_id):
     user = users.get_user(user_id)
-    user_recipes = users.get_user_recipes(user_id)
+    user_recipes = recipes.get_recipes_by_user(user_id)
     if not user_recipes:
         user_recipes = {}
     if not user:
