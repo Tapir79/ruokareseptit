@@ -274,9 +274,11 @@ def get_user_rating(recipe_id, rated_by):
     return result[0] if result else None
 
 
-def update_rating(rating_id, comment):
-    query = """UPDATE ratings SET comment = ?
+def update_rating(rating_id, comment, stars):
+    query = """UPDATE ratings
+               SET comment = ?,
+                   stars = ?
                WHERE id = ?"""
-    db.execute(query, (comment, rating_id))
+    db.execute(query, (comment, stars, rating_id))
     last_insert_id = db.last_insert_id()
     return last_insert_id

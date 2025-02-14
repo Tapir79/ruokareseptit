@@ -61,12 +61,13 @@ def get_user_rating(recipe_id, rated_by):
 
 def save_rating(recipe_id, form_data, rated_by):
     comment = form_data["comment"]
+    stars = form_data["stars"]
     existing_rating = recipes.get_user_rating(recipe_id, rated_by)
 
     try:
         if existing_rating:
             existing_rating_id = existing_rating["id"]
-            recipes.update_rating(existing_rating_id, comment)
+            recipes.update_rating(existing_rating_id, comment, stars)
         else:
             recipes.save_rating(recipe_id, comment, rated_by)
     except sqlite3.IntegrityError:
