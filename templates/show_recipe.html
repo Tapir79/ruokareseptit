@@ -88,7 +88,7 @@ endblock %} {% block content %}
 
 {% if recipe_ratings %}
 {% for rating in recipe_ratings %}
-<div>{{ rating.comment}}</div>
+<div>{{ rating.comment}} - {{ rating.username }} - {{ rating.created_at }}</div>
 {% endfor %}
 {% endif %}
 {% block extra_content %}{% endblock %} {% endblock %}

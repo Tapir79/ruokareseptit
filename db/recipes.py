@@ -243,20 +243,31 @@ def save_rating(recipe_id, comment, rated_by):
 
 
 def get_ratings(recipe_id):
-    sql = """SELECT comment, stars, rated_by, recipe_id
+    sql = """SELECT
+             ratings.comment,
+             ratings.stars,
+             ratings.rated_by,
+             ratings.recipe_id,
+             ratings.created_at,
+             users.username
              FROM ratings
-             WHERE recipe_id = ?"""
+             JOIN users ON ratings.rated_by = users.id
+             WHERE recipe_id = ?
+             ORDER BY created_at DESC"""
     return db.query(sql, [recipe_id])
 
 
 def get_user_rating(recipe_id, rated_by):
-    query = "SELECT id, comment, stars FROM ratings WHERE recipe_id = ? AND rated_by = ?"
+    query = """SELECT id, comment, stars
+               FROM ratings
+               WHERE recipe_id = ? AND rated_by = ?"""
     result = db.query(query, (recipe_id, rated_by))
     return result[0] if result else None
 
 
 def update_rating(rating_id, comment):
-    query = "UPDATE ratings SET comment = ? WHERE id = ?"
+    query = """UPDATE ratings SET comment = ?
+               WHERE id = ?"""
     db.execute(query, (comment, rating_id))
     last_insert_id = db.last_insert_id()
     return last_insert_id

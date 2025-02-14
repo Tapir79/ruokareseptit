@@ -37,6 +37,7 @@ CREATE TABLE ratings (
     stars INTEGER, -- TODO
     rated_by INTEGER REFERENCES users,
     recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE,
+    created_at TEXT DEFAULT (DATETIME('now')),
     UNIQUE (rated_by, recipe_id)
 );
 
