@@ -32,7 +32,7 @@ endblock %} {% block content %}
     </div>
     {% endif %}
   </div>
-  <p class="recipe-description">{{ recipe.description }}</p>
+  <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
   <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>
   <p class="recipe-author">
     Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
