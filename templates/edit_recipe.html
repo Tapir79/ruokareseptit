@@ -5,14 +5,14 @@
 <h1>Muokkaa reseptiä</h1>
 <form action="/edit_recipe/{{ recipe.id }}" method="post">
   <p>
-    Otsikko: <br />
+    <label for="title">Otsikko:</label>
     <input type="text" name="title" value="{{ form_data.title if form_data and 'title' else recipe.title }}" maxlength="30" />
     {% if errors.title %}
     <span style="color: red">{{ errors.title }}</span>
     {% endif %}
   </p>
   <p>
-    Kuvaus: <br />
+    <label for="description">Kuvaus:</label>
     <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' else recipe.description }}</textarea>
     {% if errors.description %}
     <span style="color: red">{{ errors.description }}</span>
@@ -42,7 +42,8 @@
   <ul>
     {% for ingredient in recipe_ingredients %}
     <li>
-      {{ ingredient.name }} - <input
+      <label for="ingredient_{{ ingredient.ingredient_id }}">{{ ingredient.name }}</label>
+      <input
       type="text"
       name="ingredient_{{ ingredient.ingredient_id }}"
       maxlength="20"
@@ -57,7 +58,7 @@
   {% endif %}
 
   <p>
-    Aineksen nimi: <br />
+    <label for="name">Aineksen nimi:</label>
     {% if errors.name or errors.amount %}
     <input
       type="text"
@@ -71,7 +72,7 @@
     {% endif %}
   </p>
   <p>
-    Määrä: <br />
+    <label for="amount">Määrä:</label>
     {% if errors.name or errors.amount %}
     <input
       type="text"
@@ -87,11 +88,12 @@
   <input type="submit" name="ingredient" value="Lisää uusi aines" />
 </p>
 
-  <h3>Ohje</h3>
+  <h3>Ohjeet</h3>
   {% if recipe_instructions %}
   <ul>
     {% for instruction in recipe_instructions %}
     <li>
+      <label for="instruction_{{ instruction.id }}">Ohje {{ instruction.id }}</label>
         <input type="text" name="instruction_{{ instruction.id }}" value="{{ instruction.instruction_name }}" maxlength="20" />
       <label>
         <input type="submit" name="delete_instruction_{{ instruction.id }}" value="Poista" />
@@ -103,6 +105,7 @@
 
    <p>
   {% if errors.instruction_name %}
+  <label for="instruction_name">Ohje:</label>
   <input
     type="text"
     name="instruction_name"
@@ -111,6 +114,7 @@
   />
   <span style="color: red">{{ errors.instruction_name }}</span>
   {% else %}
+  <label for="instruction_name">Uusi ohje:</label>
   <input type="text" name="instruction_name" maxlength="150" />
   {% endif %}
 </p>
