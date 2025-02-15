@@ -13,7 +13,7 @@
 * Käyttäjä pystyy suodattamaan reseptejä luokittelun perusteella. []
 * Käyttäjä pystyy antamaan reseptille kommentin [X]
 * Reseptistä näytetään kommentit [X]
-* Käyttäjä pystyy antamaan reseptille arvosanan. []
+* Käyttäjä pystyy antamaan reseptille arvosanan. [X]
 * Reseptistä näytetään keskimääräinen arvosana. []
 * Käyttäjä pystyy suodattamaan ja järjestämään reseptejä arvosanan perusteella. []
 * Käyttäjä voi lisätä kuvan reseptiin []
