@@ -18,6 +18,7 @@ def get_recipe(recipe_id):
                     recipes.user_id, 
                     cuisines.id as cuisine_id,
                     cuisines.name as cuisine,
+                    users.id as user_id,
                     users.username,
                     (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
              FROM recipes JOIN users ON recipes.user_id = users.id
@@ -87,15 +88,25 @@ def find_recipes(query):
                     recipes.title,
                     recipes.description,
                     recipes.user_id,
-                    users.username
+                    users.username,
+                    cuisines.name,
+                    (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
              FROM recipes JOIN users ON recipes.user_id = users.id
-             WHERE recipes.title LIKE ?
+             JOIN cuisines ON recipes.cuisine_id = cuisines.id
+             LEFT JOIN ratings ON recipes.id = ratings.recipe_id
+             WHERE (recipes.title LIKE ?
              OR recipes.description LIKE ?
              OR recipes.id IN (SELECT recipe_ingredients.recipe_id
                               FROM recipe_ingredients
                               JOIN ingredients
                               ON ingredients.id = recipe_ingredients.ingredient_id
-                              WHERE ingredients.name LIKE ?)
+                              WHERE ingredients.name LIKE ?))
+             GROUP BY recipes.id,
+                    recipes.title,
+                    recipes.description,
+                    recipes.user_id,
+                    users.username,
+                    cuisines.name
              ORDER BY recipes.id DESC"""
 
     search_term = f"%{ query }%"
