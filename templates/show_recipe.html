@@ -32,6 +32,9 @@ endblock %} {% block content %}
     </div>
     {% endif %}
   </div>
+  <p>
+    Tähdet: {{ recipe.avg_rating }}
+  </p>
   <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
   <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>
   <p class="recipe-author">
@@ -78,16 +81,17 @@ endblock %} {% block content %}
       <option value="4" {% if selected_stars == 4 %}selected{% endif %}>4</option>
       <option value="5" {% if selected_stars == 5 %}selected{% endif %}>5</option>
   </select>
-    {% if rating %}
-    <label for="comment">Kommentti:</label>
-    <textarea name="comment" rows="8" cols="60" maxlength="1000">
-{{rating.comment}}</textarea
-    >
+
+    <p> <label for="comment">Kommentti:</label>
+      {% if rating %}
+    <textarea name="comment" rows="8" cols="60" maxlength="1000">{{ rating.comment }}
+    </textarea>
     <label>
       <input type="submit" value="Muokkaa" />
     </label>
+  </p>
     {% else %}
-    <textarea name="comment" rows="8" cols="60" maxlength="1000">
+   <textarea name="comment" rows="8" cols="60" maxlength="1000"></p>
 {{ rating.comment }}</textarea
     >
     <label>

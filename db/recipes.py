@@ -18,9 +18,11 @@ def get_recipe(recipe_id):
                     recipes.user_id, 
                     cuisines.id as cuisine_id,
                     cuisines.name as cuisine,
-                    users.username 
+                    users.username,
+                    (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
              FROM recipes JOIN users ON recipes.user_id = users.id
              JOIN cuisines ON recipes.cuisine_id = cuisines.id
+             LEFT JOIN ratings ON recipes.id = ratings.recipe_id
              WHERE recipes.id = ?"""
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
