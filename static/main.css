@@ -98,6 +98,14 @@ nav a:hover {
   gap: 10px;
 }
 
+.recipe-description {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 4px solid rgba(186, 186, 189, 0.313);
+  font-style: italic;
+  margin: 10px 0;
+}
+
 /* Recipe Buttons */
 .recipe-buttons {
   display: flex;
@@ -131,4 +139,11 @@ nav a:hover {
 .recipe-column {
   flex: 1;
   padding: 10px;
+}
+
+.stars-select, .comment-box {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }

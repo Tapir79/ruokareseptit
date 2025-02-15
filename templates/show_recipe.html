@@ -7,34 +7,17 @@ endblock %} {% block content %}
 
     {% if session.user_id == recipe.user_id %}
     <div class="recipe-buttons">
-      <a
-        href="/edit_recipe/{{ recipe.id }}"
-        class="btn {{ edit_disabled|default('') }}"
-      >
-        <img
-          src="{{ url_for('static', filename='icons/edit.svg') }}"
-          width="20"
-          height="20"
-          alt="Muokkaa"
-        />
+      <a href="/edit_recipe/{{ recipe.id }}" class="btn {{ edit_disabled|default('') }}">
+        <img src="{{ url_for('static', filename='icons/edit.svg') }}" width="20" height="20" alt="Muokkaa" />
       </a>
-      <a
-        href="/remove_recipe/{{ recipe.id }}"
-        class="btn {{ edit_disabled|default('') }}"
-      >
-        <img
-          src="{{ url_for('static', filename='icons/delete.svg') }}"
-          width="20"
-          height="20"
-          alt="Poista"
-        />
+      <a href="/remove_recipe/{{ recipe.id }}" class="btn {{ edit_disabled|default('') }}">
+        <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
       </a>
     </div>
     {% endif %}
   </div>
-  <p>
-    Tähdet: {{ recipe.avg_rating }}
-  </p>
+  <p class="recipe-stars">Tähdet: <strong>{{ recipe.avg_rating }}</strong></p>
+
   <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
   <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>
   <p class="recipe-author">
@@ -73,14 +56,14 @@ endblock %} {% block content %}
 
   <form action="/recipe/{{ recipe.id }}" method="POST">
     <label for="stars">Tähdet:</label>
-    <select name="stars" id="stars">
+    <select name="stars" id="stars" class="stars-select">
       {% set selected_stars = rating.stars if rating and rating.stars else 5 %}
-      <option value="1" {% if selected_stars == 1 %}selected{% endif %}>1</option>
-      <option value="2" {% if selected_stars == 2 %}selected{% endif %}>2</option>
-      <option value="3" {% if selected_stars == 3 %}selected{% endif %}>3</option>
-      <option value="4" {% if selected_stars == 4 %}selected{% endif %}>4</option>
-      <option value="5" {% if selected_stars == 5 %}selected{% endif %}>5</option>
-  </select>
+      {% for i in range(1, 6) %}
+      <option value="{{ i }}" {% if selected_stars == i %}selected{% endif %}>
+        {{ i }}
+      </option>
+      {% endfor %}
+    </select>
 
     <p> <label for="comment">Kommentti:</label>
       {% if rating %}
