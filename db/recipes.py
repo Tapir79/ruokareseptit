@@ -87,11 +87,17 @@ def find_recipes(query):
                     recipes.user_id,
                     users.username
              FROM recipes JOIN users ON recipes.user_id = users.id
-             WHERE recipes.title LIKE ? OR recipes.description LIKE ?
+             WHERE recipes.title LIKE ?
+             OR recipes.description LIKE ?
+             OR recipes.id IN (SELECT recipe_ingredients.recipe_id
+                              FROM recipe_ingredients
+                              JOIN ingredients
+                              ON ingredients.id = recipe_ingredients.ingredient_id
+                              WHERE ingredients.name LIKE ?)
              ORDER BY recipes.id DESC"""
 
     search_term = f"%{ query }%"
-    return db.query(sql, [search_term, search_term])
+    return db.query(sql, [search_term, search_term, search_term])
 
 
 def add_ingredients(recipe_id, recipe_ingredients):
