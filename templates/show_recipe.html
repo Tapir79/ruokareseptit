@@ -16,7 +16,14 @@ endblock %} {% block content %}
     </div>
     {% endif %}
   </div>
-  <p class="recipe-stars">Tähdet: <strong>{{ recipe.avg_rating }}</strong></p>
+  <p>
+    {% for i in range(0,stars) %}
+    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
+    {% endfor %}
+    {% for i in range(0,5-stars) %}
+    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
+    {% endfor %}
+  </p>
 
   <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
   <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>

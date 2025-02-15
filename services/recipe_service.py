@@ -40,6 +40,10 @@ def show_recipe(recipe_id):
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
     recipe_ratings = recipes.get_ratings(recipe_id)
     session["recipe"] = dict(single_recipe)
+    stars = single_recipe["avg_rating"]
+    if not stars:
+        stars = 0
+
     rating = []
     if "user_id" in session:
         user_id = session["user_id"]
@@ -51,7 +55,8 @@ def show_recipe(recipe_id):
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
         recipe_ratings = recipe_ratings,
-        rating = rating
+        rating = rating,
+        stars = int(stars),
     )
 
 def get_user_rating(recipe_id, rated_by):
