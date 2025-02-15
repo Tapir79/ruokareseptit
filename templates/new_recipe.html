@@ -3,7 +3,7 @@ endblock %} {% block content %}
 <h1>Uusi resepti</h1>
 <form action="/create_recipe" method="post">
   <p>
-    Otsikko: <br />
+    <label for="title">Otsikko:</label>
     <input
       type="text"
       name="title"
@@ -15,7 +15,7 @@ endblock %} {% block content %}
     {% endif %}
   </p>
   <p>
-    Kuvaus: <br />
+    <label for="description">Kuvaus:</label>
     <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
     {% if errors.description %}
     <span style="color: red">{{ errors.description }}</span>
@@ -52,7 +52,7 @@ endblock %} {% block content %}
   {% endif %}
 
   <p>
-    Aineksen nimi: <br />
+    <label for="name">Aineksen nimi:</label>
     {% if errors.name or errors.amount %}
     <input
       type="text"
@@ -66,7 +66,7 @@ endblock %} {% block content %}
     {% endif %}
   </p>
   <p>
-    Määrä: <br />
+    <label for="amount">Määrä:</label>
     {% if errors.name or errors.amount %}
     <input
       type="text"
@@ -94,8 +94,10 @@ endblock %} {% block content %}
     {% endfor %}
   </ul>
   {% endif %}
+
   <p>
   {% if errors.instruction_name %}
+  <label for="instruction_name">Ohje:</label>
   <input
     type="text"
     name="instruction_name"
@@ -104,12 +106,12 @@ endblock %} {% block content %}
   />
   <span style="color: red">{{ errors.instruction_name }}</span>
   {% else %}
+  <label for="instruction_name">Uusi ohje:</label>
   <input type="text" name="instruction_name" maxlength="150" />
   {% endif %}
 </p>
   <input type="submit" name="instruction" value="Lisää uusi ohje" />
 </p>
-
   <input type="submit" name="save" value="Luo resepti" />
 </form>
 {% endblock %}
