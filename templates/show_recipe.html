@@ -17,12 +17,21 @@ endblock %} {% block content %}
     {% endif %}
   </div>
   <p>
-    {% for i in range(0,stars) %}
+    {% if recipe.avg_rating %}
+    {% for i in range(0, recipe.avg_rating) %}
     <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
     {% endfor %}
-    {% for i in range(0,5-stars) %}
+    {% for i in range(0, 5-recipe.avg_rating) %}
     <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
     {% endfor %}
+    {% else %}
+    {% for i in range(0, 0) %}
+    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
+    {% endfor %}
+    {% for i in range(0, 5) %}
+    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
+    {% endfor %}
+    {% endif %}
   </p>
 
   <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>

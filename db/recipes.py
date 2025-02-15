@@ -90,6 +90,7 @@ def find_recipes(query):
                     recipes.user_id,
                     users.username,
                     cuisines.name,
+                    -- TODO coaslesce for sqlite if null then return 0 
                     (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
              FROM recipes JOIN users ON recipes.user_id = users.id
              JOIN cuisines ON recipes.cuisine_id = cuisines.id
