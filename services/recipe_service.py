@@ -35,6 +35,7 @@ def search_recipe():
 
 def show_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
+    recipe_must_exist(single_recipe)
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
     recipe_ratings = recipes.get_ratings(recipe_id)
@@ -54,6 +55,8 @@ def show_recipe(recipe_id):
     )
 
 def get_user_rating(recipe_id, rated_by):
+    single_recipe = recipes.get_recipe(recipe_id)
+    recipe_must_exist(single_recipe)
     result = recipes.get_user_rating(recipe_id, rated_by)
     if result:
         return result
@@ -148,7 +151,29 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
         )
+
+    except sqlite3.DatabaseError as e:
+        return render_template(
+           "new_recipe.html",
+            errors={"general": "Tietokantavirhe. Yritä myöhemmin uudelleen"},
+            form_data=form_data,
+            recipe_ingredients=recipe_ingredients,
+            recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
+        )
+
+    except Exception as e:
+        return render_template(
+            "new_recipe.html",
+            errors={"general": "Odottamaton virhe. Yritä myöhemmin uudelleen."},
+            form_data=form_data,
+            recipe_ingredients=recipe_ingredients,
+            recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
+        )
+
 
 
 def render_new_recipe(errors, form_data, recipe_ingredients, recipe_instructions):
@@ -303,6 +328,9 @@ def get_updated_session_instructions(recipe_id, form_data):
 def save_edited_recipe(
     recipe, form_data, recipe_ingredients, recipe_instructions, recipe_id
 ):
+    single_recipe = recipes.get_recipe(recipe_id)
+    recipe_must_exist(single_recipe)
+
     errors = validate_new_recipe_save_form(form_data)
     if errors:
         return render_template(
@@ -325,10 +353,39 @@ def save_edited_recipe(
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
         recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         return redirect(f"/recipe/{recipe_id}")
-    except sqlite3.IntegrityError:
-        print("VIRHE: reseptin päivitys epäonnistui")
 
-    return get_index()
+    except sqlite3.IntegrityError:
+        return render_template(
+            "edit_recipe.html",
+            recipe=recipe,
+            errors={"general": "Päivitys epäonnistui. Tarkista tiedot ja yritä uudelleen."},
+            form_data=form_data,
+            recipe_ingredients=recipe_ingredients,
+            recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
+        )
+
+    except sqlite3.DatabaseError as e:
+        return render_template(
+           "edit_recipe.html",
+            recipe=recipe,
+            errors={"general": "Tietokantavirhe. Yritä myöhemmin uudelleen"},
+            form_data=form_data,
+            recipe_ingredients=recipe_ingredients,
+            recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
+        )
+
+    except Exception as e:
+        return render_template(
+            "edit_recipe.html",
+            recipe=recipe,
+            errors={"general": "Odottamaton virhe. Yritä myöhemmin uudelleen."},
+            form_data=form_data,
+            recipe_ingredients=recipe_ingredients,
+            recipe_instructions=recipe_instructions,
+            cuisines=session["cuisines"],
+        )
 
 
 def handle_edit_recipe_session_instructions(

@@ -58,6 +58,13 @@
     </nav>
 
     <!-- Main Content Section -->
-    <main class="site-content">{% block content %}{% endblock %}</main>
+    <main class="site-content">
+      {% if errors and errors.general %}
+      <div class="error-message">
+        <p>{{ errors.general }}</p>
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
   </body>
 </html>
