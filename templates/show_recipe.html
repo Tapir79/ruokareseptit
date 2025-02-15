@@ -69,7 +69,7 @@ endblock %} {% block content %}
   <h3>Arvostele resepti:</h3>
 
   <form action="/recipe/{{ recipe.id }}" method="POST">
-    Tähdet <br/>
+    <label for="stars">Tähdet:</label>
     <select name="stars" id="stars">
       {% set selected_stars = rating.stars if rating and rating.stars else 5 %}
       <option value="1" {% if selected_stars == 1 %}selected{% endif %}>1</option>
@@ -79,7 +79,7 @@ endblock %} {% block content %}
       <option value="5" {% if selected_stars == 5 %}selected{% endif %}>5</option>
   </select>
     {% if rating %}
-    Kommentti <br />
+    <label for="comment">Kommentti:</label>
     <textarea name="comment" rows="8" cols="60" maxlength="1000">
 {{rating.comment}}</textarea
     >
