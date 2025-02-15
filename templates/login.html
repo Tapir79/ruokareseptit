@@ -10,14 +10,14 @@
 <h1><a href="/register">Luo tunnus</a> ja lisää omia reseptejä!</h1>
 <form action="/login" method="post">
   <p>
-    Tunnus: <br />
+    <label for="username">Tunnus:</label>
     <input type="text" name="username" required />
       {% if errors.username %}
       <span style="color: red;">{{ errors.username }}</span>
       {% endif %}
   </p>
   <p>
-    Salasana: <br />
+    <label for="password">Salasana:</label>
     <input type="password" name="password" required />
     {% if errors.password %}
     <span style="color: red;">{{ errors.password }}</span>
