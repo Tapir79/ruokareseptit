@@ -141,9 +141,16 @@ nav a:hover {
   padding: 10px;
 }
 
-.stars-select, .comment-box {
+.stars-select {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+
+.comment-box {
+  width: 100%; 
+  max-width: 1000px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
 }

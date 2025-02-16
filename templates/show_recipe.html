@@ -71,7 +71,7 @@ endblock %} {% block content %}
   <h3>Arvostele resepti:</h3>
 
   <form action="/recipe/{{ recipe.id }}" method="POST">
-    <label for="stars">Tähdet:</label>
+    <p><label for="stars">Tähdet:</label></p>
     <select name="stars" id="stars" class="stars-select">
       {% set selected_stars = rating.stars if rating and rating.stars else 5 %}
       {% for i in range(1, 6) %}
@@ -81,16 +81,19 @@ endblock %} {% block content %}
       {% endfor %}
     </select>
 
-    <p> <label for="comment">Kommentti:</label>
+    <p><label for="comment">Kommentti:</label></p>
       {% if rating %}
-    <textarea name="comment" rows="8" cols="60" maxlength="1000">{{ rating.comment }}
+    <textarea name="comment" rows="8" class="comment-box">{{ rating.comment }}
     </textarea>
-    <label>
-      <input type="submit" value="Muokkaa" />
-    </label>
-  </p>
+    <p>
+      <label>
+        <input type="submit" value="Muokkaa" />
+      </label>
+    </p>
+    
+
     {% else %}
-   <textarea name="comment" rows="8" cols="60" maxlength="1000"></p>
+   <textarea name="comment" rows="8" class="comment-box">
 {{ rating.comment }}</textarea
     >
     <label>
