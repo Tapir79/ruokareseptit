@@ -90,17 +90,17 @@
 
   <h3>Ohjeet</h3>
   {% if recipe_instructions %}
-  <ul>
+  <ol>
     {% for instruction in recipe_instructions %}
     <li>
-      <label for="instruction_{{ instruction.id }}">Ohje {{ instruction.id }}</label>
+      <label for="instruction_{{ instruction.id }}">ohje</label>
         <input type="text" name="instruction_{{ instruction.id }}" value="{{ instruction.instruction_name }}" maxlength="20" />
       <label>
         <input type="submit" name="delete_instruction_{{ instruction.id }}" value="Poista" />
       </label>
     </li>
     {% endfor %}
-  </ul>
+  </ol>
   {% endif %}
 
    <p>
