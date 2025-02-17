@@ -3,6 +3,8 @@ from flask import render_template, request, session
 import config
 from utils.validations import (
     require_login,
+    user_owns_the_recipe,
+    recipe_must_exist,
 )
 from services.recipe_service import (
     delete_temporary_session_attributes,
@@ -108,6 +110,12 @@ def edit_recipe(recipe_id):
         return show_edit_recipe(recipe_id)
 
     recipe = session["recipe"]
+    recipe_must_exist(recipe)
+
+    recipe_created_by = recipe["user_id"]
+    logged_in_user = session["user_id"]
+    user_owns_the_recipe(logged_in_user, recipe_created_by)
+
     form_data = request.form
     recipe_ingredients = get_updated_session_ingredients(recipe_id, form_data)
     recipe_instructions = get_updated_session_instructions(recipe_id, form_data)

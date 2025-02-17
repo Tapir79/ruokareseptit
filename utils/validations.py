@@ -124,3 +124,7 @@ def recipe_must_exist(recipe):
 def require_login(session):
     if "user_id" not in session:
         abort(403)
+
+def user_owns_the_recipe(logged_in_user, recipe_created_by):
+    if logged_in_user != recipe_created_by:
+        abort(403)

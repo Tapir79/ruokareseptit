@@ -6,6 +6,7 @@ from utils.validations import (
     validate_recipe_form_instructions,
     validate_recipe_form_ingredients,
     recipe_must_exist,
+    user_owns_the_recipe
 )
 from utils.validations import user_ids_must_match
 import html
@@ -340,8 +341,13 @@ def save_edited_recipe(
 ):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
+    recipe_created_by = recipe["user_id"]
+    logged_in_user = session["user_id"]
+
+    user_owns_the_recipe(logged_in_user, recipe_created_by)
 
     errors = validate_recipe_save_form(form_data)
+
     if errors:
         return render_template(
             "edit_recipe.html",
