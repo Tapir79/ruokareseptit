@@ -262,7 +262,10 @@ def get_cuisines():
 
 
 def cuisine_exists(cuisine_id):
-    return db.query("SELECT id FROM cuisines WHERE id = ?", [str(cuisine_id)])
+    sql = "SELECT EXISTS (SELECT 1 FROM cuisines WHERE id = ?)"
+    result = db.query(sql, [cuisine_id])
+
+    return result[0][0] == 1
 
 
 def save_rating(recipe_id, comment, rated_by):
