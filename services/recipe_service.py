@@ -8,6 +8,7 @@ from utils.validations import (
     recipe_must_exist,
 )
 from utils.validations import user_ids_must_match
+import html
 
 
 def delete_temporary_session_attributes():
@@ -66,7 +67,7 @@ def get_user_rating(recipe_id, rated_by):
 
 
 def save_rating(recipe_id, form_data, rated_by):
-    comment = form_data["comment"]
+    comment = html.escape(form_data["comment"])
     stars = form_data["stars"]
     existing_rating = recipes.get_user_rating(recipe_id, rated_by)
 
@@ -119,8 +120,8 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
             cuisines=session["cuisines"],
         )
 
-    title = form_data["title"]
-    description = form_data["description"]
+    title = html.escape(form_data["title"])
+    description = html.escape(form_data["description"])
     cuisine_id = int(form_data["cuisine"])
     user_id = session["user_id"]
     cuisines = session["cuisines"]
@@ -273,7 +274,10 @@ def show_edit_recipe(recipe_id):
     ]
 
     recipe_instructions = session["recipe_instructions"] = [
-        {"id": instr["id"], "instruction_name": instr["instruction_name"]}
+        {
+            "id": instr["id"],
+            "instruction_name": instr["instruction_name"]
+        }
         for instr in recipes.get_recipe_instructions(recipe_id)
     ]
 
@@ -315,7 +319,10 @@ def get_updated_session_ingredients(recipe_id, form_data):
 
 def get_updated_session_instructions(recipe_id, form_data):
     recipe_instructions = session.get("recipe_instructions") or [
-        {"id": instr["id"], "instruction_name": instr["instruction_name"]}
+        {
+            "id": instr["id"],
+            "instruction_name": instr["instruction_name"]
+        }
         for instr in recipes.get_recipe_instructions(recipe_id)
     ]
 
@@ -346,8 +353,8 @@ def save_edited_recipe(
             cuisines=session["cuisines"],
         )
 
-    title = request.form["title"]
-    description = request.form["description"]
+    title = html.escape(request.form["title"])
+    description = html.escape(request.form["description"])
     user_id = session["user_id"]
     cuisine_id = form_data["cuisine"]
 
