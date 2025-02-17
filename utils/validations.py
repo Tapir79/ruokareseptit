@@ -16,6 +16,17 @@ VALIDATION_RULES_NEW_RECIPE = {
     "cuisine":{"type": "int", "required": True}
 }
 
+def check_type(rules, value):
+    expected_type = rules.get("type")
+    if expected_type == "string" and not isinstance(value, str):
+        return "Arvon on oltava tekstiä."
+    if expected_type == "int":
+        try:
+            int(value)  # Try converting to int
+        except ValueError:
+            return "Arvon on oltava kokonaisluku."
+
+
 def check_required(rules, value):
     if rules.get("required") and not value:
         return f"pakollinen kenttä. Anna jokin arvo."
@@ -29,7 +40,7 @@ def check_already_added_ingredient(value, recipe_ingredients):
         return f"{value} on jo lisätty."
 
 
-def validate_new_recipe_instruction_input(field_name, value):
+def validate_recipe_instruction_input(field_name, value):
 
     rules = VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT.get(field_name)
 
@@ -39,10 +50,11 @@ def validate_new_recipe_instruction_input(field_name, value):
 
     return (
         check_required(rules, value) or
-        check_max_length(rules, value)
+        check_max_length(rules, value) or
+        check_type(rules, value)
     )
 
-def validate_new_recipe_input(field_name, value):
+def validate_recipe_input(field_name, value):
 
     rules = VALIDATION_RULES_NEW_RECIPE.get(field_name)
 
@@ -52,10 +64,11 @@ def validate_new_recipe_input(field_name, value):
 
     return (
         check_required(rules, value) or
-        check_max_length(rules, value)
+        check_max_length(rules, value) or
+        check_type(rules, value)
     )
 
-def validate_new_recipe_ingredient_input(field_name, value, recipe_ingredients=[]):
+def validate_recipe_ingredient_input(field_name, value, recipe_ingredients=[]):
 
     rules = VALIDATION_RULES_NEW_RECIPE_INGREDIENT_EDIT.get(field_name)
 
@@ -66,33 +79,34 @@ def validate_new_recipe_ingredient_input(field_name, value, recipe_ingredients=[
     return (
         check_already_added_ingredient(value, recipe_ingredients) or
         check_required(rules, value) or
-        check_max_length(rules, value)
+        check_max_length(rules, value) or
+        check_type(rules, value)
     )
 
-def validate_new_recipe_form_ingredients(form_data, recipe_ingredients=[]):
+def validate_recipe_form_ingredients(form_data, recipe_ingredients=[]):
     errors = {}
 
     for field, value in form_data.items():
-        error = validate_new_recipe_ingredient_input(field, value, recipe_ingredients)
+        error = validate_recipe_ingredient_input(field, value, recipe_ingredients)
         if error:
             errors[field] = error
 
     return errors
 
-def validate_new_recipe_form_instructions(form_data):
+def validate_recipe_form_instructions(form_data):
     errors = {}
 
     for field, value in form_data.items():
-        error = validate_new_recipe_instruction_input(field, value)
+        error = validate_recipe_instruction_input(field, value)
         if error:
             errors[field] = error
 
     return errors
 
-def validate_new_recipe_save_form(form_data):
+def validate_recipe_save_form(form_data):
     errors = {}
     for field, value in form_data.items():
-        error = validate_new_recipe_input(field, value)
+        error = validate_recipe_input(field, value)
         if error:
             errors[field] = error
 

@@ -2,9 +2,9 @@ import sqlite3
 from flask import redirect, render_template, request, session
 import db.recipes as recipes
 from utils.validations import (
-    validate_new_recipe_save_form,
-    validate_new_recipe_form_instructions,
-    validate_new_recipe_form_ingredients,
+    validate_recipe_save_form,
+    validate_recipe_form_instructions,
+    validate_recipe_form_ingredients,
     recipe_must_exist,
 )
 from utils.validations import user_ids_must_match
@@ -107,7 +107,7 @@ def show_new_recipe():
 def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     """Handles the logic for saving a new recipe."""
 
-    errors = validate_new_recipe_save_form(form_data)
+    errors = validate_recipe_save_form(form_data)
 
     if errors:
         return render_template(
@@ -198,7 +198,7 @@ def handle_new_recipe_session_ingredients(
 
     # Handle Adding a New Ingredient
     if "ingredient" in request.form and form_data["ingredient"] != "":
-        errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
+        errors = validate_recipe_form_ingredients(form_data, recipe_ingredients)
         if not errors:
             new_id = max((ing["id"] for ing in recipe_ingredients), default=0) + 1
             recipe_ingredients.append(
@@ -231,7 +231,7 @@ def handle_new_recipe_session_instructions(
 
     # Handle Adding a New Instruction
     if "instruction" in request.form and form_data["instruction"] != "":
-        errors = validate_new_recipe_form_instructions(form_data)
+        errors = validate_recipe_form_instructions(form_data)
         if not errors:
             new_id = max((instr["id"] for instr in recipe_instructions), default=0) + 1
             recipe_instructions.append(
@@ -334,7 +334,7 @@ def save_edited_recipe(
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
 
-    errors = validate_new_recipe_save_form(form_data)
+    errors = validate_recipe_save_form(form_data)
     if errors:
         return render_template(
             "edit_recipe.html",
@@ -398,7 +398,7 @@ def handle_edit_recipe_session_instructions(
 
     # Handle Adding a New Instruction
     if "instruction" in request.form and form_data["instruction"] != "":
-        errors = validate_new_recipe_form_instructions(form_data)
+        errors = validate_recipe_form_instructions(form_data)
         if not errors:
             new_id = session["max_instruction_id"]
             session["max_instruction_id"] = int(new_id) + 1
@@ -450,7 +450,7 @@ def handle_edit_recipe_session_ingredients(
 
     # Handle Adding a New Ingredient
     if "ingredient" in request.form and form_data["ingredient"] != "":
-        errors = validate_new_recipe_form_ingredients(form_data, recipe_ingredients)
+        errors = validate_recipe_form_ingredients(form_data, recipe_ingredients)
         if not errors:
             new_id = session["max_ingredient_id"]
             session["max_ingredient_id"] = int(new_id) + 1
