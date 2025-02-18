@@ -9,6 +9,7 @@
 
 <br />
 <form action="/remove_recipe/{{ recipe.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <button type="submit" name="remove">Poista resepti</button>
   <button type="submit" name="back">Keskeytä</button>
 </form>

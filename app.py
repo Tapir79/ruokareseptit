@@ -154,6 +154,8 @@ def edit_recipe(recipe_id):
 @app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def remove_recipe(recipe_id):
     require_login(session)
+    if request.method == "POST":
+        check_csrf(request, session)
     return delete_recipe(recipe_id)
 
 
