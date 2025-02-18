@@ -4,6 +4,7 @@
 
 <h1>Muokkaa reseptiä</h1>
 <form action="/edit_recipe/{{ recipe.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     <label for="title">Otsikko:</label>
     <input type="text" name="title" value="{{ form_data.title if form_data and 'title' else recipe.title }}" maxlength="30" />

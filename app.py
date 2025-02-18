@@ -102,7 +102,6 @@ def create_recipe():
         cuisines=cuisines,
     )
 
-# add csrf
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     require_login(session)
@@ -111,6 +110,7 @@ def edit_recipe(recipe_id):
         delete_temporary_session_attributes()
         return show_edit_recipe(recipe_id)
 
+    check_csrf(request, session)
     recipe = session["recipe"]
     recipe_must_exist(recipe)
 
