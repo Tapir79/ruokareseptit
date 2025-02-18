@@ -77,7 +77,7 @@ def save_rating(recipe_id, form_data, rated_by):
             existing_rating_id = existing_rating["id"]
             recipes.update_rating(existing_rating_id, comment, stars)
         else:
-            recipes.save_rating(recipe_id, comment, rated_by)
+            recipes.save_rating(recipe_id, comment, stars, rated_by)
     except sqlite3.IntegrityError:
         print("VIRHE: reseptin tallennus epäonnistui")
         if existing_rating:

@@ -83,6 +83,7 @@ def remove_recipe(recipe_id):
     remove_unused_ingredients()
 
 
+# TODO prettier check if correct
 def find_recipes(query):
     sql = """SELECT recipes.id,
                     recipes.title,
@@ -90,26 +91,17 @@ def find_recipes(query):
                     recipes.user_id,
                     users.username,
                     cuisines.name,
-                    -- TODO coaslesce for sqlite if null then return 0 
-                    (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
-             FROM recipes JOIN users ON recipes.user_id = users.id
-             JOIN cuisines ON recipes.cuisine_id = cuisines.id
-             LEFT JOIN ratings ON recipes.id = ratings.recipe_id
-             WHERE (recipes.title LIKE ?
-             OR recipes.description LIKE ?
-             OR recipes.id IN (SELECT recipe_ingredients.recipe_id
-                              FROM recipe_ingredients
-                              JOIN ingredients
-                              ON ingredients.id = recipe_ingredients.ingredient_id
-                              WHERE ingredients.name LIKE ?))
-             GROUP BY recipes.id,
-                    recipes.title,
-                    recipes.description,
-                    recipes.user_id,
-                    users.username,
-                    cuisines.name
-             ORDER BY recipes.id DESC"""
-
+                    (recipes.total_rating/recipes.rating_count) as avg_rating
+            FROM recipes
+            JOIN users ON recipes.user_id = users.id
+            JOIN cuisines ON recipes.cuisine_id = cuisines.id
+            WHERE (recipes.title LIKE ?
+                OR recipes.description LIKE ?
+                OR recipes.id IN (SELECT recipe_ingredients.recipe_id
+                                    FROM recipe_ingredients
+                                    JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
+                                    WHERE ingredients.name LIKE ?))
+            ORDER BY recipes.id DESC"""
     search_term = f"%{ query }%"
     return db.query(sql, [search_term, search_term, search_term])
 
@@ -268,11 +260,19 @@ def cuisine_exists(cuisine_id):
     return result[0][0] == 1
 
 
-def save_rating(recipe_id, comment, rated_by):
-    sql = """INSERT INTO ratings (comment, rated_by, recipe_id)
-             VALUES (?, ?, ?)"""
-    db.execute(sql, [comment, rated_by, recipe_id])
+def save_rating(recipe_id, comment, stars, rated_by):
+    sql = """INSERT INTO ratings (comment, rated_by, stars, recipe_id)
+             VALUES (?, ?, ?, ?)"""
+    db.execute(sql, [comment, rated_by, stars, recipe_id])
     last_insert_id = db.last_insert_id()
+
+    # Update the recipe table with the new rating count and sum
+    update_sql = """UPDATE recipes
+                    SET total_rating = total_rating + ?,
+                        rating_count = rating_count + 1
+                    WHERE id = ?"""
+    db.execute(update_sql, [stars, recipe_id])
+
     return last_insert_id
 
 
@@ -300,10 +300,26 @@ def get_user_rating(recipe_id, rated_by):
 
 
 def update_rating(rating_id, comment, stars):
-    query = """UPDATE ratings
-               SET comment = ?,
-                   stars = ?
-               WHERE id = ?"""
-    db.execute(query, (comment, stars, rating_id))
+
+    # Get the old rating value
+    query = """SELECT recipe_id, stars FROM ratings WHERE id = ?"""
+    result = db.query(query, [rating_id])
+
+    if not result:
+        return None  # Rating not found
+
+    recipe_id, old_stars = result[0]
+
+    update_query = """UPDATE ratings
+                      SET comment = ?, stars = ?
+                      WHERE id = ?"""
+    db.execute(update_query, (comment, stars, rating_id))
     last_insert_id = db.last_insert_id()
+
+    # Adjust the stored rating sum
+    adjust_sql = """UPDATE recipes
+                    SET total_rating = total_rating - ? + ?
+                    WHERE id = ?"""
+    db.execute(adjust_sql, [old_stars, stars, recipe_id])
+
     return last_insert_id

@@ -8,6 +8,8 @@ CREATE TABLE recipes (
     id INTEGER PRIMARY KEY,
     title TEXT,
     description TEXT,
+    total_rating INTEGER DEFAULT 0,
+    rating_count INTEGER DEFAULT 0,
     cuisine_id INTEGER REFERENCES cuisines,
     user_id INTEGER REFERENCES users
 );
