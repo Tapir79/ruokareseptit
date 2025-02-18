@@ -71,6 +71,7 @@ endblock %} {% block content %}
   <h3>Arvostele resepti:</h3>
 
   <form action="/recipe/{{ recipe.id }}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <p><label for="stars">Tähdet:</label></p>
     <select name="stars" id="stars" class="stars-select">
       {% set selected_stars = rating.stars if rating and rating.stars else 5 %}

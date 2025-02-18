@@ -55,6 +55,7 @@ def recipe(recipe_id):
         delete_temporary_session_attributes()
         return show_recipe(recipe_id)
 
+    check_csrf(request, session)
     logged_in_user = session["user_id"]
     recipe = session["recipe"]
     recipe_created_by = recipe["user_id"]
