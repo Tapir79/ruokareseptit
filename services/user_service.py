@@ -1,3 +1,4 @@
+import secrets
 import sqlite3
 from flask import abort, redirect, render_template, request, session
 import db.users as users
@@ -37,6 +38,7 @@ def user_login(form_data):
     if user_id:
         session["user_id"] = user_id
         session["username"] = username
+        session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
 
     return redirect("/login")
@@ -71,7 +73,7 @@ def register_user(form_data):
         user_id = users.create_user(username, password1)
         session["user_id"] = user_id
         session["username"] = username
-        # TODO flash tunnus luotu
+        session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
         
     except sqlite3.IntegrityError:
