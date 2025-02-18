@@ -11,7 +11,7 @@
 <form action="/login" method="post">
   <p>
     <label for="username">Tunnus:</label>
-    <input type="text" name="username" required />
+    <input type="text" name="username" value="{{ username or '' }}" required />
       {% if errors.username %}
       <span style="color: red;">{{ errors.username }}</span>
       {% endif %}

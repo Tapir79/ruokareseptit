@@ -32,7 +32,7 @@ def user_login(form_data):
         errors["username"] = error_message
 
     if errors:
-        return render_template("login.html", errors=errors)
+        return render_template("login.html", errors=errors, username=username)
 
     if user_id:
         session["user_id"] = user_id
