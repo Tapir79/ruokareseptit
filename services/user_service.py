@@ -59,7 +59,7 @@ def register_user(form_data):
 
     if not username:
         errors["username"] = "Käyttäjätunnus vaaditaan."
-    if not password1 or password2:
+    if not password1 and password2:
         errors["password1"] = "Salasana vaaditaan."
     if password1 != password2:
         errors["password1"] = "Salasanat eivät täsmää"
