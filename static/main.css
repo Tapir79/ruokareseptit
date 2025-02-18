@@ -158,3 +158,32 @@ nav a:hover {
   box-sizing: border-box;
   border: 1px solid #ddd;
 }
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid;
+}
+
+.tag-gluten-free {
+  border-color: #c37604;
+  color: #c37604;
+}
+
+.tag-lactose-free {
+  border-color: #0f4e82;
+  color: #0f4e82;
+}
+
+.tag-vegan {
+  border-color: #379103;
+  color: #379103;
+}
+
+.tag-vegetarian {
+  border-color: #6f9702;
+  color: #6f9702;
+}

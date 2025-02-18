@@ -36,6 +36,23 @@ endblock %} {% block content %}
 
   <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
   <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>
+  <p>
+    {% if recipe.vegan %}
+    <span class="tag tag-vegan">Vegaani</span>
+    {% endif %}
+
+    {% if recipe.vegetarian %}
+    <span class="tag tag-vegetarian">Kasvis</span>
+    {% endif %}
+
+    {% if recipe.lactose_free %}
+    <span class="tag tag-lactose-free">Laktoositon</span>
+    {% endif %}
+
+    {% if recipe.gluten_free %}
+    <span class="tag tag-gluten-free">Gluteeniton</span>
+    {% endif %}
+  </p>
   <p class="recipe-author">
     Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
   </p>

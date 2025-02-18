@@ -15,7 +15,11 @@ def get_recipe(recipe_id):
     sql = """SELECT recipes.id, 
                     recipes.title, 
                     recipes.description,
-                    recipes.user_id, 
+                    recipes.user_id,
+                    recipes.vegan,
+                    recipes.vegetarian,
+                    recipes.lactose_free,
+                    recipes.gluten_free,
                     cuisines.id as cuisine_id,
                     cuisines.name as cuisine,
                     users.id as user_id,
@@ -51,22 +55,24 @@ def get_recipe_ingredients(recipe_id):
     result = db.query(sql, [recipe_id])
     return result
 
-
-def add_recipe(title, description, cuisine_id, user_id):
-    sql = """INSERT INTO recipes (title, description, cuisine_id, user_id)
-             VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [title, description, cuisine_id, user_id])
+def add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free):
+    sql = """INSERT INTO recipes (title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
+    db.execute(sql, [title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free])
     last_insert_id = db.last_insert_id()
     return last_insert_id
 
-
-def edit_recipe(recipe_id, title, description, cuisine_id, user_id):
+def edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free):
     sql = """UPDATE recipes SET title = ?, 
                                 description = ?,
-                                cuisine_id = ?
-                            WHERE id = ?
-                            AND user_id = ?"""
-    db.execute(sql, [title, description, cuisine_id, recipe_id, user_id])
+                                cuisine_id = ?,
+                                vegan = ?,
+                                vegetarian = ?,
+                                lactose_free = ?,
+                                gluten_free = ?
+              WHERE id = ?
+              AND user_id = ?"""
+    db.execute(sql, [title, description, cuisine_id, vegan, vegetarian, lactose_free, gluten_free, recipe_id, user_id])
 
 
 def remove_unused_ingredients():
@@ -89,6 +95,10 @@ def find_recipes(query):
                     recipes.title,
                     recipes.description,
                     recipes.user_id,
+                    recipes.vegan,
+                    recipes.vegetarian,
+                    recipes.lactose_free,
+                    recipes.gluten_free,
                     users.username,
                     cuisines.name,
                     (recipes.total_rating/recipes.rating_count) as avg_rating

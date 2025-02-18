@@ -127,6 +127,12 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     user_id = session["user_id"]
     cuisines = session["cuisines"]
 
+    # Handle checkboxes: if unchecked, default to 0
+    vegan = 1 if "vegan" in form_data else 0
+    vegetarian = 1 if "vegetarian" in form_data else 0
+    lactose_free = 1 if "lactose_free" in form_data else 0
+    gluten_free = 1 if "gluten_free" in form_data else 0
+
     cuisine_check = recipes.cuisine_exists(cuisine_id)
     if not cuisine_check:
         print(f"VIRHE: Valittu cuisine_id={cuisine_id} ei ole olemassa!")
@@ -140,7 +146,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         )
 
     try:
-        recipe_id = recipes.add_recipe(title, description, cuisine_id, user_id)
+        recipe_id = recipes.add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
         recipes.add_ingredients(recipe_id, recipe_ingredients)
         recipes.add_instructions(recipe_id, recipe_instructions)
 
@@ -364,8 +370,13 @@ def save_edited_recipe(
     user_id = session["user_id"]
     cuisine_id = form_data["cuisine"]
 
+    vegan = 1 if "vegan" in request.form else 0
+    vegetarian = 1 if "vegetarian" in request.form else 0
+    lactose_free = 1 if "lactose_free" in request.form else 0
+    gluten_free = 1 if "gluten_free" in request.form else 0
+
     try:
-        recipes.edit_recipe(recipe_id, title, description, cuisine_id, user_id)
+        recipes.edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
         recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         return redirect(f"/recipe/{recipe_id}")

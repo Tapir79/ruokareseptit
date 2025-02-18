@@ -10,6 +10,10 @@ CREATE TABLE recipes (
     description TEXT,
     total_rating INTEGER DEFAULT 0,
     rating_count INTEGER DEFAULT 0,
+    vegan INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
+    vegetarian INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
+    lactose_free INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
+    gluten_free INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
     cuisine_id INTEGER REFERENCES cuisines,
     user_id INTEGER REFERENCES users
 );

@@ -38,6 +38,41 @@
     {% endif %}
 </p>
 
+<p><strong>Ruokavaliot:</strong></p>
+
+<p>
+  <label>
+    <input type="checkbox" name="vegan" value="1"
+      {% if (form_data and form_data.vegan == "1") or (not form_data and recipe.vegan) %} checked {% endif %}>
+    Vegaaninen
+  </label>
+</p>
+
+<p>
+  <label>
+    <input type="checkbox" name="vegetarian" value="1"
+      {% if (form_data and form_data.vegetarian == "1") or (not form_data and recipe.vegetarian) %} checked {% endif %}>
+    Kasvisruoka
+  </label>
+</p>
+
+<p>
+  <label>
+    <input type="checkbox" name="lactose_free" value="1"
+      {% if (form_data and form_data.lactose_free == "1") or (not form_data and recipe.lactose_free) %} checked {% endif %}>
+    Laktoositon
+  </label>
+</p>
+
+<p>
+  <label>
+    <input type="checkbox" name="gluten_free" value="1"
+      {% if (form_data and form_data.gluten_free == "1") or (not form_data and recipe.gluten_free) %} checked {% endif %}>
+    Gluteeniton
+  </label>
+</p>
+
+
   <h3>Ainekset</h3>
   {% if recipe_ingredients %}
   <ul>
