@@ -150,7 +150,6 @@ def edit_recipe(recipe_id):
         cuisines=cuisines,
     )
 
-# add csrf
 @app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def remove_recipe(recipe_id):
     require_login(session)
