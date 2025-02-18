@@ -58,16 +58,14 @@ def register_user(form_data):
     password2 = form_data["password2"]
 
     if not username:
-        errors["username"] = "Tunnus ei voi olla tyhjä."
-    if not password1:
-        errors["password1"] = "Tunnus ei voi olla tyhjä."
-    if not password2:
-        errors["password2"] = "Tunnus ei voi olla tyhjä."
+        errors["username"] = "Käyttäjätunnus vaaditaan."
+    if not password1 or password2:
+        errors["password1"] = "Salasana vaaditaan."
     if password1 != password2:
         errors["password1"] = "Salasanat eivät täsmää"
 
     if errors:
-        return render_template("register.html", errors=errors)
+        return render_template("register.html", errors=errors, username=username)
 
     try:
         user_id = users.create_user(username, password1)
@@ -78,5 +76,5 @@ def register_user(form_data):
         
     except sqlite3.IntegrityError:
         errors["username"] = "Tunnus on jo varattu."
-        return render_template("register.html", errors=errors)
+        return render_template("register.html", errors=errors, username=username)
     
