@@ -5,6 +5,7 @@ from utils.validations import (
     require_login,
     user_owns_the_recipe,
     recipe_must_exist,
+    check_csrf,
 )
 from services.recipe_service import (
     delete_temporary_session_attributes,
@@ -62,15 +63,16 @@ def recipe(recipe_id):
         save_rating(recipe_id, request.form, logged_in_user)
     return show_recipe(recipe_id)
 
-
+ 
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
     require_login(session)
-
+    
     if request.method == "GET":
         delete_temporary_session_attributes()
         return show_new_recipe()
 
+    check_csrf(request, session)
     form_data = request.form
     recipe_ingredients = session.get("recipe_ingredients", [])
     recipe_instructions = session.get("recipe_instructions", [])
@@ -100,7 +102,7 @@ def create_recipe():
         cuisines=cuisines,
     )
 
-
+# add csrf
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     require_login(session)
@@ -148,7 +150,7 @@ def edit_recipe(recipe_id):
         cuisines=cuisines,
     )
 
-
+# add csrf
 @app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def remove_recipe(recipe_id):
     require_login(session)

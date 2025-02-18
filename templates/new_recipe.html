@@ -2,6 +2,7 @@
 endblock %} {% block content %}
 <h1>Uusi resepti</h1>
 <form action="/create_recipe" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     <label for="title">Otsikko:</label>
     <input
@@ -112,6 +113,6 @@ endblock %} {% block content %}
 </p>
   <input type="submit" name="instruction" value="Lisää uusi ohje" />
 </p>
-  <input type="submit" name="save" value="Luo resepti" />
+ <input type="submit" name="save" value="Luo resepti" />
 </form>
 {% endblock %}

@@ -128,3 +128,9 @@ def require_login(session):
 def user_owns_the_recipe(logged_in_user, recipe_created_by):
     if logged_in_user != recipe_created_by:
         abort(403)
+
+def check_csrf(request, session):
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
