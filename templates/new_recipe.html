@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% block title %} Uuden reseptin lisääminen {%
 endblock %} {% block content %}
 <h1>Uusi resepti</h1>
-<form action="/create_recipe" method="post">
+<form action="/create_recipe" method="post"  enctype="multipart/form-data">
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     <label for="title">Otsikko:</label>
@@ -20,6 +20,14 @@ endblock %} {% block content %}
     <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
     {% if errors.description %}
     <span style="color: red">{{ errors.description }}</span>
+    {% endif %}
+  </p>
+
+  <p>
+    <label for="image">Reseptin kuva:</label>
+    <input type="file" name="image" accept=".jpg" />
+    {% if errors.image %}
+    <span style="color: red">{{ errors.image }}</span>
     {% endif %}
   </p>
 

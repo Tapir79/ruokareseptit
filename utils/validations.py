@@ -134,3 +134,7 @@ def check_csrf(request, session):
         abort(403)
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
+
+def check_image(image):
+    if not image:
+        abort(404)

@@ -1,12 +1,13 @@
 import sqlite3
-from flask import redirect, render_template, request, session
+from flask import make_response, redirect, render_template, request, session
 import db.recipes as recipes
 from utils.validations import (
     validate_recipe_save_form,
     validate_recipe_form_instructions,
     validate_recipe_form_ingredients,
     recipe_must_exist,
-    user_owns_the_recipe
+    user_owns_the_recipe,
+    check_image,
 )
 from utils.validations import user_ids_must_match
 import html
@@ -106,7 +107,7 @@ def show_new_recipe():
     )
 
 
-def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
+def save_new_recipe(form_data, recipe_ingredients, recipe_instructions, image):
     """Handles the logic for saving a new recipe."""
 
     errors = validate_recipe_save_form(form_data)
@@ -133,6 +134,15 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     lactose_free = 1 if "lactose_free" in form_data else 0
     gluten_free = 1 if "gluten_free" in form_data else 0
 
+    image_data = None
+    if image and image.filename:
+        if not image.filename.endswith(".jpg"):
+            errors["image"] = "VIRHE: Väärä tiedostomuoto"
+        else:
+            image_data = image.read()
+            if len(image_data) > 100 * 1024:
+                errors["image"] = "VIRHE: liian suuri kuva"
+
     cuisine_check = recipes.cuisine_exists(cuisine_id)
     if not cuisine_check:
         print(f"VIRHE: Valittu cuisine_id={cuisine_id} ei ole olemassa!")
@@ -146,7 +156,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         )
 
     try:
-        recipe_id = recipes.add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
+        recipe_id = recipes.add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free, image_data)
         recipes.add_ingredients(recipe_id, recipe_ingredients)
         recipes.add_instructions(recipe_id, recipe_instructions)
 
@@ -551,3 +561,12 @@ def get_delete_instruction_id(form_data):
         return int(instruction_id) if instruction_id.isdigit() else None
 
     return None
+
+def get_recipe_image_by_id(recipe_id):
+    image = recipes.get_recipe_image(recipe_id)
+    check_image(image)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
+

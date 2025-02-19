@@ -20,6 +20,7 @@ def get_recipe(recipe_id):
                     recipes.vegetarian,
                     recipes.lactose_free,
                     recipes.gluten_free,
+                    recipes.image,
                     cuisines.id as cuisine_id,
                     cuisines.name as cuisine,
                     users.id as user_id,
@@ -55,10 +56,10 @@ def get_recipe_ingredients(recipe_id):
     result = db.query(sql, [recipe_id])
     return result
 
-def add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free):
-    sql = """INSERT INTO recipes (title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
-    db.execute(sql, [title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free])
+def add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free, image):   
+    sql = """INSERT INTO recipes (title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free, image)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+    db.execute(sql, [title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free, image])
     last_insert_id = db.last_insert_id()
     return last_insert_id
 
@@ -333,3 +334,8 @@ def update_rating(rating_id, comment, stars):
     db.execute(adjust_sql, [old_stars, stars, recipe_id])
 
     return last_insert_id
+
+def get_recipe_image(recipe_id):
+    sql = "SELECT image FROM recipes WHERE id = ?"
+    result = db.query(sql, [recipe_id])
+    return result[0]["image"] if result and result[0]["image"] else None

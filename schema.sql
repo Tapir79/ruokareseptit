@@ -14,6 +14,7 @@ CREATE TABLE recipes (
     vegetarian INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
     lactose_free INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
     gluten_free INTEGER DEFAULT 0, -- Boolean stored as 0 (FALSE) or 1 (TRUE)
+    image BLOB,
     cuisine_id INTEGER REFERENCES cuisines,
     user_id INTEGER REFERENCES users
 );

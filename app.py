@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, abort, make_response
 from flask import render_template, request, session
 import config
+from db import recipes
 from utils.validations import (
     require_login,
     user_owns_the_recipe,
@@ -24,6 +25,7 @@ from services.recipe_service import (
     handle_edit_recipe_session_instructions,
     handle_edit_recipe_session_ingredients,
     delete_recipe,
+    get_recipe_image_by_id,
 )
 
 from services.user_service import (
@@ -79,8 +81,10 @@ def create_recipe():
     recipe_instructions = session.get("recipe_instructions", [])
     cuisines = session["cuisines"]
 
+    image = request.files.get("image")
+
     if "save" in request.form:
-        return save_new_recipe(form_data, recipe_ingredients, recipe_instructions)
+        return save_new_recipe(form_data, recipe_ingredients, recipe_instructions, image)
 
     instructions_response = handle_new_recipe_session_instructions(
         form_data, recipe_ingredients, recipe_instructions
@@ -158,6 +162,10 @@ def remove_recipe(recipe_id):
         check_csrf(request, session)
     return delete_recipe(recipe_id)
 
+
+@app.route("/recipe/<int:recipe_id>/image")
+def show_recipe_image(recipe_id):
+    return get_recipe_image_by_id(recipe_id)
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
