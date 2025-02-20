@@ -333,3 +333,16 @@ def update_rating(rating_id, comment, stars):
     db.execute(adjust_sql, [old_stars, stars, recipe_id])
 
     return last_insert_id
+
+def add_recipe_image(recipe_id, image_data):
+    sql = "INSERT INTO recipe_images (recipe_id, image) VALUES (?, ?)"
+    db.execute(sql, [recipe_id, image_data])
+
+def get_recipe_image(recipe_id):
+    sql = "SELECT image FROM recipe_images WHERE recipe_id = ? LIMIT 1"
+    result = db.query(sql, [recipe_id])
+    return result[0]["image"] if result else None
+
+def recipe_image_exists(recipe_id):
+    sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
+    return db.query(sql, [recipe_id])

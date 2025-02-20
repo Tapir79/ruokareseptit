@@ -52,6 +52,12 @@ CREATE TABLE cuisines (
     name TEXT
 );
 
+CREATE TABLE recipe_images (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    image BLOB NOT NULL,
+    recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
+);
+
 -- TODO move into separate init db file
 INSERT INTO cuisines (name) VALUES 
     ('Pohjoismainen'),

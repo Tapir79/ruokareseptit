@@ -1,5 +1,6 @@
 from flask import abort
 
+ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 
 VALIDATION_RULES_NEW_RECIPE_INGREDIENT_EDIT = {
     "name": {"type": "string", "max_length": 30, "required": True},
@@ -134,3 +135,10 @@ def check_csrf(request, session):
         abort(403)
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
+
+def check_image(image):
+    if not image:
+        abort(404)
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS

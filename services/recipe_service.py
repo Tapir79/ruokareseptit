@@ -1,12 +1,14 @@
 import sqlite3
-from flask import redirect, render_template, request, session
+from flask import make_response, redirect, render_template, request, session
 import db.recipes as recipes
 from utils.validations import (
+    allowed_file,
     validate_recipe_save_form,
     validate_recipe_form_instructions,
     validate_recipe_form_ingredients,
     recipe_must_exist,
-    user_owns_the_recipe
+    user_owns_the_recipe,
+    check_image,
 )
 from utils.validations import user_ids_must_match
 import html
@@ -41,6 +43,7 @@ def show_recipe(recipe_id):
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
     recipe_ratings = recipes.get_ratings(recipe_id)
+    image_exists = recipes.recipe_image_exists(recipe_id)
     session["recipe"] = dict(single_recipe)
 
     rating = []
@@ -55,6 +58,7 @@ def show_recipe(recipe_id):
         recipe_instructions=recipe_instructions,
         recipe_ratings = recipe_ratings,
         rating = rating,
+        image_exists = image_exists
     )
 
 
@@ -151,8 +155,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         recipes.add_instructions(recipe_id, recipe_instructions)
 
         delete_temporary_session_attributes()
-
-        return redirect(f"/recipe/{recipe_id}")
+        return render_template("upload_image.html", recipe_id=recipe_id)
 
     except sqlite3.IntegrityError:
         print("VIRHE: reseptin tallennus epäonnistui")
@@ -264,6 +267,41 @@ def handle_new_recipe_session_instructions(
 
     return None  # Return None if no action was taken
 
+
+def add_new_recipe_image(recipe_id):
+    try:
+        if "image" not in request.files:
+            errors={"general": "Tiedostoa ei valittu."}
+            return render_template("upload_recipe_image", recipe_id=recipe_id, errors=errors)
+
+        file = request.files["image"]
+
+        if file.filename == "":
+            errors={"general": "Tiedoston nimi ei voi olla tyhjä."}
+            return render_template("upload_recipe_image", recipe_id=recipe_id, errors=errors)
+
+        if file and allowed_file(file.filename):
+            image_data = file.read()  # Read the binary data
+
+            recipes.add_recipe_image(recipe_id, image_data)
+
+            print("Kuva ladattu onnistuneesti!")
+            return redirect(f"/recipe/{recipe_id}")
+        else:
+            errors={"general": "Väärä tiedostomuoto. Sallitut: .jpg, .jpeg, .png."},
+            return render_template("upload_recipe_image", recipe_id=recipe_id, errors=errors)
+    except Exception as e:
+        print(f"Virhe kuvan tallennuksessa: {e}")  # Log error to console
+        errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
+        return render_template("upload_recipe_image.html", recipe_id=recipe_id, errors=errors)
+
+def get_recipe_image_by_id(recipe_id):
+    image = recipes.get_recipe_image(recipe_id)
+    check_image(image)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
 
 def show_edit_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)

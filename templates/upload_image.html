@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %} Lisää kuva reseptille {% endblock %}
+{% block content %}
+<h1>Lisää kuva reseptille</h1>
+<form action="/upload_recipe_image/{{ recipe_id }}" method="POST" enctype="multipart/form-data">
+    <label for="image">Valitse kuva:</label>
+    <input type="file" name="image" accept=".jpg,.jpeg,.png" required />
+    <input type="submit" value="Lataa kuva" />
+</form>
+{% endblock %}

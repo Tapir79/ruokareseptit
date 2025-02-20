@@ -24,6 +24,8 @@ from services.recipe_service import (
     handle_edit_recipe_session_instructions,
     handle_edit_recipe_session_ingredients,
     delete_recipe,
+    add_new_recipe_image,
+    get_recipe_image_by_id,
 )
 
 from services.user_service import (
@@ -157,6 +159,16 @@ def remove_recipe(recipe_id):
     if request.method == "POST":
         check_csrf(request, session)
     return delete_recipe(recipe_id)
+
+@app.route("/upload_recipe_image/<int:recipe_id>", methods=["POST"])
+def upload_recipe_image(recipe_id):
+    require_login(session)
+
+    return add_new_recipe_image(recipe_id)
+
+@app.route("/recipe/<int:recipe_id>/image")
+def show_recipe_image(recipe_id):
+    return get_recipe_image_by_id(recipe_id)
 
 
 @app.route("/user/<int:user_id>")

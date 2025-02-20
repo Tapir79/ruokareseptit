@@ -34,7 +34,16 @@ endblock %} {% block content %}
     {% endif %}
   </p>
 
-  <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
+  <div class="recipe-image-description">
+    {% if image_exists %}
+      <img src="/recipe/{{ recipe.id }}/image" alt="Reseptikuva" class="recipe-image">
+    {% else %}
+    <div class="recipe-image-placeholder">Ei kuvaa saatavilla</div>
+    {% endif %}
+
+    <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
+  </div>
+
   <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>
   <p>
     {% if recipe.vegan %}
