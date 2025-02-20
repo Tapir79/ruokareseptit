@@ -112,6 +112,22 @@ def validate_recipe_save_form(form_data):
 
     return errors
 
+def validate_recipe_image(image):
+    errors = {}
+
+    if image and image.filename:
+        image_data = image.read()  # Read the image once
+
+        if not image.filename.endswith(".jpg"):
+            errors["image"] = "VIRHE: Väärä tiedostomuoto"
+        elif len(image_data) > 100 * 1024:
+            errors["image"] = "VIRHE: liian suuri kuva"
+
+        # Reset file pointer so it can be read again later
+        image.seek(0)
+
+    return errors
+
 
 def user_ids_must_match(recipe_user_id, session):
     if recipe_user_id != session["user_id"]:

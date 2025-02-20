@@ -5,6 +5,7 @@ from utils.validations import (
     validate_recipe_save_form,
     validate_recipe_form_instructions,
     validate_recipe_form_ingredients,
+    validate_recipe_image,
     recipe_must_exist,
     user_owns_the_recipe,
     check_image,
@@ -111,6 +112,14 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions, image):
     """Handles the logic for saving a new recipe."""
 
     errors = validate_recipe_save_form(form_data)
+    image_errors = validate_recipe_image(image)
+
+    image_data = None
+    if not image_errors:
+        image_data = image.read()  # Read the image data
+        image.seek(0)
+    else:
+        errors.update(image_errors)
 
     if errors:
         return render_template(
@@ -133,15 +142,6 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions, image):
     vegetarian = 1 if "vegetarian" in form_data else 0
     lactose_free = 1 if "lactose_free" in form_data else 0
     gluten_free = 1 if "gluten_free" in form_data else 0
-
-    image_data = None
-    if image and image.filename:
-        if not image.filename.endswith(".jpg"):
-            errors["image"] = "VIRHE: Väärä tiedostomuoto"
-        else:
-            image_data = image.read()
-            if len(image_data) > 100 * 1024:
-                errors["image"] = "VIRHE: liian suuri kuva"
 
     cuisine_check = recipes.cuisine_exists(cuisine_id)
     if not cuisine_check:
@@ -353,7 +353,7 @@ def get_updated_session_instructions(recipe_id, form_data):
 
 
 def save_edited_recipe(
-    recipe, form_data, recipe_ingredients, recipe_instructions, recipe_id
+    recipe, form_data, recipe_ingredients, recipe_instructions, recipe_id, image
 ):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
@@ -363,6 +363,14 @@ def save_edited_recipe(
     user_owns_the_recipe(logged_in_user, recipe_created_by)
 
     errors = validate_recipe_save_form(form_data)
+    image_errors = validate_recipe_image(image)
+
+    image_data = None
+    if not image_errors:
+        image_data = image.read()  # Read the image data
+        image.seek(0)
+    else:
+        errors.update(image_errors)
 
     if errors:
         return render_template(
@@ -386,7 +394,7 @@ def save_edited_recipe(
     gluten_free = 1 if "gluten_free" in request.form else 0
 
     try:
-        recipes.edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
+        recipes.edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free, image_data)
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
         recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         return redirect(f"/recipe/{recipe_id}")
@@ -569,4 +577,3 @@ def get_recipe_image_by_id(recipe_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
-

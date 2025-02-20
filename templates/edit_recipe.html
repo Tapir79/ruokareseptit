@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>Muokkaa reseptiä</h1>
-<form action="/edit_recipe/{{ recipe.id }}" method="post">
+<form action="/edit_recipe/{{ recipe.id }}" method="post" enctype="multipart/form-data">
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     <label for="title">Otsikko:</label>
@@ -17,6 +17,14 @@
     <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' else recipe.description }}</textarea>
     {% if errors.description %}
     <span style="color: red">{{ errors.description }}</span>
+    {% endif %}
+  </p>
+
+  <p>
+    <label for="image">Reseptin kuva:</label>
+    <input type="file" name="image" accept=".jpg" />
+    {% if errors.image %}
+    <span style="color: red">{{ errors.image }}</span>
     {% endif %}
   </p>
 

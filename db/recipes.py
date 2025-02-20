@@ -63,17 +63,18 @@ def add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lacto
     last_insert_id = db.last_insert_id()
     return last_insert_id
 
-def edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free):
+def edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free, image):
     sql = """UPDATE recipes SET title = ?, 
                                 description = ?,
                                 cuisine_id = ?,
                                 vegan = ?,
                                 vegetarian = ?,
                                 lactose_free = ?,
-                                gluten_free = ?
+                                gluten_free = ?,
+                                image = ?
               WHERE id = ?
               AND user_id = ?"""
-    db.execute(sql, [title, description, cuisine_id, vegan, vegetarian, lactose_free, gluten_free, recipe_id, user_id])
+    db.execute(sql, [title, description, cuisine_id, vegan, vegetarian, lactose_free, gluten_free, image, recipe_id, user_id])
 
 
 def remove_unused_ingredients():

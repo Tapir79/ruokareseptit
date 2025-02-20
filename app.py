@@ -128,9 +128,11 @@ def edit_recipe(recipe_id):
     recipe_instructions = get_updated_session_instructions(recipe_id, form_data)
     cuisines = session["cuisines"]
 
+    image = request.files.get("image")
+
     if "save" in request.form:
         return save_edited_recipe(
-            recipe, form_data, recipe_ingredients, recipe_instructions, recipe_id
+            recipe, form_data, recipe_ingredients, recipe_instructions, recipe_id, image
         )
 
     instructions_response = handle_edit_recipe_session_instructions(
