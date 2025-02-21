@@ -20,14 +20,14 @@ def get_recipe(recipe_id):
                     recipes.vegetarian,
                     recipes.lactose_free,
                     recipes.gluten_free,
+                    recipes.rating_count,
                     cuisines.id as cuisine_id,
                     cuisines.name as cuisine,
                     users.id as user_id,
                     users.username,
-                    (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
+                    (recipes.total_rating/recipes.rating_count) as avg_rating
              FROM recipes JOIN users ON recipes.user_id = users.id
              JOIN cuisines ON recipes.cuisine_id = cuisines.id
-             LEFT JOIN ratings ON recipes.id = ratings.recipe_id
              WHERE recipes.id = ?"""
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
@@ -36,9 +36,9 @@ def get_recipe(recipe_id):
 def get_recipes_by_user(user_id):
     sql = """SELECT recipes.id,
                     recipes.title,
-                    (SUM(ratings.stars)/COUNT(ratings.stars)) as avg_rating
+                    recipes.rating_count,
+                    (recipes.total_rating/recipes.rating_count) as avg_rating
              FROM recipes JOIN users ON recipes.user_id = users.id
-             LEFT JOIN ratings ON recipes.id = ratings.recipe_id
              WHERE users.id = ?"""
     result = db.query(sql, [user_id])
     return result if result else None
