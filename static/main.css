@@ -137,13 +137,161 @@ nav a:hover {
 .recipe-container {
   display: flex;
   gap: 20px;
-  align-items: flex-start;
+  align-items: stretch; /* Ensures both columns have equal height */
+  justify-content: space-between;
+  max-width: 50em;
+  margin: auto;
 }
 
 .recipe-column {
   flex: 1;
-  padding: 10px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures both sections grow equally */
+  min-height: 100%;
 }
+
+.recipe-column h3 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Equalizing the Form Sections */
+.recipe-form-section {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Ensures both sections grow to the same height */
+}
+
+/* Ensuring Inputs & Labels Are Aligned */
+.recipe-form-section label {
+  display: block;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.recipe-form-section input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+/* Ensuring Buttons Stay Aligned */
+.recipe-column .btn {
+  margin-top: auto;
+}
+
+.recipe-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recipe-column li {
+  background: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recipe-column ol {
+  list-style-type: decimal;  /* Ensures numbers appear */
+  margin-left: 20px;         /* Proper indentation */
+  padding-left: 20px;
+}
+
+.recipe-column ol li {
+  display: list-item;        /* Forces correct list item behavior */
+}
+
+
+/* Container for "Lisää uusi aines" and "Lisää uusi ohje" */
+.recipe-form-container {
+  display: flex;
+  gap: 30px;
+  align-items: stretch;
+  justify-content: space-between;
+  max-width: 50em;
+  margin: auto;
+}
+
+/* Ensure both form sections have equal height */
+.recipe-form-column {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures both sections grow equally */
+  min-height: 250px; /* Adjust as needed */
+}
+
+/* Ensures input sections take equal space */
+.recipe-form-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Ensure button alignment */
+.recipe-form-column .btn {
+  align-self: center;
+  margin-top: auto;
+}
+
+/* Container for "Ainekset" and "Ohjeet" */
+.recipe-list-container {
+  display: flex;
+  gap: 30px;
+  align-items: stretch;
+  justify-content: space-between;
+  max-width: 50em;
+  margin: auto;
+  margin-top: 20px; /* Adds spacing between sections */
+}
+
+/* Ensure both lists have equal height */
+.recipe-list-column {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-height: 200px; /* Adjust as needed */
+}
+
+/* Ensuring lists align */
+.recipe-list-column ul,
+.recipe-list-column ol {
+  list-style-position: inside;
+  min-height: 150px; /* Ensures lists are the same height */
+}
+
+/* List items */
+.recipe-list-column li {
+  background: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
 
 .stars-select {
   width: 100%;

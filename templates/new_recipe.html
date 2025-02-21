@@ -1,152 +1,126 @@
-{% extends "layout.html" %} {% block title %} Uuden reseptin lisääminen {%
-endblock %} {% block content %}
+{% extends "layout.html" %}
+{% block title %} Uuden reseptin lisääminen {% endblock %}
+{% block content %}
+
 <h1>Uusi resepti</h1>
+
 <form action="/create_recipe" method="post">
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <p>
+
+  <div class="form-group">
     <label for="title">Otsikko:</label>
-    <input
-      type="text"
-      name="title"
-      value="{{ form_data.title if form_data and 'title' else '' }}"
-      maxlength="30"
-    />
+    <input type="text" name="title" value="{{ form_data.title if form_data and 'title' else '' }}" maxlength="30" />
     {% if errors.title %}
-    <span style="color: red">{{ errors.title }}</span>
+    <span class="error-message">{{ errors.title }}</span>
     {% endif %}
-  </p>
-  <p>
+  </div>
+
+  <div class="form-group">
     <label for="description">Kuvaus:</label>
     <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
     {% if errors.description %}
-    <span style="color: red">{{ errors.description }}</span>
+    <span class="error-message">{{ errors.description }}</span>
     {% endif %}
-  </p>
+  </div>
 
-  <p>
+  <div class="form-group">
     <label for="cuisine">Ruokakulttuuri:</label>
     <select name="cuisine" id="cuisine">
       {% for cuisine in cuisines %}
-      <option value="{{ cuisine.id }}"
-        {% if form_data.cuisine == cuisine.id|string %} selected {% endif %}>
+      <option value="{{ cuisine.id }}" {% if form_data.cuisine == cuisine.id|string %} selected {% endif %}>
         {{ cuisine.name }}
       </option>
-    {% endfor %}
+      {% endfor %}
     </select>
     {% if errors.cuisine %}
-    <span style="color: red">{{ errors.cuisine }}</span>
+    <span class="error-message">{{ errors.cuisine }}</span>
     {% endif %}
-  </p>
+  </div>
 
-  <p><strong>Ruokavaliot:</strong></p>
+  <div class="form-group">
+    <strong>Ruokavaliot:</strong><br>
+    <label><input type="checkbox" name="vegan" value="1" {% if form_data and form_data.get("vegan") == "1" %} checked {% endif %}> Vegaaninen</label>
+    <label><input type="checkbox" name="vegetarian" value="1" {% if form_data and form_data.get("vegetarian") == "1" %} checked {% endif %}> Kasvisruoka</label>
+    <label><input type="checkbox" name="lactose_free" value="1" {% if form_data and form_data.get("lactose_free") == "1" %} checked {% endif %}> Laktoositon</label>
+    <label><input type="checkbox" name="gluten_free" value="1" {% if form_data and form_data.get("gluten_free") == "1" %} checked {% endif %}> Gluteeniton</label>
+  </div>
 
-  <p>
-    <label>
-      <input type="checkbox" name="vegan" value="1"
-        {% if form_data and form_data.get("vegan") == "1" %} checked {% endif %}>
-      Vegaaninen
-    </label>
-  </p>
+  <!-- Side-by-side layout for Ingredients and Instructions -->
+  <div class="recipe-form-container">
 
-  <p>
-    <label>
-      <input type="checkbox" name="vegetarian" value="1"
-        {% if form_data and form_data.get("vegetarian") == "1" %} checked {% endif %}>
-      Kasvisruoka
-    </label>
-  </p>
+        <!-- Ingredients Form Column -->
+        <div class="recipe-form-column">
+          <h3>Lisää uusi aines</h3>
 
-  <p>
-    <label>
-      <input type="checkbox" name="lactose_free" value="1"
-        {% if form_data and form_data.get("lactose_free") == "1" %} checked {% endif %}>
-      Laktoositon
-    </label>
-  </p>
+          <div class="recipe-form-content">
+            <label for="name">Aineksen nimi:</label>
+            <input type="text" name="name" maxlength="30" value="{{ form_data.name if form_data and 'name' in form_data else '' }}" />
+            {% if errors.name %}
+            <span class="error-message">{{ errors.name }}</span>
+            {% endif %}
 
-  <p>
-    <label>
-      <input type="checkbox" name="gluten_free" value="1"
-        {% if form_data and form_data.get("gluten_free") == "1" %} checked {% endif %}>
-      Gluteeniton
-    </label>
-  </p>
+            <label for="amount">Määrä:</label>
+            <input type="text" name="amount" maxlength="20" value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}" />
+            {% if errors.amount %}
+            <span class="error-message">{{ errors.amount }}</span>
+            {% endif %}
 
-  <p>
-  <h3>Ainekset</h3>
-  {% if recipe_ingredients %}
-  <ul>
-    {% for ingredient in recipe_ingredients %}
-    <li>{{ ingredient.name }} - {{ ingredient.amount }}
-      <label>
+            <input type="submit" class="btn btn-secondary" name="ingredient" value="Lisää uusi aines" />
+          </div>
+        </div>
+
+            <!-- Instructions Form Column -->
+    <div class="recipe-form-column">
+      <h3>Lisää uusi ohje</h3>
+
+      <div class="recipe-form-content">
+        <label for="instruction_name">Uusi ohje:</label>
+        <input type="text" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
+        {% if errors.instruction_name %}
+        <span class="error-message">{{ errors.instruction_name }}</span>
+        {% endif %}
+
+        <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" />
+      </div>
+    </div>
+
+</div>
+<!-- Section for listing ingredients and instructions -->
+<div class="recipe-list-container">
+
+  <!-- Ingredients List Column -->
+  <div class="recipe-list-column">
+    <h3>Ainekset</h3>
+    {% if recipe_ingredients %}
+    <ul>
+      {% for ingredient in recipe_ingredients %}
+      <li>{{ ingredient.name }} - {{ ingredient.amount }}
         <input type="submit" name="delete_ingredient_{{ ingredient.id }}" value="Poista" />
-      </label>
-    </li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
 
-  <p>
-    <label for="name">Aineksen nimi:</label>
-    {% if errors.name or errors.amount %}
-    <input
-      type="text"
-      name="name"
-      maxlength="30"
-      value="{{ form_data.name if form_data and 'name' in form_data else '' }}"
-    />
-    <span style="color: red">{{ errors.name }}</span>
-    {% else %}
-    <input type="text" name="name" maxlength="30" />
-    {% endif %}
-  </p>
-  <p>
-    <label for="amount">Määrä:</label>
-    {% if errors.name or errors.amount %}
-    <input
-      type="text"
-      name="amount"
-      maxlength="20"
-      value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}"
-    />
-    <span style="color: red">{{ errors.amount }}</span>
-    {% else %}
-    <input type="text" name="amount" maxlength="20" />
-    {% endif %}
-  </p>
-  <input type="submit" name="ingredient" value="Lisää uusi aines" />
-</p>
-<p>
-  Ohje: <br />
-  {% if recipe_instructions %}
-  <ul>
-    {% for instruction in recipe_instructions %}
-    <li>{{ instruction.instruction_name }}
-      <label>
+  <!-- Instructions List Column -->
+  <div class="recipe-list-column">
+    <h3>Ohjeet</h3>
+    {% if recipe_instructions %}
+    <ol>
+      {% for instruction in recipe_instructions %}
+      <li>{{ instruction.instruction_name }}
         <input type="submit" name="delete_instruction_{{ instruction.id }}" value="Poista" />
-      </label>
-    </li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+  </div>
 
-  <p>
-  {% if errors.instruction_name %}
-  <label for="instruction_name">Ohje:</label>
-  <input
-    type="text"
-    name="instruction_name"
-    maxlength="150"
-    value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}"
-  />
-  <span style="color: red">{{ errors.instruction_name }}</span>
-  {% else %}
-  <label for="instruction_name">Uusi ohje:</label>
-  <input type="text" name="instruction_name" maxlength="150" />
-  {% endif %}
-</p>
-  <input type="submit" name="instruction" value="Lisää uusi ohje" />
-</p>
- <input type="submit" name="save" value="Tallenna ja jatka kuvan lisäämiseen" />
+</div>
+
+
+  <!-- Submit Button -->
+  <input type="submit" class="btn btn-primary" name="save" value="Tallenna ja jatka kuvan lisäämiseen" />
 </form>
+
 {% endblock %}

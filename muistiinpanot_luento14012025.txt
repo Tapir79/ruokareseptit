@@ -1,0 +1,72 @@
+1. välipalautus 
+- valinnut työn aiheen
+- ekat jutut projektiin liittyen
+- 
+
+2. välipalautus
+- tavoite saada valmiiksi
+
+Tavoitteet löytyy ohjeet ja aikataulu 
+
+
+Discord-ryhmä: 
+
+
+Paja 3 kertaa viikossa 
+
+
+Vertaisarvioinnit pakollisia. 2 kpl. 
+Miten vertaisarviointi tehdään: labtool (kirjaudu)
+
+Esimerkkisovellus: miten voi tehdä sovelluksen, jolla saa hyvän arvosanan (huutokauppa)
+- ei täytä suuren tietomäärän käsittelyosia 
+- videosarja täyttää kurssin kaikki vaatimukset 
+
+db.py saa kopioida suoraan 
+app.py saa ottaa mallia
+
+saa käyttää tekoälyä apuna
+
+
+- githubiin uusi repo
+- aihe ja sen kuvaus
+- labtooliin kirjautuminen
+- labtoolissa github-osoite 
+
+
+
+<p>
+    <label for="cuisine">Ruokakulttuuri:</label>
+    <select name="cuisine" id="cuisine">
+      <option value="nordic">Pohjoismainen</option>
+      <option value="european">Eurooppalainen</option>
+      <option value="eastern-european">Itäeurooppalainen</option>
+      <option value="asian">Aasialainen</option>
+      <option value="middle-eastern">Lähi-idän keittiö</option>
+      <option value="african">Afrikkalainen</option>
+      <option value="latin-american">Latinalaisamerikkalainen</option>
+      <option value="north-american">Pohjoisamerikkalainen</option>
+      <option value="australian">Australialainen & Oseanialainen</option>
+    </select>
+  </p>
+
+  <p>
+    <label>Ruokavaliot:</label><br />
+    <input type="checkbox" name="diet[]" value="lactose-free" />
+    Laktoositon<br />
+    <input type="checkbox" name="diet[]" value="vegetarian" /> Kasvis<br />
+    <input type="checkbox" name="diet[]" value="vegan" /> Vegaani<br />
+    <input type="checkbox" name="diet[]" value="milk-free" /> Maidoton<br />
+    <input type="checkbox" name="diet[]" value="eggfree" /> Kananmunaton<br />
+  </p>
+
+  <p>
+    <label>Ateriatyyppi:</label><br />
+    <input type="checkbox" name="meal[]" value="starter" /> Alkuruoka<br />
+    <input type="checkbox" name="meal[]" value="main-course" /> Pääruoka<br />
+    <input type="checkbox" name="meal[]" value="dessert" /> Jälkiruoka<br />
+    <input type="checkbox" name="meal[]" value="salad" /> Salaatti<br />
+    <input type="checkbox" name="meal[]" value="soup" /> Keitto<br />
+    <input type="checkbox" name="meal[]" value="drink" /> Juoma<br />
+    <input type="checkbox" name="meal[]" value="sauce" /> Kastike<br />
+  </p>
