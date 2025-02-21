@@ -13,7 +13,7 @@ VALIDATION_RULES_NEW_RECIPE_INSTRUCTION_EDIT = {
 
 VALIDATION_RULES_NEW_RECIPE = {
     "title": {"type": "string", "max_length": 30, "min_length": 1, "required": True},
-    "description": {"type": "string", "max_length": 1000, "required": True},
+    "description": {"type": "string", "max_length": 300, "required": True},
     "cuisine":{"type": "int", "required": True}
 }
 

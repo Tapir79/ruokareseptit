@@ -14,7 +14,7 @@
   </p>
   <p>
     <label for="description">Kuvaus:</label>
-    <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' else recipe.description }}</textarea>
+    <textarea name="description" rows="8" cols="60" maxlength="300">{{ form_data.description if form_data and 'description' else recipe.description }}</textarea>
     {% if errors.description %}
     <span style="color: red">{{ errors.description }}</span>
     {% endif %}

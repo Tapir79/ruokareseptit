@@ -17,7 +17,7 @@
 
   <div class="form-group">
     <label for="description">Kuvaus:</label>
-    <textarea name="description" rows="8" cols="60" maxlength="1000">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
+    <textarea name="description" rows="8" cols="60" maxlength="300">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
     {% if errors.description %}
     <span class="error-message">{{ errors.description }}</span>
     {% endif %}
