@@ -302,6 +302,34 @@ def add_new_recipe_image(recipe_id):
 
     return redirect(f"/recipe/{recipe_id}")
 
+
+def edit_new_recipe_image(recipe_id):
+    file = request.files['image']
+    if  file:
+        if file.filename == "":
+            errors={"general": "Tiedoston nimi ei voi olla tyhjä."}
+            return render_template("show_recipe.html", recipe_id=recipe_id, errors=errors)
+
+        if file and allowed_file(file.filename):
+            image_data = file.read()  # Read the binary data
+            if len(image_data) > 100 * 1024:
+                errors={"general": "Kuva on liian suuri"}
+                return render_template("show_recipe.html", recipe_id=recipe_id, errors=errors)
+
+            try:
+                recipes.update_recipe_image(recipe_id, image_data)
+                return redirect(f"/recipe/{recipe_id}")
+            except Exception as e:
+                    print(f"Virhe kuvan päivityksessä: {e}")  # Log error to console
+                    errors = {"general": "Odottamaton virhe kuvan päivityksessä. Yritä uudelleen."}
+                    return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+
+        errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
+        return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+
+    return redirect(f"/recipe/{recipe_id}")
+
+
 def get_recipe_image_by_id(recipe_id):
     image = recipes.get_recipe_image(recipe_id)
     check_image(image)

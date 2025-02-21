@@ -338,6 +338,12 @@ def add_recipe_image(recipe_id, image_data):
     sql = "INSERT INTO recipe_images (recipe_id, image) VALUES (?, ?)"
     db.execute(sql, [recipe_id, image_data])
 
+def update_recipe_image(recipe_id, image_data):
+    sql = """UPDATE recipe_images
+            SET image = ?
+            WHERE recipe_id = ?"""
+    db.execute(sql, [image_data, recipe_id])
+
 def get_recipe_image(recipe_id):
     sql = "SELECT image FROM recipe_images WHERE recipe_id = ? LIMIT 1"
     result = db.query(sql, [recipe_id])

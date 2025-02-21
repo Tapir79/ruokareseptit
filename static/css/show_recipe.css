@@ -41,6 +41,17 @@
     /* Rounded corners for a softer look */
 }
 
+.image-upload-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 1px;
+    width: 100%;
+    max-width: 400px;
+}
+
+
 /* Placeholder for missing image */
 .recipe-image-placeholder {
     width: 300px;
@@ -54,6 +65,14 @@
     color: #666;
     font-size: 16px;
     text-align: center;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Adds spacing between the image and the buttons */
+    margin-bottom: 15px; /* Ensures space before the description */
 }
 
 /* Style for the description */

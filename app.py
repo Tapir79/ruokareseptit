@@ -25,6 +25,7 @@ from services.recipe_service import (
     handle_edit_recipe_session_ingredients,
     delete_recipe,
     add_new_recipe_image,
+    edit_new_recipe_image,
     get_recipe_image_by_id,
 )
 
@@ -163,8 +164,15 @@ def remove_recipe(recipe_id):
 @app.route("/upload_recipe_image/<int:recipe_id>", methods=["POST"])
 def upload_recipe_image(recipe_id):
     require_login(session)
-
+    # TODO check that session user is the same user that created the recipe_id
     return add_new_recipe_image(recipe_id)
+
+@app.route('/edit_recipe/<int:recipe_id>/image', methods=['POST'])
+def edit_recipe_image(recipe_id):
+    require_login(session)
+    # TODO check that session user is the same user that created the recipe_id
+    return edit_new_recipe_image(recipe_id)
+
 
 @app.route("/recipe/<int:recipe_id>/image")
 def show_recipe_image(recipe_id):
