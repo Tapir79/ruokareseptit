@@ -236,3 +236,54 @@ nav a:hover {
   justify-content: center; /* Centers text horizontally */
   margin: 0px;
 }
+
+.image-upload-form {
+  max-width: 50em;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1em;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary {
+  background: #57595c;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #414345;
+}
+
+.btn-secondary {
+  background: #ddd;
+  color: black;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background: #bbb;
+}
+
+/* Error Messages */
+.error-message {
+  color: red;
+  font-weight: bold;
+  background: #ffe6e6;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}

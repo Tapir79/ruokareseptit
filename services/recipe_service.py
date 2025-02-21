@@ -269,31 +269,38 @@ def handle_new_recipe_session_instructions(
 
 
 def add_new_recipe_image(recipe_id):
-    try:
-        if "image" not in request.files:
-            errors={"general": "Tiedostoa ei valittu."}
-            return render_template("upload_recipe_image", recipe_id=recipe_id, errors=errors)
 
-        file = request.files["image"]
+    file = request.files["image"]
+    if  file:
+        if not file.filename.endswith(".jpg"):
+            errors={"general": " väärä tiedostomuoto."}
+            return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+
 
         if file.filename == "":
             errors={"general": "Tiedoston nimi ei voi olla tyhjä."}
-            return render_template("upload_recipe_image", recipe_id=recipe_id, errors=errors)
+            return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
 
         if file and allowed_file(file.filename):
             image_data = file.read()  # Read the binary data
+            if len(image_data) > 100 * 1024:
+                errors={"general": "Kuva on liian suuri"}
+                return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
 
-            recipes.add_recipe_image(recipe_id, image_data)
+            try:
+                recipes.add_recipe_image(recipe_id, image_data)
 
-            print("Kuva ladattu onnistuneesti!")
-            return redirect(f"/recipe/{recipe_id}")
-        else:
-            errors={"general": "Väärä tiedostomuoto. Sallitut: .jpg, .jpeg, .png."},
-            return render_template("upload_recipe_image", recipe_id=recipe_id, errors=errors)
-    except Exception as e:
-        print(f"Virhe kuvan tallennuksessa: {e}")  # Log error to console
+                print("Kuva ladattu onnistuneesti!")
+                return redirect(f"/recipe/{recipe_id}")
+            except Exception as e:
+                print(f"Virhe kuvan tallennuksessa: {e}")  # Log error to console
+                errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
+                return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+
         errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
-        return render_template("upload_recipe_image.html", recipe_id=recipe_id, errors=errors)
+        return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+
+    return redirect(f"/recipe/{recipe_id}")
 
 def get_recipe_image_by_id(recipe_id):
     image = recipes.get_recipe_image(recipe_id)
