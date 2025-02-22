@@ -89,9 +89,10 @@ def remove_recipe(recipe_id):
     remove_unused_ingredients()
 
 
-# TODO prettier check if correct
-def find_recipes(query):
-    sql = """SELECT recipes.id,
+def find_recipes(query, vegan):
+    search_params, conditions = build_search_query_conditions(query, vegan)
+    
+    sql = f"""SELECT recipes.id,
                     recipes.title,
                     recipes.description,
                     recipes.user_id,
@@ -104,16 +105,15 @@ def find_recipes(query):
                     (recipes.total_rating/recipes.rating_count) as avg_rating
             FROM recipes
             JOIN users ON recipes.user_id = users.id
-            JOIN cuisines ON recipes.cuisine_id = cuisines.id
-            WHERE (recipes.title LIKE ?
-                OR recipes.description LIKE ?
-                OR recipes.id IN (SELECT recipe_ingredients.recipe_id
-                                    FROM recipe_ingredients
-                                    JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
-                                    WHERE ingredients.name LIKE ?))
-            ORDER BY recipes.id DESC"""
-    search_term = f"%{ query }%"
-    return db.query(sql, [search_term, search_term, search_term])
+            JOIN cuisines ON recipes.cuisine_id = cuisines.id"""
+    sql += conditions
+    sql += """ ORDER BY recipes.id DESC"""
+    
+    if search_params:
+        search_term = f"%{ query }%"
+        return db.query(sql, [search_term, search_term, search_term])
+    else:
+        return db.query(sql)
 
 
 def add_ingredients(recipe_id, recipe_ingredients):
@@ -353,3 +353,41 @@ def recipe_image_exists(recipe_id):
     sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
     result = db.query(sql, [recipe_id])
     return result[0][0] == 1
+
+# Helper function
+
+def get_next_operator(where):
+    if where:
+        return "WHERE", False
+    else:
+        return "AND", True
+
+
+def build_search_query_conditions(query, vegan):
+    search_params = False
+    where = True
+    conditions = []
+
+    if query:
+        query_condition = """(recipes.title LIKE ?
+                OR recipes.description LIKE ?
+                OR recipes.id IN (SELECT recipe_ingredients.recipe_id
+                                    FROM recipe_ingredients
+                                    JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
+                                    WHERE ingredients.name LIKE ?))"""
+        search_params = True
+        sql_operator, is_where = get_next_operator(where)
+        where = is_where
+        conditions.append(sql_operator)
+        conditions.append(query_condition)
+
+    if vegan:
+        sql_operator, is_where = get_next_operator(where)
+        where = is_where
+        conditions.append(sql_operator)
+        conditions.append("vegan = 1")
+
+    conditions = " ".join(conditions)
+    conditions = " " + conditions + " "
+
+    return search_params, conditions

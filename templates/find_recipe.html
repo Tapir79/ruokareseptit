@@ -11,10 +11,12 @@
     <label for="query">Hakusana:</label>
     <input type="text" name="query" value="{{ query }}" />
   </p>
+  <label for="vegan">Vegaaninen:</label>
+  <input type="checkbox" name="vegan" />
   <input type="submit" value="Hae" />
 </form>
 
-{% if query %}
+{% if results %}
 <h2>Tulokset</h2>
 <ul>
   {% for recipe in results %}
