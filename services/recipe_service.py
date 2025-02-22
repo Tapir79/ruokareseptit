@@ -322,7 +322,10 @@ def edit_new_recipe_image(recipe_id):
                 return render_template("show_recipe.html", recipe_id=recipe_id, errors=errors)
 
             try:
-                recipes.update_recipe_image(recipe_id, image_data)
+                if recipes.recipe_image_exists(recipe_id):
+                    recipes.update_recipe_image(recipe_id, image_data)
+                else:
+                    recipes.add_recipe_image(recipe_id, image_data)
                 return redirect(f"/recipe/{recipe_id}")
             except Exception as e:
                     print(f"Virhe kuvan päivityksessä: {e}")  # Log error to console
