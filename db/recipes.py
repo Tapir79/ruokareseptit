@@ -362,6 +362,12 @@ def get_next_operator(where):
     else:
         return "AND", True
 
+def append_to_conditions(where, conditions: list, query_condition):
+    sql_operator, is_where = get_next_operator(where)
+    where = is_where
+    conditions.append(sql_operator)
+    conditions.append(query_condition)
+    return where
 
 def build_search_query_conditions(query, vegan):
     search_params = False
@@ -376,16 +382,11 @@ def build_search_query_conditions(query, vegan):
                                     JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
                                     WHERE ingredients.name LIKE ?))"""
         search_params = True
-        sql_operator, is_where = get_next_operator(where)
-        where = is_where
-        conditions.append(sql_operator)
-        conditions.append(query_condition)
+        where = append_to_conditions(where, conditions, query_condition)
 
     if vegan:
-        sql_operator, is_where = get_next_operator(where)
-        where = is_where
-        conditions.append(sql_operator)
-        conditions.append("vegan = 1")
+        query_condition = "vegan = 1"
+        where = append_to_conditions(where, conditions, query_condition)
 
     conditions = " ".join(conditions)
     conditions = " " + conditions + " "
