@@ -49,18 +49,17 @@
     padding: 1px;
     width: 100%;
     max-width: 400px;
+    min-height: 100px;
 }
 
 
 /* Placeholder for missing image */
 .recipe-image-placeholder {
     width: 300px;
-    height: auto;
-    min-height: 100%;
-    /* Ensures placeholder is as tall as the description */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
+    max-height: 400px;
+    /* Limits height for a balanced look */
+    object-fit: cover;
     background-color: #f0f0f0;
     color: #666;
     font-size: 16px;
@@ -73,6 +72,7 @@
     align-items: center;
     gap: 10px; /* Adds spacing between the image and the buttons */
     margin-bottom: 15px; /* Ensures space before the description */
+    min-height: 100px;
 }
 
 /* Style for the description */
@@ -94,6 +94,8 @@
     justify-content: center;
     /* Centers text horizontally */
     margin: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 /* Recipe Buttons */
@@ -106,12 +108,6 @@
     background: none;
     border: none;
     cursor: pointer;
-}
-
-/* Recipe Text */
-.recipe-description {
-    font-size: 1.1em;
-    margin: 10px 0;
 }
 
 .recipe-author {
