@@ -89,8 +89,8 @@ def remove_recipe(recipe_id):
     remove_unused_ingredients()
 
 
-def find_recipes(query, vegan):
-    search_params, conditions = build_search_query_conditions(query, vegan)
+def find_recipes(query, vegan, vegetarian, lactose_free, gluten_free):
+    search_params, conditions = build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free)
     
     sql = f"""SELECT recipes.id,
                     recipes.title,
@@ -262,13 +262,11 @@ def get_cuisines():
     """Fetch all cuisines from the database."""
     return db.query("SELECT id, name FROM cuisines")
 
-
 def cuisine_exists(cuisine_id):
     sql = "SELECT EXISTS (SELECT 1 FROM cuisines WHERE id = ?)"
     result = db.query(sql, [cuisine_id])
 
     return result[0][0] == 1
-
 
 def save_rating(recipe_id, comment, stars, rated_by):
     sql = """INSERT INTO ratings (comment, rated_by, stars, recipe_id)
@@ -285,7 +283,6 @@ def save_rating(recipe_id, comment, stars, rated_by):
 
     return last_insert_id
 
-
 def get_ratings(recipe_id):
     sql = """SELECT
              ratings.comment,
@@ -300,14 +297,12 @@ def get_ratings(recipe_id):
              ORDER BY created_at DESC"""
     return db.query(sql, [recipe_id])
 
-
 def get_user_rating(recipe_id, rated_by):
     query = """SELECT id, comment, stars
                FROM ratings
                WHERE recipe_id = ? AND rated_by = ?"""
     result = db.query(query, (recipe_id, rated_by))
     return result[0] if result else None
-
 
 def update_rating(rating_id, comment, stars):
 
@@ -369,7 +364,7 @@ def append_to_conditions(where, conditions: list, query_condition):
     conditions.append(query_condition)
     return where
 
-def build_search_query_conditions(query, vegan):
+def build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free):
     search_params = False
     where = True
     conditions = []
@@ -386,6 +381,18 @@ def build_search_query_conditions(query, vegan):
 
     if vegan:
         query_condition = "vegan = 1"
+        where = append_to_conditions(where, conditions, query_condition)
+
+    if vegetarian:
+        query_condition = "vegetarian = 1"
+        where = append_to_conditions(where, conditions, query_condition)
+
+    if lactose_free:
+        query_condition = "lactose_free = 1"
+        where = append_to_conditions(where, conditions, query_condition)
+
+    if gluten_free:
+        query_condition = "gluten_free = 1"
         where = append_to_conditions(where, conditions, query_condition)
 
     conditions = " ".join(conditions)

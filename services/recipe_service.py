@@ -34,8 +34,11 @@ def get_index():
 def search_recipe():
     results = None
     query = request.args.get("query", "").strip()
-    vegan = request.args.get("vegan", "").strip()
-    results = recipes.find_recipes(query, vegan)
+    vegan = request.args.get("vegan")
+    vegetarian = request.args.get("vegetarian")
+    lactose_free = request.args.get("lactose_free")
+    gluten_free = request.args.get("gluten_free")
+    results = recipes.find_recipes(query, vegan, vegetarian, lactose_free, gluten_free)
     return render_template("find_recipe.html", query=query, results=results)
 
 
