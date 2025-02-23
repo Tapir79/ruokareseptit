@@ -164,13 +164,11 @@ def remove_recipe(recipe_id):
 @app.route("/upload_recipe_image/<int:recipe_id>", methods=["POST"])
 def upload_recipe_image(recipe_id):
     require_login(session)
-    # TODO check that session user is the same user that created the recipe_id
     return add_new_recipe_image(recipe_id)
 
 @app.route('/edit_recipe/<int:recipe_id>/image', methods=['POST'])
 def edit_recipe_image(recipe_id):
     require_login(session)
-    # TODO check that session user is the same user that created the recipe_id
     return edit_new_recipe_image(recipe_id)
 
 
