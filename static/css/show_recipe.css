@@ -18,15 +18,11 @@
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;
-    gap: 20px;
-    /* Adds space between image and description */
-    background-color: #ffffff;
-    /* Clean white background */
-    border-radius: 12px;
-    /* Soft rounded corners */
+    gap: 20px; /* Adds space between image and description */
+    background-color: #ffffff; /* Clean white background */
+    border-radius: 12px; /* Soft rounded corners */
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    /* Light shadow for depth */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Light shadow for depth */
 }
 
 /* Style for the image */
@@ -78,24 +74,20 @@
 /* Style for the description */
 .recipe-description {
     flex: 1;
-    /* Allows text to take up remaining space */
+    min-width: 0; /* Allows the element to shrink below its content's intrinsic width */
     background-color: #f9f9f9;
-    /* Light background for contrast */
     border: 2px solid rgba(186, 186, 189, 0.2);
-    /* Subtle border */
     font-style: italic;
     color: #333;
-    /* Darker text for readability */
     font-size: 16px;
     line-height: 1.6;
     display: flex;
     align-items: center;
-    /* Centers text vertically */
     justify-content: center;
-    /* Centers text horizontally */
-    margin: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all; /* Breaks words at arbitrary points if necessary */
 }
 
 /* Recipe Buttons */
@@ -226,7 +218,6 @@
     display: list-item;
     /* Forces correct list item behavior */
 }
-
 
 
 .stars-select {
