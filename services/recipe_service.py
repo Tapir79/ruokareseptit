@@ -10,7 +10,6 @@ from utils.validations import (
     user_owns_the_recipe,
     check_image,
 )
-from utils.validations import user_ids_must_match
 import html
 
 
@@ -274,6 +273,11 @@ def handle_new_recipe_session_instructions(
 
 
 def add_new_recipe_image(recipe_id):
+    single_recipe = recipes.get_recipe(recipe_id)
+    recipe_must_exist(single_recipe)
+    recipe_created_by = single_recipe["user_id"]
+    logged_in_user = session["user_id"]
+    user_owns_the_recipe(logged_in_user, recipe_created_by)
 
     file = request.files["image"]
     if  file:
@@ -309,6 +313,13 @@ def add_new_recipe_image(recipe_id):
 
 
 def edit_new_recipe_image(recipe_id):
+
+    single_recipe = recipes.get_recipe(recipe_id)
+    recipe_must_exist(single_recipe)
+    recipe_created_by = single_recipe["user_id"]
+    logged_in_user = session["user_id"]
+    user_owns_the_recipe(logged_in_user, recipe_created_by)
+
     file = request.files['image']
     if  file:
         if file.filename == "":
@@ -594,8 +605,8 @@ def handle_edit_recipe_session_ingredients(
 def delete_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
-    user_ids_must_match(single_recipe["user_id"], session)
-
+    user_owns_the_recipe(session["user_id"], single_recipe["user_id"])
+    
     if request.method == "GET":
         return render_template("remove_recipe.html", recipe=single_recipe)
 

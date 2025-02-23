@@ -113,11 +113,6 @@ def validate_recipe_save_form(form_data):
 
     return errors
 
-
-def user_ids_must_match(recipe_user_id, session):
-    if recipe_user_id != session["user_id"]:
-        abort(403)
-
 def recipe_must_exist(recipe):
     if not recipe:
         abort(404)
