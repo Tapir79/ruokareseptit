@@ -23,10 +23,16 @@
 * [x]Sovelluksella on CSS-tyylitiedosto
 
 
-# Sovelluksen asennus
-Asenna `flask`-kirjasto:
+# Sovelluksen asennus 
 
-``$ pip install flask``
+## Asenna `flask`-kirjasto:    
+    ``$ pip install flask``
+
+## Luo tietokanta
+   
+``$ . install.sh``
+
+Jos automaattiasennus ei toimi, voit tehdä asennuksen myös manuaalisesti:
 
 Luo tietokannan taulut ja lisää alkutiedot: 
 ````
@@ -34,10 +40,7 @@ $ sqlite3 database.db < schema.sql
 $ sqlite3 database.db < init.sql
 ````
 
-Voit käynnistää sovelluksen näin: 
-`` $ flask run `` 
-
-# (Optionaalinen) testidatan asennus
+## (Optionaalinen) lisää testidata tietokantaan
 
 Aja tietokantaan valmista testidataa:
 ````
@@ -51,3 +54,8 @@ Lisäksi luodaan 2 valmista testikäyttäjää:
 |-|-|
 |guybrush|guybrush|
 |elaine|elaine|
+
+## Käynnistä sovellus    
+`` $ flask run ``
+
+
