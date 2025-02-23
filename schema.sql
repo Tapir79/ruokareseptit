@@ -57,14 +57,3 @@ CREATE TABLE recipe_images (
     image BLOB NOT NULL,
     recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
 );
-
--- TODO move into separate init db file
-INSERT INTO cuisines (name) VALUES 
-    ('Pohjoismainen'),
-    ('Eurooppalainen'),
-    ('Aasialainen'),
-    ('Lähi-idän keittiö'),
-    ('Afrikkalainen'),
-    ('Latinalaisamerikkalainen'),
-    ('Pohjoisamerikkalainen'),
-    ('Australialainen & Oseanialainen');

@@ -31,7 +31,23 @@ Asenna `flask`-kirjasto:
 Luo tietokannan taulut ja lisää alkutiedot: 
 ````
 $ sqlite3 database.db < schema.sql
+$ sqlite3 database.db < init.sql
 ````
 
 Voit käynnistää sovelluksen näin: 
 `` $ flask run `` 
+
+# (Optionaalinen) testidatan asennus
+
+Aja tietokantaan valmista testidataa:
+````
+$ sqlite3 database.db < test_data.sql
+````
+
+Testidata sisältää yhden valmiin reseptin ja arvostelun reseptille.    
+Lisäksi luodaan 2 valmista testikäyttäjää:
+
+|tunnus|salasana|
+|-|-|
+|guybrush|guybrush|
+|elaine|elaine|
