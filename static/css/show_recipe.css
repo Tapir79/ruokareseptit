@@ -83,17 +83,44 @@
     border-radius: 10px;
 }
 
+/*image upload form*/
+
 .image-upload-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    padding: 1px;
+    padding: 1rem;
     width: 100%;
     max-width: 400px;
     min-height: 100px;
-}
-
+    background-color: #f9f9f9; /* Optional: light background */
+    border: 1px solid #ddd;    /* Optional: border around the form */
+    border-radius: 5px;        /* Optional: rounded corners */
+  }
+  
+  /* Style the label */
+  .image-upload-form label {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  /* Style the file input */
+  .image-upload-form input[type="file"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Style the submit button if you're not using a framework like Bootstrap */
+  .image-upload-form input[type="submit"] {
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+/* end image upload form */
 
 .recipe-image-placeholder {
     width: 100%;

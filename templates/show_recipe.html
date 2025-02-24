@@ -68,9 +68,10 @@ endblock %} {% block content %}
 
         {% if session.user_id == recipe.user_id %}
         <form action="/edit_recipe/{{ recipe.id }}/image" method="post" enctype="multipart/form-data" class="image-upload-form">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-            <input type="file" name="image" accept="jpg" required />
-            <input type="submit" value="Päivitä kuva" class="btn btn-primary" />
+          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+          <label for="image">Päivitä kuva</label>
+          <input type="file" name="image" accept="jpg" required />
+          <input type="submit" value="Tallenna muutokset" class="btn btn-primary" />
         </form>
         {% endif %}
     </div>
