@@ -94,32 +94,35 @@
     width: 100%;
     max-width: 400px;
     min-height: 100px;
-    background-color: #f9f9f9; /* Optional: light background */
-    border: 1px solid #ddd;    /* Optional: border around the form */
-    border-radius: 5px;        /* Optional: rounded corners */
-  }
-  
-  /* Style the label */
-  .image-upload-form label {
+    background-color: #f9f9f9;
+    /* Optional: light background */
+    border: 1px solid #ddd;
+    /* Optional: border around the form */
+    border-radius: 5px;
+    /* Optional: rounded corners */
+}
+
+/* Style the label */
+.image-upload-form label {
     font-weight: bold;
     font-size: 1rem;
     margin-bottom: 5px;
-  }
-  
-  /* Style the file input */
-  .image-upload-form input[type="file"] {
+}
+
+/* Style the file input */
+.image-upload-form input[type="file"] {
     padding: 5px;
     border: 1px solid #ccc;
-  }
-  
-  /* Style the submit button if you're not using a framework like Bootstrap */
-  .image-upload-form input[type="submit"] {
+}
+
+/* Style the submit button if you're not using a framework like Bootstrap */
+.image-upload-form input[type="submit"] {
     border: none;
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
+}
+
 /* end image upload form */
 
 .recipe-image-placeholder {
@@ -231,61 +234,6 @@
     /* Light hover effect (you can remove this line if not needed) */
 }
 
-
-
-
-/* Ensuring Buttons Stay Aligned */
-/* Styling for form groups (Title, Description, etc.) */
-.form-group {
-    margin-bottom: 20px;
-}
-
-/* Labels for better readability */
-.form-group label {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #444;
-    display: block;
-    margin-bottom: 5px;
-}
-
-/* Title Input Field */
-.form-group input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1.1em;
-    transition: border-color 0.3s ease;
-}
-
-/* Add focus effect for better UX */
-.form-group input[type="text"]:focus,
-.form-group textarea:focus {
-    border-color: #57595c;
-    outline: none;
-}
-
-/* Description Field */
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1.1em;
-    resize: vertical;
-    transition: border-color 0.3s ease;
-}
-
-/* Dropdown Styling */
-.form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1.1em;
-}
-
 .recipe-column .btn {
     margin-top: auto;
 }
@@ -330,35 +278,6 @@
     max-width: 1000px;
     box-sizing: border-box;
     border: 1px solid #ddd;
-}
-
-.tag {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid;
-}
-
-.tag-gluten-free {
-    border-color: #c37604;
-    color: #c37604;
-}
-
-.tag-lactose-free {
-    border-color: #0f4e82;
-    color: #0f4e82;
-}
-
-.tag-vegan {
-    border-color: #379103;
-    color: #379103;
-}
-
-.tag-vegetarian {
-    border-color: #6f9702;
-    color: #6f9702;
 }
 
 /* Wrapper for each rating */

@@ -1,0 +1,143 @@
+/* General Layout */
+body {
+    background: #f7f5f5;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+hr {
+    height: 1px;
+    border: none;
+    background-color: #ccc;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1em;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-primary {
+    background: #57595c;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #414345;
+}
+
+.btn-secondary {
+    background: #ddd;
+    color: black;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #bbb;
+}
+
+/* Error Messages */
+.error-message {
+    color: red;
+    font-weight: bold;
+    background: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Tags */
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid;
+}
+
+.tag-gluten-free {
+    border-color: #c37604;
+    color: #c37604;
+}
+
+.tag-lactose-free {
+    border-color: #0f4e82;
+    color: #0f4e82;
+}
+
+.tag-vegan {
+    border-color: #379103;
+    color: #379103;
+}
+
+.tag-vegetarian {
+    border-color: #6f9702;
+    color: #6f9702;
+}
+
+
+/* Form Containers */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.form-group label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #444;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Input Fields */
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus Effect */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #57595c;
+    outline: none;
+}
+
+/* Description Field */
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1em;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+/* Dropdown Styling */
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1em;
+}

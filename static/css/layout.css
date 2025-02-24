@@ -1,14 +1,3 @@
-/* General Layout */
-body {
-  background: #f7f5f5;
-  margin: 0;
-  font-family: sans-serif;
-}
-
-html {
-  overflow-y: scroll;
-}
-
 .site-content {
   max-width: 50em;
   margin: 20px auto;
@@ -104,10 +93,4 @@ nav a:hover {
   color: gray;
   text-decoration: none;
   opacity: 0.6;
-}
-
-hr {
-  height: 1px;
-  border: none;
-  background-color: #ccc;
 }
