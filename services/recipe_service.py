@@ -42,7 +42,8 @@ def search_recipe():
     vegetarian = request.args.get("vegetarian")
     lactose_free = request.args.get("lactose_free")
     gluten_free = request.args.get("gluten_free")
-    results = recipes.find_recipes(query, vegan, vegetarian, lactose_free, gluten_free)
+    avg_rating = request.args.getlist("avg_rating")
+    results = recipes.find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating)
     return render_template("find_recipe.html", query=query, results=results)
 
 

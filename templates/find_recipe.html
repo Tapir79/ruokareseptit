@@ -1,52 +1,73 @@
 {% extends "layout.html" %}
-{% block title %} Haku {% endblock %}
+{% block title %}Haku{% endblock %}
 {% block content %}
-{% if not session.username %}
-<h1><a href="/register">Luo tunnus</a> ja lisää omia reseptejä!</h1>
-{% endif %}
-<h2>Etsi resepti</h2>
+  {% if not session.username %}
+    <h1><a href="/register">Luo tunnus</a> ja lisää omia reseptejä!</h1>
+  {% endif %}
+  <h2>Etsi resepti</h2>
 
-<form action="/find_recipe" method="get">
-  <p>
-    <label for="query">Hakusana:</label>
-    <input type="text" name="query" value="{{ query }}" />
-  </p>
-  <p>
-    <label for="vegan">Vegaaninen:</label>
-    <input type="checkbox" name="vegan" />
-    <label for="vegetarian">Vegetaarinen:</label>
-    <input type="checkbox" name="vegetarian" />
-    <label for="lactose_free">Lactose free:</label>
-    <input type="checkbox" name="lactose_free" />
-    <label for="gluten_free">Gluten free:</label>
-    <input type="checkbox" name="gluten_free" />
-  </p>
+  <form action="/find_recipe" method="get">
+    <p>
+      <label for="query">Hakusana:</label>
+      <input type="text" name="query" value="{{ query }}" />
+    </p>
+    <p>
+      <label for="vegan">Vegaaninen:</label>
+      <input type="checkbox" name="vegan" {% if request.args.get('vegan') %}checked{% endif %} />
+      <label for="vegetarian">Vegetaarinen:</label>
+      <input type="checkbox" name="vegetarian" {% if request.args.get('vegetarian') %}checked{% endif %} />
+      <label for="lactose_free">Lactose free:</label>
+      <input type="checkbox" name="lactose_free" {% if request.args.get('lactose_free') %}checked{% endif %} />
+      <label for="gluten_free">Gluten free:</label>
+      <input type="checkbox" name="gluten_free" {% if request.args.get('gluten_free') %}checked{% endif %} />
+    </p>
+    <p>
+      <span>Tähtiarvosana:</span><br>
+      <label for="star1">
+        <input type="checkbox" name="avg_rating" value="1" id="star1" {% if '1' in request.args.getlist('avg_rating') %}checked{% endif %}>
+        1 tähti
+      </label>
+      <label for="star2">
+        <input type="checkbox" name="avg_rating" value="2" id="star2" {% if '2' in request.args.getlist('avg_rating') %}checked{% endif %}>
+        2 tähteä
+      </label>
+      <label for="star3">
+        <input type="checkbox" name="avg_rating" value="3" id="star3" {% if '3' in request.args.getlist('avg_rating') %}checked{% endif %}>
+        3 tähteä
+      </label>
+      <label for="star4">
+        <input type="checkbox" name="avg_rating" value="4" id="star4" {% if '4' in request.args.getlist('avg_rating') %}checked{% endif %}>
+        4 tähteä
+      </label>
+      <label for="star5">
+        <input type="checkbox" name="avg_rating" value="5" id="star5" {% if '5' in request.args.getlist('avg_rating') %}checked{% endif %}>
+        5 tähteä
+      </label>
+    </p>
+    <input type="submit" value="Hae" />
+  </form>
 
-  <input type="submit" value="Hae" />
-</form>
-
-{% if results %}
-<h2>Tulokset</h2>
-<ul>
-  {% for recipe in results %}
-  <li><a href="/recipe/{{ recipe.id }}"> {{ recipe.title }} </a> - <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a> 
-    {% if recipe.avg_rating %}
-    {% for i in range(0, recipe.avg_rating) %}
-    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
-    {% endfor %}
-    {% for i in range(0, 5-recipe.avg_rating) %}
-    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
-    {% endfor %}
-    {% else %}
-    {% for i in range(0, 0) %}
-    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
-    {% endfor %}
-    {% for i in range(0, 5) %}
-    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
-    {% endfor %}
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% endif %}
+  {% if results %}
+    <h2>Tulokset</h2>
+    <ul>
+      {% for recipe in results %}
+        <li>
+          <a href="/recipe/{{ recipe.id }}"> {{ recipe.title }} </a> -
+          <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
+          {% if recipe.avg_rating %}
+            {% for i in range(0, recipe.avg_rating) %}
+              <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti" />
+            {% endfor %}
+            {% for i in range(0, 5 - recipe.avg_rating) %}
+              <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti" />
+            {% endfor %}
+          {% else %}
+            {% for i in range(0, 5) %}
+              <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti" />
+            {% endfor %}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 {% endblock %}
