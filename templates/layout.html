@@ -9,16 +9,17 @@
     <!-- Full-width Dark Header -->
     <header class="top-header">
       <div class="header-container">
-        <h1 class="logo">
-          Ruokareseptit
-          <img
-          src="{{ url_for('static', filename='icons/coffee.svg') }}"
-          width="40"
-          height="40"
-          alt="Coffee logo"
-        />
-        </h1>
-
+        <a href="/" class="logo-link">
+          <h1 class="logo">
+            Ruokareseptit
+            <img
+              src="{{ url_for('static', filename='icons/coffee.svg') }}"
+              width="40"
+              height="40"
+              alt="Coffee logo"
+            />
+          </h1>
+        </a>
         <div class="nav-links">
           {% if session.user_id %}
           <p>
@@ -63,8 +64,7 @@
       <div class="error-message">
         <p>{{ errors.general }}</p>
       </div>
-      {% endif %}
-      {% block content %}{% endblock %}
+      {% endif %} {% block content %}{% endblock %}
     </main>
   </body>
 </html>

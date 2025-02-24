@@ -3,7 +3,7 @@ endblock %} {% block content %}
 
 <div class="recipe-header">
   <div class="recipe-title-container">
-    <h2>{{ recipe.title }}</h2>
+    <h1>{{ recipe.title }}</h1>
 
     {% if session.user_id == recipe.user_id %}
     <div class="recipe-buttons">
@@ -16,7 +16,8 @@ endblock %} {% block content %}
     </div>
     {% endif %}
   </div>
-  <p>
+  <p class="rating-cuisine-container">
+    <span class="rating-stars">
     {% if recipe.avg_rating %}
     {% for i in range(0, recipe.avg_rating) %}
     <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
@@ -32,7 +33,30 @@ endblock %} {% block content %}
     <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
     {% endfor %}
     {% endif %}
-  </p>
+  </span>
+
+  <span class="cuisine-tag">{{ recipe.cuisine }}</span>
+  
+    {% if recipe.vegan %}
+    <span class="tag tag-vegan">Vegaani</span>
+    {% endif %}
+
+    {% if recipe.vegetarian %}
+    <span class="tag tag-vegetarian">Kasvis</span>
+    {% endif %}
+
+    {% if recipe.lactose_free %}
+    <span class="tag tag-lactose-free">Laktoositon</span>
+    {% endif %}
+
+    {% if recipe.gluten_free %}
+    <span class="tag tag-gluten-free">Gluteeniton</span>
+    {% endif %}
+</p>
+
+<p class="recipe-author">
+  Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
+</p>
 
   <div class="recipe-image-description">
     <div class="image-container">
@@ -54,38 +78,29 @@ endblock %} {% block content %}
     <p class="recipe-description">{{ recipe.description | replace('\n', '<br>') | safe }}</p>
 </div>
 
-  <p>Ruokakulttuuri: {{ recipe.cuisine }}</p>
-  <p>
-    {% if recipe.vegan %}
-    <span class="tag tag-vegan">Vegaani</span>
-    {% endif %}
-
-    {% if recipe.vegetarian %}
-    <span class="tag tag-vegetarian">Kasvis</span>
-    {% endif %}
-
-    {% if recipe.lactose_free %}
-    <span class="tag tag-lactose-free">Laktoositon</span>
-    {% endif %}
-
-    {% if recipe.gluten_free %}
-    <span class="tag tag-gluten-free">Gluteeniton</span>
-    {% endif %}
-  </p>
-  <p class="recipe-author">
-    Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
-  </p>
+  
 </div>
 
 <div class="recipe-container">
   <div class="recipe-column">
     <h3>Ainekset</h3>
     {% if recipe_ingredients %}
-    <ul>
-      {% for ingredient in recipe_ingredients %}
-      <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
-      {% endfor %}
-    </ul>
+    <table class="ingredients-table">
+      <thead>
+        <tr>
+          <th>Määrä</th>
+          <th>Aines</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ingredient in recipe_ingredients %}
+        <tr>
+          <td>{{ ingredient.amount }}</td>
+          <td>{{ ingredient.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% endif %}
   </div>
 
@@ -128,6 +143,7 @@ endblock %} {% block content %}
       </label>
     </p>
     
+    <hr>
 
     {% else %}
    <textarea name="comment" rows="8" class="comment-box">
@@ -139,13 +155,33 @@ endblock %} {% block content %}
     {% endif %}
   </form>
 </div>
-{% endif %} {% if recipe_ratings %} {% for rating in recipe_ratings %}
-<div>
-  {{ rating.comment}} -
-  <a href="/user/{{ rating.rated_by }}">{{ rating.username }}</a>
-  - {{ rating.created_at }}
-  {% if rating.stars %}
-  - {{ rating.stars }}
-  {% endif %}
-</div>
-{% endfor %} {% endif %} {% block extra_content %}{% endblock %} {% endblock %}
+{% endif %} 
+
+<h2>Arvostelut</h2>
+
+{% if recipe_ratings %}
+  {% for rating in recipe_ratings %}
+  <div class="rating-container">
+    <div class="rating-comment">
+      {{ rating.comment }}
+    </div>
+    <div class="rating-username">
+      <a href="/user/{{ rating.rated_by }}">{{ rating.username }}</a>
+    </div>
+    <div class="rating-container-stars">
+      {% for i in range(0, rating.stars) %}
+      <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
+      {% endfor %}
+      {% for i in range(0, 5-rating.stars) %}
+      <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
+      {% endfor %}
+    </div>
+    <div class="rating-created-at">
+     {{ rating.created_at }}
+    </div>
+  </div>
+  {% endfor %}
+{% endif %}
+
+
+{% block extra_content %}{% endblock %} {% endblock %}

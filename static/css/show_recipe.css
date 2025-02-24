@@ -6,30 +6,78 @@
     border-bottom: 2px solid #ddd;
 }
 
-/* Recipe title & buttons */
 .recipe-title-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 10px;
+    position: relative;
+    /* Allows absolute positioning inside */
+}
+
+/* Move buttons to the right while keeping title centered */
+.recipe-buttons {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.recipe-buttons a {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Container for the stars and cuisine tag */
+.rating-cuisine-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Adjust the gap as needed */
+}
+
+/* Ensures the stars are displayed in a row */
+.rating-stars {
+    display: flex;
+    align-items: center;
+}
+
+/* Styling for the cuisine tag */
+.cuisine-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #5694d2;
+    /* Nice blue tone */
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
 }
 
 .recipe-image-description {
     display: flex;
-    flex-direction: column; /* Stack image above description */
+    flex-direction: column;
+    /* Stack image above description */
     align-items: center;
     gap: 20px;
     background-color: #ffffff;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    max-width: 50em; /* Ensures consistent layout width */
+    max-width: 50em;
+    /* Ensures consistent layout width */
     margin: auto;
 }
 
 .recipe-image {
-    width: 100%; /* Makes image take full width */
-    max-width: 600px; /* Limits max size */
+    width: 100%;
+    /* Makes image take full width */
+    max-width: 600px;
+    /* Limits max size */
     height: auto;
     object-fit: cover;
     border-radius: 10px;
@@ -49,7 +97,8 @@
 
 .recipe-image-placeholder {
     width: 100%;
-    max-width: 600px; /* Matches image max width */
+    max-width: 600px;
+    /* Matches image max width */
     height: auto;
     object-fit: cover;
     background-color: #f0f0f0;
@@ -72,32 +121,22 @@
 }
 
 .recipe-description {
-    width: 80%; /* Fixed width to maintain layout */
-    max-width: 600px; /* Matches image width */
-    background-color: #f9f9f9;
-    border: 2px solid rgba(186, 186, 189, 0.2);
+    width: 80%;
+    /* Fixed width to maintain layout */
+    max-width: 600px;
+    /* Matches image width */
     font-style: italic;
     color: #333;
     font-size: 16px;
     line-height: 1.6;
     padding: 15px;
-    text-align: center;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    white-space: normal; /* Ensures proper word wrapping */
+    white-space: normal;
+    /* Ensures proper word wrapping */
 }
 
-/* Recipe Buttons */
-.recipe-buttons {
-    display: flex;
-    gap: 10px;
-}
 
-.recipe-buttons a {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
 
 .recipe-author {
     font-size: 1em;
@@ -132,6 +171,41 @@
     text-align: center;
     margin-bottom: 15px;
 }
+
+
+/* Style for the ingredients table */
+.ingredients-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Makes the borders of the table cells collapse together */
+}
+
+.ingredients-table th,
+.ingredients-table td {
+    padding: 10px;
+    text-align: left;
+    /* Aligns the content to the left */
+}
+
+.ingredients-table th {
+    font-weight: bold;
+    /* Makes the header text bold */
+}
+
+/* Thin line between rows */
+.ingredients-table tr {
+    border-bottom: 1px solid #dddddd64;
+    /* Adds a thin line between each row */
+}
+
+/* Optional: Hover effect for rows */
+.ingredients-table tr:hover {
+    background-color: #f1f1f1;
+    /* Light hover effect (you can remove this line if not needed) */
+}
+
+
+
 
 /* Ensuring Buttons Stay Aligned */
 /* Styling for form groups (Title, Description, etc.) */
@@ -258,4 +332,44 @@
 .tag-vegetarian {
     border-color: #6f9702;
     color: #6f9702;
+}
+
+/* Wrapper for each rating */
+.rating-container {
+    display: flex;
+    justify-content: space-between;
+    /* Spread out elements evenly */
+    align-items: center;
+    /* Align vertically */
+    border-bottom: 1px solid #ccc;
+    /* Optional: Adds a small border between ratings */
+    padding: 10px 0;
+}
+
+/* Each part of the rating: comment, username, stars, and created date */
+.rating-comment {
+    flex: 1;
+    /* Makes comment take the available space */
+    padding-right: 10px;
+    /* Adds some spacing between the comment and the other parts */
+}
+
+.rating-username {
+    flex: 1;
+    text-align: center;
+    /* Center the username */
+}
+
+.rating-container-stars {
+    flex: 1;
+    text-align: center;
+    /* Center the stars */
+}
+
+.rating-created-at {
+    flex: 1;
+    text-align: right;
+    /* Align the date to the right */
+    font-size: 0.9em;
+    /* Slightly smaller text for the created date */
 }
