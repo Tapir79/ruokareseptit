@@ -9,14 +9,14 @@
     <label for="title">Otsikko:</label>
     <input type="text" name="title" value="{{ form_data.title if form_data and 'title' else recipe.title }}" maxlength="30" />
     {% if errors.title %}
-    <span style="color: red">{{ errors.title }}</span>
+    <span class="error-message">{{ errors.title }}</span>
     {% endif %}
   </p>
   <p>
     <label for="description">Kuvaus:</label>
     <textarea name="description" rows="8" cols="60" maxlength="300">{{ form_data.description if form_data and 'description' else recipe.description }}</textarea>
     {% if errors.description %}
-    <span style="color: red">{{ errors.description }}</span>
+    <span class="error-message">{{ errors.description }}</span>
     {% endif %}
   </p>
 
@@ -34,7 +34,7 @@
       {% endfor %}
     </select>
     {% if errors.cuisine %}
-    <span style="color: red">{{ errors.cuisine }}</span>
+    <span class="error-message">{{ errors.cuisine }}</span>
     {% endif %}
 </p>
 
@@ -102,7 +102,7 @@
       maxlength="30"
       value="{{ form_data.name if form_data and 'name' in form_data else '' }}"
     />
-    <span style="color: red">{{ errors.name }}</span>
+    <span class="error-message">{{ errors.name }}</span>
     {% else %}
     <input type="text" name="name" maxlength="30" />
     {% endif %}
@@ -116,7 +116,7 @@
       maxlength="20"
       value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}"
     />
-    <span style="color: red">{{ errors.amount }}</span>
+    <span class="error-message">{{ errors.amount }}</span>
     {% else %}
     <input type="text" name="amount" maxlength="20" />
     {% endif %}
@@ -148,7 +148,7 @@
     maxlength="150"
     value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}"
   />
-  <span style="color: red">{{ errors.instruction_name }}</span>
+  <span class="error-message">{{ errors.instruction_name }}</span>
   {% else %}
   <label for="instruction_name">Uusi ohje:</label>
   <input type="text" name="instruction_name" maxlength="150" />
