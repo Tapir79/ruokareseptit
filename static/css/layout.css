@@ -5,6 +5,10 @@ body {
   font-family: sans-serif;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 .site-content {
   max-width: 50em;
   margin: 20px auto;
