@@ -113,8 +113,8 @@ def remove_recipe(recipe_id):
     remove_unused_ingredients()
 
 
-def find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating):
-    search_params, conditions = build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating)
+def find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine):
+    search_params, cuisine_param, conditions = build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine)
     
     sql = f"""SELECT recipes.id,
                     recipes.title,
@@ -133,11 +133,15 @@ def find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating
     sql += conditions
     sql += """ ORDER BY recipes.id DESC"""
     
-    if search_params:
-        search_term = f"%{ query }%"
-        return db.query(sql, [search_term, search_term, search_term])
-    else:
+    if not search_params and not cuisine_param:
         return db.query(sql)
+    else:
+        params = []
+        if search_params:
+            params = [f"%{ query }%", f"%{ query }%", f"%{ query }%"]
+        if cuisine_param:
+            params.append(cuisine)
+        return db.query(sql, params)
 
 
 def add_ingredients(recipe_id, recipe_ingredients):
@@ -391,8 +395,9 @@ def append_to_conditions(is_first, conditions: list, query_condition):
         is_first = False
     return is_first
 
-def build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating):
+def build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine):
     search_params = False
+    cuisine_param = False
     is_first = True
     conditions = []
 
@@ -428,7 +433,12 @@ def build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten
         query_condition = f"(recipes.total_rating/recipes.rating_count) IN ({ratings_str})"
         is_first = append_to_conditions(is_first, conditions, query_condition)
 
+    if cuisine:
+        query_condition = "cuisines.id = ?"
+        is_first = append_to_conditions(is_first, conditions, query_condition)
+        cuisine_param = True
+
     conditions = " ".join(conditions)
     conditions = " " + conditions + " "
 
-    return search_params, conditions
+    return search_params, cuisine_param, conditions
