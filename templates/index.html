@@ -1,20 +1,40 @@
 {% extends "layout.html" %}
-{% block title %} Ruokareseptit - etusivu {% endblock %}
+{% block title %}Ruokareseptit - Etusivu{% endblock %}
 {% block content %}
 
-{% if not session.username %}
-<h1><a href="/register">Luo tunnus</a> ja lisää omia reseptejä!</h1>
-{% endif %}
+  <h1>Suosituin resepti juuri nyt</h1>
 
-<h2>Reseptilista</h2>
-
-<ul>
-  {% for recipe in recipes %}
-  <li>
-    <a href="/recipe/{{ recipe.id }}">
-      {{ recipe.title }} id: {{ recipe.id }}
+  <div class="featured-recipe">
+    <a href="/recipe/{{ featured_recipe.id }}">
+      {% if image_exists %}
+        <img src="/recipe/{{ featured_recipe.id }}/image" alt="{{ featured_recipe.title }}" class="featured-recipe-image">
+      {% else %}
+        <img src="{{ url_for('static', filename='icons/default_recipe.svg') }}" alt="Oletusreseptikuva" class="featured-recipe-image">
+      {% endif %}
     </a>
-  </li>
-  {% endfor %}
-</ul>
+    <div class="featured-recipe-details">
+      <h2 class="featured-recipe-title">
+        <a href="/recipe/{{ featured_recipe.id }}">{{ featured_recipe.title }}</a>
+      </h2>
+      <div class="rating-stars">
+        {% if featured_recipe.avg_rating %}
+          {% for i in range(0, featured_recipe.avg_rating) %}
+            <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti">
+          {% endfor %}
+          {% for i in range(0, 5 - featured_recipe.avg_rating) %}
+            <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
+          {% endfor %}
+        {% else %}
+          {% for i in range(0, 5) %}
+            <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
+          {% endfor %}
+        {% endif %}
+      </div>
+      <p>Arviot: {{ featured_recipe.rating_count }}</p>
+      <p>Laatinut: <a href="/user/{{ featured_recipe.user_id }}">{{ featured_recipe.username }}</a></p>
+    </div>
+  </div>
+
+  <!-- Mahdollisesti muu etusivun sisältö -->
+  
 {% endblock %}

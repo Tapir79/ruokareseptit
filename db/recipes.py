@@ -33,6 +33,30 @@ def get_recipe(recipe_id):
     return result[0] if result else None
 
 
+def get_featured_recipe():
+    sql = """SELECT recipes.id, 
+                    recipes.title, 
+                    recipes.description,
+                    recipes.user_id,
+                    recipes.vegan,
+                    recipes.vegetarian,
+                    recipes.lactose_free,
+                    recipes.gluten_free,
+                    recipes.rating_count,
+                    cuisines.id as cuisine_id,
+                    cuisines.name as cuisine,
+                    users.id as user_id,
+                    users.username,
+                    (recipes.total_rating/recipes.rating_count) as avg_rating
+             FROM recipes 
+             JOIN users ON recipes.user_id = users.id
+             JOIN cuisines ON recipes.cuisine_id = cuisines.id
+             ORDER BY avg_rating DESC, recipes.rating_count DESC
+             LIMIT 1"""
+    result = db.query(sql)
+    return result[0] if result else None
+
+
 def get_recipes_by_user(user_id):
     sql = """SELECT recipes.id,
                     recipes.title,

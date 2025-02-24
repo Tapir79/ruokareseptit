@@ -27,7 +27,12 @@ def delete_temporary_session_attributes():
 
 
 def get_index():
-    return render_template("index.html", recipes=recipes.get_recipes())
+    featured_recipe = recipes.get_featured_recipe()
+    recipe_must_exist(featured_recipe)
+    image_exists = recipes.recipe_image_exists(featured_recipe["id"])
+    return render_template("index.html",
+                           featured_recipe=featured_recipe,
+                           image_exists = image_exists)
 
 
 def search_recipe():
