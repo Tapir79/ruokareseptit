@@ -9,21 +9,21 @@
 {% else %}
 <h1><a href="/register">Luo tunnus</a> ja lisää omia reseptejä!</h1>
 <form action="/login" method="post">
-  <p>
+  <div class="form-group">
     <label for="username">Tunnus:</label>
-    <input type="text" name="username" value="{{ username or '' }}" required />
+    <input type="text" name="username" value="{{ username or '' }}" class="form-control" required />
       {% if errors.username %}
-      <span style="color: red;">{{ errors.username }}</span>
+      <span class="error-message">{{ errors.username }}</span>
       {% endif %}
-  </p>
-  <p>
+  </div>
+  <div class="form-group">
     <label for="password">Salasana:</label>
-    <input type="password" name="password" required />
+    <input type="password" name="password" class="form-control" required />
     {% if errors.password %}
-    <span style="color: red;">{{ errors.password }}</span>
+    <span class="error-message">{{ errors.password }}</span>
     {% endif %}
-  </p>
-  <input type="submit" value="Kirjaudu" />
+  </div>
+  <button type="submit" class="btn btn-primary">Kirjaudu</button>
 </form>
 {% endif %}
 

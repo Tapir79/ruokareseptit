@@ -2,27 +2,27 @@
 {% block title %} Rekisteröi uusi käyttäjä {% endblock %}
 {% block content %}
 <form action="/register" method="post">
-  <p>
+  <div class="form-group">
     <label for="username">Tunnus:</label>
-    <input type="text" name="username" value="{{ username or '' }}"/>
+    <input type="text" name="username" value="{{ username or '' }}" class="form-control" required/>
     {% if errors.username %}
     <span style="color: red;">{{ errors.username }}</span>
     {% endif %}
-  </p>
-  <p>
+  </div>
+  <div class="form-group">
     <label for="password1">Salasana:</label>
-    <input type="password" name="password1" />
+    <input type="password" name="password1" class="form-control" required/>
     {% if errors.password1 %}
     <span style="color: red;">{{ errors.password1 }}</span>
     {% endif %}
-  </p>
-  <p>
+  </div>
+  <div class="form-group">
     <label for="password2">Salasana uudestaan:</label>
-    <input type="password" name="password2" />
+    <input type="password" name="password2" class="form-control" required/>
     {% if errors.password2 %}
     <span style="color: red;">{{ errors.password2 }}</span>
     {% endif %}
-  </p>
-  <input type="submit" value="Luo tunnus" />
+  </div>
+  <button type="submit" class="btn btn-primary">Luo tunnus</button>
 </form>
 {% endblock %}
