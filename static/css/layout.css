@@ -94,3 +94,23 @@ nav a:hover {
   text-decoration: none;
   opacity: 0.6;
 }
+
+.welcome-message {
+  font-size: 1.8em;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.welcome-message a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.welcome-message a:hover {
+  text-decoration: underline;
+}

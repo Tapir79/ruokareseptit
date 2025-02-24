@@ -60,7 +60,11 @@
 
     <!-- Main Content Section -->
     <main class="site-content">
-      {% if errors and errors.general %}
+      {% if not session.username %}
+      <h1 class="welcome-message">
+        <a href="/register">Luo tunnus</a> ja lisää omia reseptejä!
+      </h1>
+      {% endif %} {% if errors and errors.general %}
       <div class="error-message">
         <p>{{ errors.general }}</p>
       </div>
