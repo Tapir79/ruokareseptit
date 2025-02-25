@@ -11,17 +11,14 @@
           <input type="checkbox" name="vegan" id="vegan" {% if request.args.get('vegan') %}checked{% endif %}>
           Vegaaninen
         </label>
-        <br>
         <label for="vegetarian">
           <input type="checkbox" name="vegetarian" id="vegetarian" {% if request.args.get('vegetarian') %}checked{% endif %}>
           Kasvis
         </label>
-        <br>
         <label for="lactose_free">
           <input type="checkbox" name="lactose_free" id="lactose_free" {% if request.args.get('lactose_free') %}checked{% endif %}>
           Laktoositon
         </label>
-        <br>
         <label for="gluten_free">
           <input type="checkbox" name="gluten_free" id="gluten_free" {% if request.args.get('gluten_free') %}checked{% endif %}>
           Gluteeniton
@@ -34,22 +31,18 @@
           <input type="checkbox" name="avg_rating" value="1" id="star1" {% if '1' in request.args.getlist('avg_rating') %}checked{% endif %}>
           1 tähti
         </label>
-        <br>
         <label for="star2">
           <input type="checkbox" name="avg_rating" value="2" id="star2" {% if '2' in request.args.getlist('avg_rating') %}checked{% endif %}>
           2 tähteä
         </label>
-        <br>
         <label for="star3">
           <input type="checkbox" name="avg_rating" value="3" id="star3" {% if '3' in request.args.getlist('avg_rating') %}checked{% endif %}>
           3 tähteä
         </label>
-        <br>
         <label for="star4">
           <input type="checkbox" name="avg_rating" value="4" id="star4" {% if '4' in request.args.getlist('avg_rating') %}checked{% endif %}>
           4 tähteä
         </label>
-        <br>
         <label for="star5">
           <input type="checkbox" name="avg_rating" value="5" id="star5" {% if '5' in request.args.getlist('avg_rating') %}checked{% endif %}>
           5 tähteä
@@ -81,60 +74,85 @@
   <div class="results">
     {% if results %}
       <h2>Tulokset</h2>
-      <table class="results-table">
-        <thead>
-          <tr>
-            <th>Resepti</th>
-            <th>Laatija</th>
-            <th>Arvosana</th>
-            <th>Tunnisteet</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for recipe in results %}
-          <tr>
-            <td>
-              <a href="/recipe/{{ recipe.id }}">{{ recipe.title }}</a>
-            </td>
-            <td>
-              <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
-            </td>
-            <td>
-              <div class="rating-stars">
-                {% if recipe.avg_rating %}
-                  {% for i in range(0, recipe.avg_rating) %}
-                    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="16" height="16" alt="tähti">
-                  {% endfor %}
-                  {% for i in range(0, 5 - recipe.avg_rating) %}
-                    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="16" height="16" alt="tyhjä tähti">
-                  {% endfor %}
-                {% else %}
-                  {% for i in range(0, 5) %}
-                    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="16" height="16" alt="tyhjä tähti">
-                  {% endfor %}
-                {% endif %}
+      <div class="results-cards">
+        {% for recipe in results %}
+          <div class="card">
+            {% if recipe.image_exists %}
+              <img src="/recipe/{{ recipe.id }}/image" alt="{{ recipe.title }}" class="card-img-top">
+            {% else %}
+              <img src="{{ url_for('static', filename='icons/default_recipe.svg') }}" alt="{{ recipe.title }}" class="card-img-top">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="/recipe/{{ recipe.id }}">{{ recipe.title }}</a>
+              </h5>
+              <p class="card-text">
+                Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
+              </p>
+              <div class="rating-cuisine-row">
+                <div class="rating-stars">
+                  {% if recipe.avg_rating %}
+                    {% for i in range(0, recipe.avg_rating) %}
+                      <img src="{{ url_for('static', filename='icons/star.svg') }}" width="16" height="16" alt="tähti">
+                    {% endfor %}
+                    {% for i in range(0, 5 - recipe.avg_rating) %}
+                      <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="16" height="16" alt="tyhjä tähti">
+                    {% endfor %}
+                  {% else %}
+                    {% for i in range(0, 5) %}
+                      <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="16" height="16" alt="tyhjä tähti">
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                <div class="cuisine-container">
+                  {% set cuisine_class = "" %}
+                  {% if recipe.cuisine == "Pohjoismainen" %}
+                    {% set cuisine_class = "cuisine-pohjoismainen" %}
+                  {% elif recipe.cuisine == "Eurooppalainen" %}
+                    {% set cuisine_class = "cuisine-eurooppalainen" %}
+                  {% elif recipe.cuisine == "Aasialainen" %}
+                    {% set cuisine_class = "cuisine-aasialainen" %}
+                  {% elif recipe.cuisine == "Lähi-idän keittiö" %}
+                    {% set cuisine_class = "cuisine-lahiidankeittio" %}
+                  {% elif recipe.cuisine == "Afrikkalainen" %}
+                    {% set cuisine_class = "cuisine-afrikkalainen" %}
+                  {% elif recipe.cuisine == "Latinalaismerikkalainen" %}
+                    {% set cuisine_class = "cuisine-latinalaismerikkalainen" %}
+                  {% elif recipe.cuisine == "Pohjoisamerikkalainen" %}
+                    {% set cuisine_class = "cuisine-pohjoisamerikkalainen" %}
+                  {% elif recipe.cuisine == "Australialainen & Oseanialainen" %}
+                    {% set cuisine_class = "cuisine-australialainen" %}
+                  {% endif %}
+                  <span class="cuisine-tag {{ cuisine_class }}">{{ recipe.cuisine }}</span>
+                </div>
               </div>
-            </td>
-            <td>
               <div class="tags">
                 {% if recipe.vegan %}
-                  <span class="tag tag-vegan">Veg</span>
+                  <span class="tag tag-vegan">Vegaaninen</span>
                 {% endif %}
                 {% if recipe.vegetarian %}
                   <span class="tag tag-vegetarian">Kasvis</span>
                 {% endif %}
                 {% if recipe.lactose_free %}
-                  <span class="tag tag-lactose-free">Lakt</span>
+                  <span class="tag tag-lactose-free">Laktoositon</span>
                 {% endif %}
                 {% if recipe.gluten_free %}
-                  <span class="tag tag-gluten-free">Glut</span>
+                  <span class="tag tag-gluten-free">Gluteeniton</span>
                 {% endif %}
               </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        {% if page > 1 %}
+          <a href="{{ url_for('find_recipe', page=page-1, query=query, vegan=vegan, vegetarian=vegetarian, lactose_free=lactose_free, gluten_free=gluten_free, avg_rating=avg_rating, cuisine=cuisine) }}" class="btn btn-secondary">Previous</a>
+        {% endif %}
+        {% if has_more %}
+          <a href="{{ url_for('find_recipe', page=page+1, query=query, vegan=vegan, vegetarian=vegetarian, lactose_free=lactose_free, gluten_free=gluten_free, avg_rating=avg_rating, cuisine=cuisine) }}" class="btn btn-secondary">Next</a>
+        {% endif %}
+      </div>
     {% else %}
       <p>Ei tuloksia.</p>
     {% endif %}

@@ -43,20 +43,6 @@
     align-items: center;
 }
 
-/* Styling for the cuisine tag */
-.cuisine-tag {
-    display: inline-block;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    background-color: #5694d2;
-    /* Nice blue tone */
-    border-radius: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 5px;
-}
 
 .recipe-image-description {
     display: flex;

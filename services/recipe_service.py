@@ -30,9 +30,9 @@ def get_index():
     featured_recipe = recipes.get_featured_recipe()
     recipe_must_exist(featured_recipe)
     image_exists = recipes.recipe_image_exists(featured_recipe["id"])
-    return render_template("index.html",
-                           featured_recipe=featured_recipe,
-                           image_exists = image_exists)
+    return render_template(
+        "index.html", featured_recipe=featured_recipe, image_exists=image_exists
+    )
 
 
 def search_recipe():
@@ -44,9 +44,40 @@ def search_recipe():
     gluten_free = request.args.get("gluten_free")
     avg_rating = request.args.getlist("avg_rating")
     cuisine = request.args.get("cuisine")
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
     cuisines = recipes.get_cuisines()
-    results = recipes.find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine)
-    return render_template("find_recipe.html", query=query, results=results, cuisines = cuisines)
+    results = recipes.find_recipes(
+        query,
+        vegan,
+        vegetarian,
+        lactose_free,
+        gluten_free,
+        avg_rating,
+        cuisine,
+        page,
+        per_page,
+    )
+
+    has_more = False
+    if len(results) > per_page:
+        has_more = True
+        results = results[:per_page]
+
+    return render_template(
+        "find_recipe.html",
+        query=query,
+        results=results,
+        cuisines=cuisines,
+        page=page,
+        has_more=has_more,
+        vegan=vegan,
+        vegetarian=vegetarian,
+        lactose_free=lactose_free,
+        gluten_free=gluten_free,
+        avg_rating=avg_rating,
+        cuisine=cuisine,
+    )
 
 
 def show_recipe(recipe_id):
@@ -68,9 +99,9 @@ def show_recipe(recipe_id):
         recipe=single_recipe,
         recipe_ingredients=recipe_ingredients,
         recipe_instructions=recipe_instructions,
-        recipe_ratings = recipe_ratings,
-        rating = rating,
-        image_exists = image_exists
+        recipe_ratings=recipe_ratings,
+        rating=rating,
+        image_exists=image_exists,
     )
 
 
@@ -162,7 +193,16 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         )
 
     try:
-        recipe_id = recipes.add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
+        recipe_id = recipes.add_recipe(
+            title,
+            description,
+            cuisine_id,
+            user_id,
+            vegan,
+            vegetarian,
+            lactose_free,
+            gluten_free,
+        )
         recipes.add_ingredients(recipe_id, recipe_ingredients)
         recipes.add_instructions(recipe_id, recipe_instructions)
 
@@ -182,7 +222,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
 
     except sqlite3.DatabaseError as e:
         return render_template(
-           "new_recipe.html",
+            "new_recipe.html",
             errors={"general": "Tietokantavirhe. Yritä myöhemmin uudelleen"},
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
@@ -199,7 +239,6 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
             recipe_instructions=recipe_instructions,
             cuisines=session["cuisines"],
         )
-
 
 
 def render_new_recipe(errors, form_data, recipe_ingredients, recipe_instructions):
@@ -288,21 +327,26 @@ def add_new_recipe_image(recipe_id):
     user_owns_the_recipe(logged_in_user, recipe_created_by)
 
     file = request.files["image"]
-    if  file:
+    if file:
         if not file.filename.endswith(".jpg"):
-            errors={"general": " väärä tiedostomuoto."}
-            return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
-
+            errors = {"general": " väärä tiedostomuoto."}
+            return render_template(
+                "upload_image.html", recipe_id=recipe_id, errors=errors
+            )
 
         if file.filename == "":
-            errors={"general": "Tiedoston nimi ei voi olla tyhjä."}
-            return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+            errors = {"general": "Tiedoston nimi ei voi olla tyhjä."}
+            return render_template(
+                "upload_image.html", recipe_id=recipe_id, errors=errors
+            )
 
         if file and allowed_file(file.filename):
             image_data = file.read()  # Read the binary data
             if len(image_data) > 100 * 1024:
-                errors={"general": "Kuva on liian suuri"}
-                return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+                errors = {"general": "Kuva on liian suuri"}
+                return render_template(
+                    "upload_image.html", recipe_id=recipe_id, errors=errors
+                )
 
             try:
                 recipes.add_recipe_image(recipe_id, image_data)
@@ -311,8 +355,12 @@ def add_new_recipe_image(recipe_id):
                 return redirect(f"/recipe/{recipe_id}")
             except Exception as e:
                 print(f"Virhe kuvan tallennuksessa: {e}")  # Log error to console
-                errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
-                return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+                errors = {
+                    "general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."
+                }
+                return render_template(
+                    "upload_image.html", recipe_id=recipe_id, errors=errors
+                )
 
         errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
         return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
@@ -328,17 +376,21 @@ def edit_new_recipe_image(recipe_id):
     logged_in_user = session["user_id"]
     user_owns_the_recipe(logged_in_user, recipe_created_by)
 
-    file = request.files['image']
-    if  file:
+    file = request.files["image"]
+    if file:
         if file.filename == "":
-            errors={"general": "Tiedoston nimi ei voi olla tyhjä."}
-            return render_template("show_recipe.html", recipe_id=recipe_id, errors=errors)
+            errors = {"general": "Tiedoston nimi ei voi olla tyhjä."}
+            return render_template(
+                "show_recipe.html", recipe_id=recipe_id, errors=errors
+            )
 
         if file and allowed_file(file.filename):
             image_data = file.read()  # Read the binary data
             if len(image_data) > 100 * 1024:
-                errors={"general": "Kuva on liian suuri"}
-                return render_template("show_recipe.html", recipe_id=recipe_id, errors=errors)
+                errors = {"general": "Kuva on liian suuri"}
+                return render_template(
+                    "show_recipe.html", recipe_id=recipe_id, errors=errors
+                )
 
             try:
                 if recipes.recipe_image_exists(recipe_id):
@@ -347,9 +399,13 @@ def edit_new_recipe_image(recipe_id):
                     recipes.add_recipe_image(recipe_id, image_data)
                 return redirect(f"/recipe/{recipe_id}")
             except Exception as e:
-                    print(f"Virhe kuvan päivityksessä: {e}")  # Log error to console
-                    errors = {"general": "Odottamaton virhe kuvan päivityksessä. Yritä uudelleen."}
-                    return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+                print(f"Virhe kuvan päivityksessä: {e}")  # Log error to console
+                errors = {
+                    "general": "Odottamaton virhe kuvan päivityksessä. Yritä uudelleen."
+                }
+                return render_template(
+                    "upload_image.html", recipe_id=recipe_id, errors=errors
+                )
 
         errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
         return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
@@ -364,6 +420,7 @@ def get_recipe_image_by_id(recipe_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
+
 
 def show_edit_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
@@ -381,10 +438,7 @@ def show_edit_recipe(recipe_id):
     ]
 
     recipe_instructions = session["recipe_instructions"] = [
-        {
-            "id": instr["id"],
-            "instruction_name": instr["instruction_name"]
-        }
+        {"id": instr["id"], "instruction_name": instr["instruction_name"]}
         for instr in recipes.get_recipe_instructions(recipe_id)
     ]
 
@@ -426,10 +480,7 @@ def get_updated_session_ingredients(recipe_id, form_data):
 
 def get_updated_session_instructions(recipe_id, form_data):
     recipe_instructions = session.get("recipe_instructions") or [
-        {
-            "id": instr["id"],
-            "instruction_name": instr["instruction_name"]
-        }
+        {"id": instr["id"], "instruction_name": instr["instruction_name"]}
         for instr in recipes.get_recipe_instructions(recipe_id)
     ]
 
@@ -476,7 +527,17 @@ def save_edited_recipe(
     gluten_free = 1 if "gluten_free" in request.form else 0
 
     try:
-        recipes.edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
+        recipes.edit_recipe(
+            recipe_id,
+            title,
+            description,
+            cuisine_id,
+            user_id,
+            vegan,
+            vegetarian,
+            lactose_free,
+            gluten_free,
+        )
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
         recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
         return redirect(f"/recipe/{recipe_id}")
@@ -485,7 +546,9 @@ def save_edited_recipe(
         return render_template(
             "edit_recipe.html",
             recipe=recipe,
-            errors={"general": "Päivitys epäonnistui. Tarkista tiedot ja yritä uudelleen."},
+            errors={
+                "general": "Päivitys epäonnistui. Tarkista tiedot ja yritä uudelleen."
+            },
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
@@ -494,7 +557,7 @@ def save_edited_recipe(
 
     except sqlite3.DatabaseError as e:
         return render_template(
-           "edit_recipe.html",
+            "edit_recipe.html",
             recipe=recipe,
             errors={"general": "Tietokantavirhe. Yritä myöhemmin uudelleen"},
             form_data=form_data,
@@ -614,7 +677,7 @@ def delete_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
     user_owns_the_recipe(session["user_id"], single_recipe["user_id"])
-    
+
     if request.method == "GET":
         return render_template("remove_recipe.html", recipe=single_recipe)
 

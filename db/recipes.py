@@ -79,14 +79,47 @@ def get_recipe_ingredients(recipe_id):
     result = db.query(sql, [recipe_id])
     return result
 
-def add_recipe(title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free):
+
+def add_recipe(
+    title,
+    description,
+    cuisine_id,
+    user_id,
+    vegan,
+    vegetarian,
+    lactose_free,
+    gluten_free,
+):
     sql = """INSERT INTO recipes (title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
-    db.execute(sql, [title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free])
+    db.execute(
+        sql,
+        [
+            title,
+            description,
+            cuisine_id,
+            user_id,
+            vegan,
+            vegetarian,
+            lactose_free,
+            gluten_free,
+        ],
+    )
     last_insert_id = db.last_insert_id()
     return last_insert_id
 
-def edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, vegetarian, lactose_free, gluten_free):
+
+def edit_recipe(
+    recipe_id,
+    title,
+    description,
+    cuisine_id,
+    user_id,
+    vegan,
+    vegetarian,
+    lactose_free,
+    gluten_free,
+):
     sql = """UPDATE recipes SET title = ?, 
                                 description = ?,
                                 cuisine_id = ?,
@@ -96,7 +129,20 @@ def edit_recipe(recipe_id, title, description, cuisine_id, user_id, vegan, veget
                                 gluten_free = ?
               WHERE id = ?
               AND user_id = ?"""
-    db.execute(sql, [title, description, cuisine_id, vegan, vegetarian, lactose_free, gluten_free, recipe_id, user_id])
+    db.execute(
+        sql,
+        [
+            title,
+            description,
+            cuisine_id,
+            vegan,
+            vegetarian,
+            lactose_free,
+            gluten_free,
+            recipe_id,
+            user_id,
+        ],
+    )
 
 
 def remove_unused_ingredients():
@@ -113,9 +159,23 @@ def remove_recipe(recipe_id):
     remove_unused_ingredients()
 
 
-def find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine):
-    search_params, cuisine_param, conditions = build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine)
-    
+def find_recipes(
+    query,
+    vegan,
+    vegetarian,
+    lactose_free,
+    gluten_free,
+    avg_rating,
+    cuisine,
+    page,
+    per_page,
+):
+
+    search_params, cuisine_param, conditions = build_search_query_conditions(
+        query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine
+    )
+
+    offset = (page - 1) * per_page
     sql = f"""SELECT recipes.id,
                     recipes.title,
                     recipes.description,
@@ -124,24 +184,24 @@ def find_recipes(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating
                     recipes.vegetarian,
                     recipes.lactose_free,
                     recipes.gluten_free,
+                    (SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = recipes.id)) as image_exists,
                     users.username,
-                    cuisines.name,
+                    cuisines.name as cuisine,
                     (recipes.total_rating/recipes.rating_count) as avg_rating
             FROM recipes
             JOIN users ON recipes.user_id = users.id
             JOIN cuisines ON recipes.cuisine_id = cuisines.id"""
     sql += conditions
-    sql += """ ORDER BY recipes.id DESC"""
-    
-    if not search_params and not cuisine_param:
-        return db.query(sql)
-    else:
-        params = []
-        if search_params:
-            params = [f"%{ query }%", f"%{ query }%", f"%{ query }%"]
-        if cuisine_param:
-            params.append(cuisine)
-        return db.query(sql, params)
+    sql += """ ORDER BY recipes.id DESC LIMIT ? OFFSET ?"""
+
+    params = []
+    if search_params:
+        params = [f"%{ query }%", f"%{ query }%", f"%{ query }%"]
+    if cuisine_param:
+        params.append(cuisine)
+    params.append(per_page + 1)
+    params.append(offset)
+    return db.query(sql, params)
 
 
 def add_ingredients(recipe_id, recipe_ingredients):
@@ -290,11 +350,13 @@ def get_cuisines():
     """Fetch all cuisines from the database."""
     return db.query("SELECT id, name FROM cuisines")
 
+
 def cuisine_exists(cuisine_id):
     sql = "SELECT EXISTS (SELECT 1 FROM cuisines WHERE id = ?)"
     result = db.query(sql, [cuisine_id])
 
     return result[0][0] == 1
+
 
 def save_rating(recipe_id, comment, stars, rated_by):
     sql = """INSERT INTO ratings (comment, rated_by, stars, recipe_id)
@@ -311,6 +373,7 @@ def save_rating(recipe_id, comment, stars, rated_by):
 
     return last_insert_id
 
+
 def get_ratings(recipe_id):
     sql = """SELECT
              ratings.comment,
@@ -325,12 +388,14 @@ def get_ratings(recipe_id):
              ORDER BY created_at DESC"""
     return db.query(sql, [recipe_id])
 
+
 def get_user_rating(recipe_id, rated_by):
     query = """SELECT id, comment, stars
                FROM ratings
                WHERE recipe_id = ? AND rated_by = ?"""
     result = db.query(query, (recipe_id, rated_by))
     return result[0] if result else None
+
 
 def update_rating(rating_id, comment, stars):
 
@@ -357,9 +422,11 @@ def update_rating(rating_id, comment, stars):
 
     return last_insert_id
 
+
 def add_recipe_image(recipe_id, image_data):
     sql = "INSERT INTO recipe_images (recipe_id, image) VALUES (?, ?)"
     db.execute(sql, [recipe_id, image_data])
+
 
 def update_recipe_image(recipe_id, image_data):
     sql = """UPDATE recipe_images
@@ -367,23 +434,28 @@ def update_recipe_image(recipe_id, image_data):
             WHERE recipe_id = ?"""
     db.execute(sql, [image_data, recipe_id])
 
+
 def get_recipe_image(recipe_id):
     sql = "SELECT image FROM recipe_images WHERE recipe_id = ? LIMIT 1"
     result = db.query(sql, [recipe_id])
     return result[0]["image"] if result else None
+
 
 def recipe_image_exists(recipe_id):
     sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
     result = db.query(sql, [recipe_id])
     return result[0][0] == 1
 
+
 # Helper function
+
 
 def get_next_operator(is_first):
     if is_first:
         return "WHERE"
     else:
         return "AND"
+
 
 def append_to_conditions(is_first, conditions: list, query_condition):
 
@@ -395,7 +467,10 @@ def append_to_conditions(is_first, conditions: list, query_condition):
         is_first = False
     return is_first
 
-def build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine):
+
+def build_search_query_conditions(
+    query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine
+):
     search_params = False
     cuisine_param = False
     is_first = True
@@ -430,7 +505,9 @@ def build_search_query_conditions(query, vegan, vegetarian, lactose_free, gluten
     if len(avg_rating) > 0:
         avg_rating_ints = [int(rating) for rating in avg_rating]
         ratings_str = ", ".join(map(str, avg_rating_ints))
-        query_condition = f"(recipes.total_rating/recipes.rating_count) IN ({ratings_str})"
+        query_condition = (
+            f"(recipes.total_rating/recipes.rating_count) IN ({ratings_str})"
+        )
         is_first = append_to_conditions(is_first, conditions, query_condition)
 
     if cuisine:

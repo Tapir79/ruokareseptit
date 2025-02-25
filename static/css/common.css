@@ -88,6 +88,51 @@ hr {
     color: #6f9702;
 }
 
+.cuisine-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+}
+
+/* Specific cuisine styles */
+.cuisine-pohjoismainen {
+    background-color: #5694d2; /* current blue */
+    color: white;
+}
+.cuisine-eurooppalainen {
+    background-color: brown;
+    color: white;
+}
+.cuisine-aasialainen {
+    background-color: purple;
+    color: white;
+}
+.cuisine-lahiidankeittio {
+    background-color: black;
+    color: white;
+}
+.cuisine-afrikkalainen {
+    background-color: orange;
+    color: white;
+}
+.cuisine-latinalaismerikkalainen {
+    background-color: red;
+    color: white;
+}
+.cuisine-pohjoisamerikkalainen {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+.cuisine-australialainen {
+    background-color: green;
+    color: white;
+}
 
 /* Form Containers */
 .form-group {
