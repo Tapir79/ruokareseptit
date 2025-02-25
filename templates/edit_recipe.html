@@ -5,22 +5,22 @@
 <h1>Muokkaa reseptiä</h1>
 <form action="/edit_recipe/{{ recipe.id }}" method="post">
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <p>
+  <div class="form-group">
     <label for="title">Otsikko:</label>
     <input type="text" name="title" value="{{ form_data.title if form_data and 'title' else recipe.title }}" maxlength="30" />
     {% if errors.title %}
     <span class="error-message">{{ errors.title }}</span>
     {% endif %}
-  </p>
-  <p>
+  </div>
+  <div class="form-group">
     <label for="description">Kuvaus:</label>
     <textarea name="description" rows="8" cols="60" maxlength="300">{{ form_data.description if form_data and 'description' else recipe.description }}</textarea>
     {% if errors.description %}
     <span class="error-message">{{ errors.description }}</span>
     {% endif %}
-  </p>
+  </div>
 
-  <p>
+  <div class="form-group">
     <label for="cuisine">Ruokakulttuuri:</label>
     <select name="cuisine" id="cuisine">
       {% for cuisine in cuisines %}
@@ -36,8 +36,9 @@
     {% if errors.cuisine %}
     <span class="error-message">{{ errors.cuisine }}</span>
     {% endif %}
-</p>
+  </div>
 
+  <div class="form-group">
 <p><strong>Ruokavaliot:</strong></p>
 
 <p>
@@ -71,7 +72,7 @@
     Gluteeniton
   </label>
 </p>
-
+</div>
 
 <div class="recipe-edit-form-container">
 

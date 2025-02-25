@@ -4,12 +4,35 @@
     border-radius: 5px;
 }
 
-.recipe-edit-form-container ul li,
+/* Reset the counter on the ordered list */
+.recipe-edit-form-container ol {
+    counter-reset: item;
+    list-style: none; /* remove default markers */
+    margin-left: 0;  
+    padding-left: 0;
+}
+
 .recipe-edit-form-container ol li {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    /* optional spacing */
+    position: relative;
+    padding-left: 30px; /* space for the number */
+}
+
+.recipe-edit-form-container ol li::before {
+    counter-increment: item;
+    content: counter(item) ".";
+    position: absolute;
+    left: 0;
+    width: 25px;
+    text-align: right;
+    color: #333;
+}
+
+.recipe-edit-form-container ul li,
+.recipe-edit-form-container ol li {
+    margin-bottom: 10px;
 }
 
 .recipe-edit-form-container ul li label,
