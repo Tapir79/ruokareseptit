@@ -47,6 +47,17 @@ hr {
     background: #bbb;
 }
 
+.btn-remove-small {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .btn-remove-small img {
+    display: block;
+  }
+
 /* Error Messages */
 .error-message {
     color: red;

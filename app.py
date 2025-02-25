@@ -117,6 +117,9 @@ def edit_recipe(recipe_id):
         delete_temporary_session_attributes()
         return show_edit_recipe(recipe_id)
 
+    if "back" in request.form:
+        return redirect(f"/recipe/{recipe_id}")
+
     check_csrf(request, session)
     recipe = session["recipe"]
     recipe_must_exist(recipe)
