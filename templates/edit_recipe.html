@@ -73,42 +73,69 @@
 </p>
 
 
+<div class="recipe-edit-form-container">
 
-<div class="recipe-form-container">
   <div class="recipe-form-column">
-  <label for="name">Aineksen nimi:</label>
-  {% if errors.name or errors.amount %}
-  <input
-    type="text"
-    name="name"
-    maxlength="30"
-    value="{{ form_data.name if form_data and 'name' in form_data else '' }}"
-  />
-  <span class="error-message">{{ errors.name }}</span>
-  {% else %}
-  <input type="text" name="name" maxlength="30" />
-  {% endif %}
-</p>
-<p>
-  <label for="amount">Määrä:</label>
-  {% if errors.name or errors.amount %}
-  <input
-    type="text"
-    name="amount"
-    maxlength="20"
-    value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}"
-  />
-  <span class="error-message">{{ errors.amount }}</span>
-  {% else %}
-  <input type="text" name="amount" maxlength="20" />
-  {% endif %}
-</p>
-<input type="submit" name="ingredient" value="Lisää uusi aines" class="btn btn-secondary"/>
+    <h3>Ainekset</h3>
+    <p>
+    <label for="name">Aines :</label>
+    {% if errors.name or errors.amount %}
+    <input
+      type="text"
+      name="name"
+      maxlength="30"
+      value="{{ form_data.name if form_data and 'name' in form_data else '' }}"
+    />
+    <span class="error-message">{{ errors.name }}</span>
+    {% else %}
+    <input type="text" name="name" maxlength="30" />
+    {% endif %}
+  </p>
+  <p>
+    <label for="amount">Määrä:</label>
+    {% if errors.name or errors.amount %}
+    <input
+      type="text"
+      name="amount"
+      maxlength="20"
+      value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}"
+    />
+    <span class="error-message">{{ errors.amount }}</span>
+    {% else %}
+    <input type="text" name="amount" maxlength="20" />
+    {% endif %}
+  </p>
+  <input type="submit" name="ingredient" value="Lisää uusi aines" class="btn btn-secondary"/>
+  
+  </div>
+  
+  <div class="recipe-form-column">
 
+    {% if recipe_ingredients %}
+    <ul>
+      {% for ingredient in recipe_ingredients %}
+      <li>
+        <input
+          type="text"
+          name="ingredient_{{ ingredient.ingredient_id }}"
+          maxlength="20"
+          value="{{ ingredient.amount }}"
+          class="fixed-amount"
+        />
+        <label for="ingredient_{{ ingredient.ingredient_id }}">{{ ingredient.name }}</label>
+        <button type="submit" name="delete_ingredient_{{ ingredient.ingredient_id }}" class="btn-remove-small">
+          <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
 </div>
 
-<div class="recipe-form-column">
-
+  <div class="recipe-edit-form-container">
+  <div class="recipe-form-column">
+    <h3>Ohjeet</h3>
     {% if errors.instruction_name %}
     <label for="instruction_name">Ohje:</label>
     <input
@@ -122,41 +149,16 @@
     <label for="instruction_name">Uusi ohje:</label>
     <input type="text" name="instruction_name" maxlength="150" />
     {% endif %}
-  </p>
     <input type="submit" name="instruction" value="Lisää uusi ohje" class="btn btn-secondary"/>
 </div>
-</div>
-
-<div class="recipe-form-container">
-  <div class="recipe-form-column">
-    <h3>Ainekset</h3>
-    {% if recipe_ingredients %}
-    <ul>
-      {% for ingredient in recipe_ingredients %}
-      <li>
-        <label for="ingredient_{{ ingredient.ingredient_id }}">{{ ingredient.name }}</label>
-        <input
-          type="text"
-          name="ingredient_{{ ingredient.ingredient_id }}"
-          maxlength="20"
-          value="{{ ingredient.amount }}"
-        />
-        <button type="submit" name="delete_ingredient_{{ ingredient.ingredient_id }}" class="btn-remove-small">
-          <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
-        </button>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  </div>
 
   <div class="recipe-form-column">
-    <h3>Ohjeet</h3>
+   
     {% if recipe_instructions %}
     <ol>
       {% for instruction in recipe_instructions %}
       <li>
-        <label for="instruction_{{ instruction.id }}">ohje</label>
+        <label for="instruction_{{ instruction.id }}">ohje:</label>
         <input type="text" name="instruction_{{ instruction.id }}" value="{{ instruction.instruction_name }}" maxlength="150" />
         <button type="submit" name="delete_instruction_{{ instruction.id }}" class="btn-remove-small">
           <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
