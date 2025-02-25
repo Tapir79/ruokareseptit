@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, request, session
+from flask import render_template, redirect, request, session
 import config
 from utils.validations import (
     require_login,
@@ -81,6 +81,9 @@ def create_recipe():
     recipe_ingredients = session.get("recipe_ingredients", [])
     recipe_instructions = session.get("recipe_instructions", [])
     cuisines = session["cuisines"]
+
+    if "back" in request.form:
+        return redirect("/")
 
     if "save" in request.form:
         return save_new_recipe(form_data, recipe_ingredients, recipe_instructions)
