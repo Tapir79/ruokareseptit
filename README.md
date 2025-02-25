@@ -36,15 +36,16 @@ Jos automaattiasennus ei toimi, voit tehdä asennuksen myös manuaalisesti:
 
 Luo tietokannan taulut ja lisää alkutiedot: 
 ````
-$ sqlite3 database.db < schema.sql
-$ sqlite3 database.db < init.sql
+$ sqlite3 database.db < install/schema.sql
+$ sqlite3 database.db < install/init.sql
 ````
 
 ## (Optionaalinen) lisää testidata tietokantaan
 
 Aja tietokantaan valmista testidataa:
 ````
-$ sqlite3 database.db < test_data.sql
+$ sqlite3 database.db < install/test_data.sql
+$ python install/upload_images.py
 ````
 
 Testidata sisältää yhden valmiin reseptin ja arvostelun reseptille.    
@@ -57,5 +58,3 @@ Lisäksi luodaan 2 valmista testikäyttäjää:
 
 ## Käynnistä sovellus    
 `` $ flask run ``
-
-
