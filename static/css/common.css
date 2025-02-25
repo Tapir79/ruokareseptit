@@ -207,3 +207,10 @@ hr {
     border-radius: 5px;
     font-size: 1.1em;
 }
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+    margin-top: 20px; /* Add vertical spacing above the buttons */
+  }
