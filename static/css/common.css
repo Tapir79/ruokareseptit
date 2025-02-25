@@ -112,44 +112,44 @@ hr {
 }
 
 /* Specific cuisine styles */
-.cuisine-pohjoismainen {
-    background-color: #5694d2;
+.cuisine-nordic {
+    background-color: #5d9ad6;
     /* current blue */
     color: white;
 }
 
-.cuisine-eurooppalainen {
-    background-color: brown;
+.cuisine-european {
+    background-color: rgb(131, 24, 24);
     color: white;
 }
 
-.cuisine-aasialainen {
-    background-color: purple;
+.cuisine-asian {
+    background-color: rgb(172, 1, 172);
     color: white;
 }
 
-.cuisine-lahiidankeittio {
-    background-color: black;
+.cuisine-middle-east {
+    background-color: rgb(0, 0, 0);
     color: white;
 }
 
-.cuisine-afrikkalainen {
-    background-color: orange;
+.cuisine-african {
+    background-color: rgb(255, 165, 0);
     color: white;
 }
 
-.cuisine-latinalaismerikkalainen {
-    background-color: red;
+.cuisine-latin-american {
+    background-color: rgb(255, 0, 0);
     color: white;
 }
 
-.cuisine-pohjoisamerikkalainen {
+.cuisine-north-american {
     background-color: white;
     color: black;
     border: 1px solid black;
 }
 
-.cuisine-australialainen {
+.cuisine-australian {
     background-color: green;
     color: white;
 }

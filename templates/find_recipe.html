@@ -106,22 +106,22 @@
                 </div>
                 <div class="cuisine-container">
                   {% set cuisine_class = "" %}
-                  {% if recipe.cuisine == "Pohjoismainen" %}
-                    {% set cuisine_class = "cuisine-pohjoismainen" %}
-                  {% elif recipe.cuisine == "Eurooppalainen" %}
-                    {% set cuisine_class = "cuisine-eurooppalainen" %}
-                  {% elif recipe.cuisine == "Aasialainen" %}
-                    {% set cuisine_class = "cuisine-aasialainen" %}
-                  {% elif recipe.cuisine == "Lähi-idän keittiö" %}
-                    {% set cuisine_class = "cuisine-lahiidankeittio" %}
-                  {% elif recipe.cuisine == "Afrikkalainen" %}
-                    {% set cuisine_class = "cuisine-afrikkalainen" %}
-                  {% elif recipe.cuisine == "Latinalaismerikkalainen" %}
-                    {% set cuisine_class = "cuisine-latinalaismerikkalainen" %}
-                  {% elif recipe.cuisine == "Pohjoisamerikkalainen" %}
-                    {% set cuisine_class = "cuisine-pohjoisamerikkalainen" %}
-                  {% elif recipe.cuisine == "Australialainen & Oseanialainen" %}
-                    {% set cuisine_class = "cuisine-australialainen" %}
+                  {% if recipe.cuisine_id == 1 %}
+                    {% set cuisine_class = "cuisine-nordic" %}
+                  {% elif recipe.cuisine_id == 2 %}
+                    {% set cuisine_class = "cuisine-european" %}
+                  {% elif recipe.cuisine_id == 3 %}
+                    {% set cuisine_class = "cuisine-asian" %}
+                  {% elif recipe.cuisine_id == 4 %}
+                    {% set cuisine_class = "cuisine-middle-east" %}
+                  {% elif recipe.cuisine_id == 5 %}
+                    {% set cuisine_class = "cuisine-african" %}
+                  {% elif recipe.cuisine_id == 6 %}
+                    {% set cuisine_class = "cuisine-latin-american" %}
+                  {% elif recipe.cuisine_id == 7 %}
+                    {% set cuisine_class = "cuisine-north-american" %}
+                  {% elif recipe.cuisine_id == 8 %}
+                    {% set cuisine_class = "cuisine-australian" %}
                   {% endif %}
                   <span class="cuisine-tag {{ cuisine_class }}">{{ recipe.cuisine }}</span>
                 </div>

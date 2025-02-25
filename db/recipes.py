@@ -187,6 +187,7 @@ def find_recipes(
                     (SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = recipes.id)) as image_exists,
                     users.username,
                     cuisines.name as cuisine,
+                    cuisines.id as cuisine_id,
                     (recipes.total_rating/recipes.rating_count) as avg_rating
             FROM recipes
             JOIN users ON recipes.user_id = users.id
