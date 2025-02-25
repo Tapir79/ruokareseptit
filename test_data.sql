@@ -27,13 +27,13 @@ VALUES (1, 'Laskiaispullat', 'Parhaat laskiaispullat ruotsalaiseen tapaan. Voit 
 -- Recipe 2: Karjalanpaisti
 -------------------------------------------------
 INSERT INTO recipes(id, title, description, total_rating, rating_count, lactose_free, cuisine_id, user_id)
-VALUES (2, 'Karjalanpaisti', 'Perinteinen karjalainen lihapata, haudutettu miedolla lämmöllä useita tunteja, mikä tekee lihasta erityisen mureaa.', 4, 1, 0, 1, 2);
+VALUES (2, 'Karjalanpaisti', 'Perinteinen karjalainen lihapata, haudutettu miedolla lämmöllä useita tunteja, mikä tekee lihasta erityisen mureaa.', 3, 1, 0, 1, 2);
 
 -------------------------------------------------
 -- Recipe 3: Lihapullat
 -------------------------------------------------
 INSERT INTO recipes(id, title, description, total_rating, rating_count, lactose_free, cuisine_id, user_id)
-VALUES (3, 'Lihapullat', 'Lihapullat kermakastikkeessa ruotsalaiseen tapaan. Tarjoile perunamuusin ja puolukkahillon kanssa.', 3, 1, 1, 1, 2);
+VALUES (3, 'Lihapullat', 'Lihapullat kermakastikkeessa ruotsalaiseen tapaan. Tarjoile perunamuusin ja puolukkahillon kanssa.', 4, 1, 1, 1, 2);
 
 
 -- Ingredients for Laskiaispullat
@@ -160,13 +160,13 @@ INSERT INTO recipe_instructions(instruction, step_number, recipe_id) VALUES
   ('Kun kastike on paksua, kaada joukkoon kerma ja sekoita vielä hetki. Kastikkeen pitäisi olla hieman notkeaa, mutta ei juoksevaa.', 12, 3),
   ('Kaada kastike lihapullien päälle ja hauduta miedolla lämmöllä kattilassa kannen alla noin 20 minuuttia.', 13, 3);
 
--- Ratings for Karjalanpaisti
-INSERT INTO ratings(comment, stars, rated_by, recipe_id) VALUES
-  ('Erittäin herkullinen!', 4, 1, 2);
-
 -- Ratings for Laskiaispullat
 INSERT INTO ratings(comment, stars, rated_by, recipe_id) VALUES
   ('Hurjan hyviä!', 5, 2, 1);
+
+-- Ratings for Karjalanpaisti
+INSERT INTO ratings(comment, stars, rated_by, recipe_id) VALUES
+  ('Ihan ok resepti!', 3, 1, 2);
 
 -- Ratings for Lihapullat
 INSERT INTO ratings(comment, stars, rated_by, recipe_id) VALUES
