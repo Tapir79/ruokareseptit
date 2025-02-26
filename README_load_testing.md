@@ -90,8 +90,8 @@ s
 - indeksin lisääminen
 - Sovelluksen etusivu lataa vain yhden kaikkein suosituimman reseptin tähtiluokituksen ja arvosteluiden määrän perusteella
 - Sovelluksen haku käyttää sivutusta, jonka vuoksi hakutulosten selaaminen on nopeaa
-- Käyttäjän tiedot on sivutettu ja niitä näytetään sivulla maksimissaan 10
-- TODO: Sovelluksen kommentit on sivutettu ja niitä näytetään sivulla kerrallaan maksimissaan 10
+- Käyttäjän tiedot on sivutettu ja niitä näytetään sivulla kerrallaan maksimissaan 10
+- Sovelluksen kommentit on sivutettu ja niitä näytetään sivulla kerrallaan maksimissaan 20
 
 ## Parannukset tietokantakyselyihin
 
