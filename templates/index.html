@@ -1,40 +1,92 @@
-{% extends "layout.html" %}
-{% block title %}Ruokareseptit - Etusivu{% endblock %}
-{% block content %}
+{% extends "layout.html" %} {% block title %}Ruokareseptit - Etusivu{% endblock
+%} {% block content %}
 
-  <h1>Suosituin resepti juuri nyt</h1>
+<h1 class="featured-title">Suosituin resepti juuri nyt</h1>
 
-  <div class="featured-recipe">
-    <a href="/recipe/{{ featured_recipe.id }}">
-      {% if image_exists %}
-        <img src="/recipe/{{ featured_recipe.id }}/image" alt="{{ featured_recipe.title }}" class="featured-recipe-image">
-      {% else %}
-        <img src="{{ url_for('static', filename='icons/default_recipe.svg') }}" alt="Oletusreseptikuva" class="featured-recipe-image">
+<div class="featured-recipe">
+  <a href="/recipe/{{ featured_recipe.id }}">
+    {% if image_exists %}
+    <img
+      src="/recipe/{{ featured_recipe.id }}/image"
+      alt="{{ featured_recipe.title }}"
+      class="featured-recipe-image"
+    />
+    {% else %}
+    <img
+      src="{{ url_for('static', filename='icons/default_recipe.svg') }}"
+      alt="Oletusreseptikuva"
+      class="featured-recipe-image"
+    />
+    {% endif %}
+  </a>
+  <div class="featured-recipe-details">
+    <h2 class="featured-recipe-title">
+      <a href="/recipe/{{ featured_recipe.id }}">{{ featured_recipe.title }}</a>
+    </h2>
+    <div
+      class="rating-cuisine-container"
+      style="display: flex; align-items: center; gap: 10px"
+    >
+      <span
+        class="rating-stars"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        {% if featured_recipe.avg_rating %} {% for i in range(0,
+        featured_recipe.avg_rating) %}
+        <img
+          src="{{ url_for('static', filename='icons/star.svg') }}"
+          width="20"
+          height="20"
+          alt="tähti"
+        />
+        {% endfor %} {% for i in range(0, 5 - featured_recipe.avg_rating) %}
+        <img
+          src="{{ url_for('static', filename='icons/star_empty.svg') }}"
+          width="20"
+          height="20"
+          alt="tyhjä tähti"
+        />
+        {% endfor %} {% else %} {% for i in range(0, 5) %}
+        <img
+          src="{{ url_for('static', filename='icons/star_empty.svg') }}"
+          width="20"
+          height="20"
+          alt="tyhjä tähti"
+        />
+        {% endfor %} {% endif %}
+      </span>
+      {% set cuisine_class = "" %} {% if featured_recipe.cuisine_id == 1 %} {%
+      set cuisine_class = "cuisine-nordic" %} {% elif featured_recipe.cuisine_id
+      == 2 %} {% set cuisine_class = "cuisine-european" %} {% elif
+      featured_recipe.cuisine_id == 3 %} {% set cuisine_class = "cuisine-asian"
+      %} {% elif featured_recipe.cuisine_id == 4 %} {% set cuisine_class =
+      "cuisine-middle-east" %} {% elif featured_recipe.cuisine_id == 5 %} {% set
+      cuisine_class = "cuisine-african" %} {% elif featured_recipe.cuisine_id ==
+      6 %} {% set cuisine_class = "cuisine-latin-american" %} {% elif
+      featured_recipe.cuisine_id == 7 %} {% set cuisine_class =
+      "cuisine-north-american" %} {% elif featured_recipe.cuisine_id == 8 %} {%
+      set cuisine_class = "cuisine-australian" %} {% endif %}
+      <span class="cuisine-tag {{ cuisine_class }}"
+        >{{ featured_recipe.cuisine }}</span
+      >
+      {% if featured_recipe.vegan %}
+      <span class="tag tag-vegan">Vegaani</span>
+      {% endif %} {% if featured_recipe.vegetarian %}
+      <span class="tag tag-vegetarian">Kasvis</span>
+      {% endif %} {% if featured_recipe.lactose_free %}
+      <span class="tag tag-lactose-free">Laktoositon</span>
+      {% endif %} {% if featured_recipe.gluten_free %}
+      <span class="tag tag-gluten-free">Gluteeniton</span>
       {% endif %}
-    </a>
-    <div class="featured-recipe-details">
-      <h2 class="featured-recipe-title">
-        <a href="/recipe/{{ featured_recipe.id }}">{{ featured_recipe.title }}</a>
-      </h2>
-      <div class="rating-stars">
-        {% if featured_recipe.avg_rating %}
-          {% for i in range(0, featured_recipe.avg_rating) %}
-            <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti">
-          {% endfor %}
-          {% for i in range(0, 5 - featured_recipe.avg_rating) %}
-            <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
-          {% endfor %}
-        {% else %}
-          {% for i in range(0, 5) %}
-            <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
-          {% endfor %}
-        {% endif %}
-      </div>
-      <p>Arviot: {{ featured_recipe.rating_count }}</p>
-      <p>Laatinut: <a href="/user/{{ featured_recipe.user_id }}">{{ featured_recipe.username }}</a></p>
     </div>
+    <p>Arviot: {{ featured_recipe.rating_count }}</p>
+    <p>
+      Laatinut:
+      <a href="/user/{{ featured_recipe.user_id }}"
+        >{{ featured_recipe.username }}</a
+      >
+    </p>
   </div>
+</div>
 
-  <!-- Mahdollisesti muu etusivun sisältö -->
-  
 {% endblock %}
