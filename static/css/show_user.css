@@ -32,10 +32,10 @@
 }
 
 .recipe-item {
-    background: #f1f1f1;
+    background: #fdfbfb;
     padding: 10px;
     margin: 5px 0;
-    border-radius: 5px;
+    border-radius: 1px;
     display: flex;
     justify-content: space-between;
     align-items: center;
