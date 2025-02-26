@@ -165,18 +165,16 @@ endblock %} {% block content %}
     </textarea>
     <p>
       <label>
-        <input type="submit" value="Muokkaa" />
+        <input type="submit" value="Muokkaa" class="btn btn-primary" />
       </label>
-    </p>
-    
+    </p> 
     <hr>
-
     {% else %}
-   <textarea name="comment" rows="8" class="comment-box">
-{{ rating.comment }}</textarea
-    >
+    <textarea name="comment" rows="8" class="comment-box">
+      {{ rating.comment }}
+    </textarea>
     <label>
-      <input type="submit" value="Lähetä" />
+      <input type="submit" value="Lähetä" class="btn btn-primary" />
     </label>
     {% endif %}
   </form>
