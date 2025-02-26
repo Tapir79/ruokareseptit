@@ -16,7 +16,7 @@
 * [X] Reseptistä näytetään keskimääräinen arvosana.
 * [X] Käyttäjä pystyy suodattamaan reseptejä ruokavalioluokittelun perusteella.
 * [X] Käyttäjä pystyy suodattamaan reseptejä ruokakulttuuriluokittelun perusteella.
-* [] Käyttäjä pystyy suodattamaan reseptejä arvosanan perusteella.
+* [X] Käyttäjä pystyy suodattamaan reseptejä arvosanan perusteella.
 * [] Käyttäjä pystyy järjestämään reseptejä arvosanan perusteella.
 * [X] Käyttäjä voi lisätä kuvan reseptiin
 * [X] Käyttäjäsivu näyttää, montako reseptiä käyttäjä on lisännyt ja listan käyttäjän lisäämistä resepteistä.

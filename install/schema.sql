@@ -57,3 +57,13 @@ CREATE TABLE recipe_images (
     image BLOB NOT NULL,
     recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
 );
+
+-- indices to speed up queries and joins
+CREATE INDEX idx_recipes_title ON recipes(title);
+CREATE INDEX idx_recipes_cuisine ON recipes(cuisine_id);
+CREATE INDEX idx_recipes_user ON recipes(user_id);
+CREATE INDEX idx_recipe_ingredients_recipe ON recipe_ingredients(recipe_id);
+CREATE INDEX idx_recipe_ingredients_ingredient ON recipe_ingredients(ingredient_id);
+CREATE INDEX idx_recipe_instructions_recipe ON recipe_instructions(recipe_id);
+CREATE INDEX idx_ratings_recipe ON ratings(recipe_id);
+CREATE INDEX idx_recipe_images_recipe ON recipe_images(recipe_id);

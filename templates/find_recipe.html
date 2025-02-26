@@ -78,7 +78,7 @@
         {% for recipe in results %}
           <div class="card">
             {% if recipe.image_exists %}
-              <img src="/recipe/{{ recipe.id }}/image" alt="{{ recipe.title }}" class="card-img-top">
+              <img src="/recipe/{{ recipe.id }}/image" alt="{{ recipe.title }}" class="card-img-top" loading="lazy">
             {% else %}
               <img src="{{ url_for('static', filename='icons/default_recipe.svg') }}" alt="{{ recipe.title }}" class="card-img-top">
             {% endif %}
