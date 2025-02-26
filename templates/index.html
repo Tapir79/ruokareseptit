@@ -16,60 +16,62 @@
       <h2 class="featured-recipe-title">
         <a href="/recipe/{{ featured_recipe.id }}">{{ featured_recipe.title }}</a>
       </h2>
-      <div class="rating-cuisine-container" style="display: flex; align-items: center; gap: 10px;">
-        <span class="rating-stars" style="display: flex; align-items: center; justify-content: center;">
-          {% if featured_recipe.avg_rating %}
-            {% for i in range(0, featured_recipe.avg_rating) %}
-              <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti">
-            {% endfor %}
-            {% for i in range(0, 5 - featured_recipe.avg_rating) %}
-              <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
-            {% endfor %}
-          {% else %}
-            {% for i in range(0, 5) %}
-              <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
-            {% endfor %}
-
+      <div class="recipe-info-container">
+        <div class="top-row">
+          <span class="rating-stars">
+            {% if featured_recipe.avg_rating %}
+              {% for i in range(0, featured_recipe.avg_rating) %}
+                <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti">
+              {% endfor %}
+              {% for i in range(0, 5 - featured_recipe.avg_rating) %}
+                <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
+              {% endfor %}
+              {% if featured_recipe.rating_count == 1 %}
+                (1 arvio)
+              {% else %}
+                ({{featured_recipe.rating_count}} arviota)
+              {% endif %}
+            {% else %}
+              {% for i in range(0, 5) %}
+                <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
+              {% endfor %}
+            {% endif %}
+          </span>
+          {% set cuisine_class = "" %}
+          {% if featured_recipe.cuisine_id == 1 %}
+            {% set cuisine_class = "cuisine-nordic" %}
+          {% elif featured_recipe.cuisine_id == 2 %}
+            {% set cuisine_class = "cuisine-european" %}
+          {% elif featured_recipe.cuisine_id == 3 %}
+            {% set cuisine_class = "cuisine-asian" %}
+          {% elif featured_recipe.cuisine_id == 4 %}
+            {% set cuisine_class = "cuisine-middle-east" %}
+          {% elif featured_recipe.cuisine_id == 5 %}
+            {% set cuisine_class = "cuisine-african" %}
+          {% elif featured_recipe.cuisine_id == 6 %}
+            {% set cuisine_class = "cuisine-latin-american" %}
+          {% elif featured_recipe.cuisine_id == 7 %}
+            {% set cuisine_class = "cuisine-north-american" %}
+          {% elif featured_recipe.cuisine_id == 8 %}
+            {% set cuisine_class = "cuisine-australian" %}
           {% endif %}
-          {% if featured_recipe.rating_count == 1 %}
-          (1 arvio)
-          {% else %}
-          ({{featured_recipe.rating_count}} arviota)
+          <span class="cuisine-tag {{ cuisine_class }}">{{ featured_recipe.cuisine }}</span>
+        </div>
+        <div class="bottom-row">
+          {% if featured_recipe.vegan %}
+            <span class="tag tag-vegan">Vegaani</span>
           {% endif %}
-        </span>
-        {% set cuisine_class = "" %}
-        {% if featured_recipe.cuisine_id == 1 %}
-          {% set cuisine_class = "cuisine-nordic" %}
-        {% elif featured_recipe.cuisine_id == 2 %}
-          {% set cuisine_class = "cuisine-european" %}
-        {% elif featured_recipe.cuisine_id == 3 %}
-          {% set cuisine_class = "cuisine-asian" %}
-        {% elif featured_recipe.cuisine_id == 4 %}
-          {% set cuisine_class = "cuisine-middle-east" %}
-        {% elif featured_recipe.cuisine_id == 5 %}
-          {% set cuisine_class = "cuisine-african" %}
-        {% elif featured_recipe.cuisine_id == 6 %}
-          {% set cuisine_class = "cuisine-latin-american" %}
-        {% elif featured_recipe.cuisine_id == 7 %}
-          {% set cuisine_class = "cuisine-north-american" %}
-        {% elif featured_recipe.cuisine_id == 8 %}
-          {% set cuisine_class = "cuisine-australian" %}
-        {% endif %}
-        <span class="cuisine-tag {{ cuisine_class }}">{{ featured_recipe.cuisine }}</span>
-        {% if featured_recipe.vegan %}
-          <span class="tag tag-vegan">Vegaani</span>
-        {% endif %}
-        {% if featured_recipe.vegetarian %}
-          <span class="tag tag-vegetarian">Kasvis</span>
-        {% endif %}
-        {% if featured_recipe.lactose_free %}
-          <span class="tag tag-lactose-free">Laktoositon</span>
-        {% endif %}
-        {% if featured_recipe.gluten_free %}
-          <span class="tag tag-gluten-free">Gluteeniton</span>
-        {% endif %}
+          {% if featured_recipe.vegetarian %}
+            <span class="tag tag-vegetarian">Kasvis</span>
+          {% endif %}
+          {% if featured_recipe.lactose_free %}
+            <span class="tag tag-lactose-free">Laktoositon</span>
+          {% endif %}
+          {% if featured_recipe.gluten_free %}
+            <span class="tag tag-gluten-free">Gluteeniton</span>
+          {% endif %}
+        </div>
       </div>
-      <p>Arviot: {{ featured_recipe.rating_count }}</p>
       <p>Laatinut: <a href="/user/{{ featured_recipe.user_id }}">{{ featured_recipe.username }}</a></p>
     </div>
   </div>

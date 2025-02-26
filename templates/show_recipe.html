@@ -16,31 +16,32 @@ endblock %} {% block content %}
     </div>
     {% endif %}
   </div>
-  <p class="rating-cuisine-container">
-    <span class="rating-stars">
-    {% if recipe.avg_rating %}
-    {% for i in range(0, recipe.avg_rating) %}
-    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
-    {% endfor %}
-    {% for i in range(0, 5-recipe.avg_rating) %}
-    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
-    {% endfor %}
-    {% else %}
-    {% for i in range(0, 0) %}
-    <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
-    {% endfor %}
-    {% for i in range(0, 5) %}
-    <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
-    {% endfor %}
-    {% endif %}
-  </span>
-
-  {% if recipe.rating_count == 1 %}
-  (1 arvio)
-  {% else %}
-  ({{recipe.rating_count}} arviota)
-  {% endif %}
-
+  <div class="recipe-info-container">
+    <div class="top-row">
+      <span class="rating-stars">
+      {% if recipe.avg_rating %}
+      {% for i in range(0, recipe.avg_rating) %}
+      <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
+      {% endfor %}
+      {% for i in range(0, 5-recipe.avg_rating) %}
+      <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
+      {% endfor %}
+      {% else %}
+      {% for i in range(0, 0) %}
+      <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
+      {% endfor %}
+      {% for i in range(0, 5) %}
+      <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
+      {% endfor %}
+      {% endif %}
+      </span>
+   
+      {% if recipe.rating_count == 1 %}
+      (1 arvio)
+      {% else %}
+      ({{recipe.rating_count}} arviota)
+      {% endif %}
+   
     {% set cuisine_class = "" %}
     {% if recipe.cuisine_id == 1 %}
       {% set cuisine_class = "cuisine-nordic" %}
@@ -60,7 +61,8 @@ endblock %} {% block content %}
       {% set cuisine_class = "cuisine-australian" %}
     {% endif %}
     <span class="cuisine-tag {{ cuisine_class }}">{{ recipe.cuisine }}</span>
- 
+  </div>
+  <div class="bottom-row">
   
     {% if recipe.vegan %}
     <span class="tag tag-vegan">Vegaani</span>
@@ -77,7 +79,8 @@ endblock %} {% block content %}
     {% if recipe.gluten_free %}
     <span class="tag tag-gluten-free">Gluteeniton</span>
     {% endif %}
-</p>
+    </div>
+  </div>
 
 <p class="recipe-author">
   Laatinut: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>

@@ -211,6 +211,30 @@ hr {
 .form-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Space between buttons */
-    margin-top: 20px; /* Add vertical spacing above the buttons */
-  }
+    gap: 20px;
+    /* Space between buttons */
+    margin-top: 20px;
+    /* Add vertical spacing above the buttons */
+}
+
+.recipe-info-container {
+    display: flex;
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
+    gap: 10px;
+}
+
+.recipe-info-container .top-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.recipe-info-container .bottom-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
