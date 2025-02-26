@@ -455,10 +455,13 @@ def get_recipe_image(recipe_id):
     return result[0]["image"] if result else None
 
 
-def recipe_image_exists(recipe_id):
-    sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
-    result = db.query(sql, [recipe_id])
-    return result[0][0] == 1
+def recipe_image_exists(recipe):
+    if recipe:
+        recipe_id = recipe["id"]
+        sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
+        result = db.query(sql, [recipe_id])
+        return result[0][0] == 1
+    return False
 
 
 # Helper function

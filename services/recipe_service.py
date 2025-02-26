@@ -28,8 +28,7 @@ def delete_temporary_session_attributes():
 
 def get_index():
     featured_recipe = recipes.get_featured_recipe()
-    recipe_must_exist(featured_recipe)
-    image_exists = recipes.recipe_image_exists(featured_recipe["id"])
+    image_exists = recipes.recipe_image_exists(featured_recipe)
     return render_template(
         "index.html", featured_recipe=featured_recipe, image_exists=image_exists
     )
@@ -98,7 +97,7 @@ def show_recipe(recipe_id):
         1 if total_ratings % ratings_per_page else 0
     )
 
-    image_exists = recipes.recipe_image_exists(recipe_id)
+    image_exists = recipes.recipe_image_exists(single_recipe)
     session["recipe"] = dict(single_recipe)
 
     rating = []
@@ -411,7 +410,7 @@ def edit_new_recipe_image(recipe_id):
                 )
 
             try:
-                if recipes.recipe_image_exists(recipe_id):
+                if recipes.recipe_image_exists(single_recipe):
                     recipes.update_recipe_image(recipe_id, image_data)
 
                 else:
