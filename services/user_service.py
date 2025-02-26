@@ -20,7 +20,7 @@ def show_user_statistics(user_id):
     total_recipes = recipes.get_total_number_of_recipes(user_id)
     total_pages = (total_recipes // per_page) + (1 if total_recipes % per_page else 0)
 
-    return render_template("show_user.html", user=user, user_recipes=user_recipes, page=page, total_pages=total_pages)
+    return render_template("show_user.html", user=user, user_recipes=user_recipes, total_recipes=total_recipes, page=page, total_pages=total_pages)
 
 def user_login(form_data):
     errors = {}
