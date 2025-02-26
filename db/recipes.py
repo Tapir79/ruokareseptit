@@ -178,6 +178,7 @@ def find_recipes(
     cuisine,
     page,
     per_page,
+    order_by,
 ):
 
     search_params, cuisine_param, conditions = build_search_query_conditions(
@@ -194,7 +195,9 @@ def find_recipes(
                     recipes.lactose_free,
                     recipes.gluten_free,
                     recipes.rating_count,
-                    (SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = recipes.id)) as image_exists,
+                    (SELECT EXISTS
+                        (SELECT 1 FROM recipe_images
+                         WHERE recipe_id = recipes.id)) as image_exists,
                     users.username,
                     cuisines.name as cuisine,
                     cuisines.id as cuisine_id,
@@ -203,7 +206,13 @@ def find_recipes(
             JOIN users ON recipes.user_id = users.id
             JOIN cuisines ON recipes.cuisine_id = cuisines.id"""
     sql += conditions
-    sql += """ ORDER BY recipes.id DESC LIMIT ? OFFSET ?"""
+    
+    if order_by == "avg_rating":
+        order_clause = " ORDER BY avg_rating DESC"
+    else:
+        order_clause = " ORDER BY recipes.title ASC"
+
+    sql += order_clause + " LIMIT ? OFFSET ?"
 
     params = []
     if search_params:
@@ -458,14 +467,15 @@ def get_recipe_image(recipe_id):
 def recipe_image_exists(recipe):
     if recipe:
         recipe_id = recipe["id"]
-        sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
+        sql = """SELECT EXISTS (
+                        SELECT 1 FROM recipe_images
+                        WHERE recipe_id = ?)"""
         result = db.query(sql, [recipe_id])
         return result[0][0] == 1
     return False
 
 
-# Helper function
-
+# Helper functions
 
 def get_next_operator(is_first):
     if is_first:

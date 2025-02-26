@@ -61,7 +61,15 @@
           {% endfor %}
         </select>
       </div>
-      
+
+      <div class="filter-box">
+        <h3>Järjestä</h3>
+        <select name="order_by" id="order_by">
+          <option value="title" {% if request.args.get('order_by') == 'title' %}selected{% endif %}>Otsikko (A-Z)</option>
+          <option value="avg_rating" {% if request.args.get('order_by') == 'avg_rating' %}selected{% endif %}>Tähdet (korkein ensin)</option>
+        </select>
+      </div>
+
       <div class="filter-box">
         <h3>Hakusana</h3>
         <input type="text" name="query" value="{{ query }}" placeholder="Hakusana...">
@@ -149,10 +157,10 @@
       <!-- Pagination Controls -->
       <div class="pagination">
         {% if page > 1 %}
-          <a href="{{ url_for('find_recipe', page=page-1, query=query, vegan=vegan, vegetarian=vegetarian, lactose_free=lactose_free, gluten_free=gluten_free, avg_rating=avg_rating, cuisine=cuisine) }}" class="btn btn-secondary">Previous</a>
+          <a href="{{ url_for('find_recipe', page=page-1, query=query, vegan=vegan, vegetarian=vegetarian, lactose_free=lactose_free, gluten_free=gluten_free, avg_rating=avg_rating, cuisine=cuisine, order_by=order_by) }}" class="btn btn-secondary">Previous</a>
         {% endif %}
         {% if has_more %}
-          <a href="{{ url_for('find_recipe', page=page+1, query=query, vegan=vegan, vegetarian=vegetarian, lactose_free=lactose_free, gluten_free=gluten_free, avg_rating=avg_rating, cuisine=cuisine) }}" class="btn btn-secondary">Next</a>
+          <a href="{{ url_for('find_recipe', page=page+1, query=query, vegan=vegan, vegetarian=vegetarian, lactose_free=lactose_free, gluten_free=gluten_free, avg_rating=avg_rating, cuisine=cuisine, order_by=order_by) }}" class="btn btn-secondary">Next</a>
         {% endif %}
       </div>
     {% else %}

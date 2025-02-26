@@ -43,6 +43,7 @@ def search_recipe():
     gluten_free = request.args.get("gluten_free")
     avg_rating = request.args.getlist("avg_rating")
     cuisine = request.args.get("cuisine")
+    order_by = request.args.get("order_by", "title")  # default ordering by title
     page = request.args.get("page", 1, type=int)
     per_page = 5
     cuisines = recipes.get_cuisines()
@@ -56,6 +57,7 @@ def search_recipe():
         cuisine,
         page,
         per_page,
+        order_by,
     )
 
     has_more = False
@@ -76,6 +78,7 @@ def search_recipe():
         gluten_free=gluten_free,
         avg_rating=avg_rating,
         cuisine=cuisine,
+        order_by=order_by,
     )
 
 
