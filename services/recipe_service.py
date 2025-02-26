@@ -1,5 +1,5 @@
 import sqlite3
-from flask import make_response, redirect, render_template, request, session
+from flask import make_response, redirect, render_template, flash, request, session
 import db.recipes as recipes
 from utils.validations import (
     allowed_file,
@@ -137,10 +137,12 @@ def save_rating(recipe_id, form_data, rated_by):
         if existing_rating:
             existing_rating_id = existing_rating["id"]
             recipes.update_rating(existing_rating_id, comment, stars)
+            flash(f"Reseptin arvostelu päivitetty onnistuneesti!", "success")
         else:
             recipes.save_rating(recipe_id, comment, stars, rated_by)
+            flash(f"Reseptin arvostelu lisätty onnistuneesti!", "success")
     except sqlite3.IntegrityError:
-        print("VIRHE: reseptin tallennus epäonnistui")
+        flash(f"Reseptin arvostelun tallennus epäonnistui!", "error")
         if existing_rating:
             action = "päivitys"
         else:
@@ -221,6 +223,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         recipes.add_instructions(recipe_id, recipe_instructions)
 
         delete_temporary_session_attributes()
+        flash(f"Resepti lisätty onnistuneesti!", "success")
         return render_template("upload_image.html", recipe_id=recipe_id)
 
     except sqlite3.IntegrityError:
@@ -365,7 +368,8 @@ def add_new_recipe_image(recipe_id):
             try:
                 recipes.add_recipe_image(recipe_id, image_data)
 
-                print("Kuva ladattu onnistuneesti!")
+                flash(f"Reseptin kuva lisätty onnistuneesti!", "success")
+
                 return redirect(f"/recipe/{recipe_id}")
             except Exception as e:
                 print(f"Virhe kuvan tallennuksessa: {e}")  # Log error to console
@@ -409,11 +413,15 @@ def edit_new_recipe_image(recipe_id):
             try:
                 if recipes.recipe_image_exists(recipe_id):
                     recipes.update_recipe_image(recipe_id, image_data)
+
                 else:
                     recipes.add_recipe_image(recipe_id, image_data)
+
+                flash(f"Reseptin kuva päivitetty onistuneesti!", "success")
                 return redirect(f"/recipe/{recipe_id}")
             except Exception as e:
                 print(f"Virhe kuvan päivityksessä: {e}")  # Log error to console
+                flash("Virhe kuvan päivityksessä", "error")
                 errors = {
                     "general": "Odottamaton virhe kuvan päivityksessä. Yritä uudelleen."
                 }
@@ -554,6 +562,7 @@ def save_edited_recipe(
         )
         recipes.add_edit_or_remove_instructions(recipe_id, recipe_instructions)
         recipes.add_edit_or_remove_ingredients(recipe_id, recipe_ingredients)
+        flash(f"Resepti {recipe_id} päivitetty onnistuneesti!", "success")
         return redirect(f"/recipe/{recipe_id}")
 
     except sqlite3.IntegrityError:
@@ -700,7 +709,9 @@ def delete_recipe(recipe_id):
             try:
                 recipes.remove_recipe(recipe_id)
             except sqlite3.IntegrityError:
-                print("VIRHE: reseptin poistaminen epäonnistui")
+                flash(f"Reseptin {recipe_id} poistaminen epäonnistui!", "error")
+
+            flash(f"Resepti {recipe_id} poistettu onnistuneesti!", "success")
             return redirect("/")
 
         return redirect("/recipe/" + str(recipe_id))
