@@ -1,5 +1,7 @@
 import db.db as db
 
+AVERAGE_RATING_CONDITION = "CAST(ROUND(recipes.total_rating*1.0/recipes.rating_count, 0) AS INTEGER)"
+AVERAGE_RATING = f"{AVERAGE_RATING_CONDITION } as avg_rating"
 
 def get_recipes():
     sql = """SELECT id, 
@@ -12,7 +14,7 @@ def get_recipes():
 
 
 def get_recipe(recipe_id):
-    sql = """SELECT recipes.id, 
+    sql = f"""SELECT recipes.id, 
                     recipes.title, 
                     recipes.description,
                     recipes.user_id,
@@ -25,7 +27,7 @@ def get_recipe(recipe_id):
                     cuisines.name as cuisine,
                     users.id as user_id,
                     users.username,
-                    (recipes.total_rating/recipes.rating_count) as avg_rating
+                    {AVERAGE_RATING}
              FROM recipes JOIN users ON recipes.user_id = users.id
              JOIN cuisines ON recipes.cuisine_id = cuisines.id
              WHERE recipes.id = ?"""
@@ -34,7 +36,7 @@ def get_recipe(recipe_id):
 
 
 def get_featured_recipe():
-    sql = """SELECT recipes.id, 
+    sql = f"""SELECT recipes.id, 
                     recipes.title, 
                     recipes.description,
                     recipes.user_id,
@@ -47,7 +49,7 @@ def get_featured_recipe():
                     cuisines.name as cuisine,
                     users.id as user_id,
                     users.username,
-                    (recipes.total_rating/recipes.rating_count) as avg_rating
+                    {AVERAGE_RATING}
              FROM recipes 
              JOIN users ON recipes.user_id = users.id
              JOIN cuisines ON recipes.cuisine_id = cuisines.id
@@ -58,10 +60,10 @@ def get_featured_recipe():
 
 
 def get_recipes_by_user(user_id, limit=10, offset=0):
-    sql = """SELECT recipes.id,
+    sql = f"""SELECT recipes.id,
                     recipes.title,
                     recipes.rating_count,
-                    (recipes.total_rating/recipes.rating_count) as avg_rating
+                    {AVERAGE_RATING}
              FROM recipes
              JOIN users ON recipes.user_id = users.id
              WHERE users.id = ?
@@ -196,7 +198,7 @@ def find_recipes(
                     users.username,
                     cuisines.name as cuisine,
                     cuisines.id as cuisine_id,
-                    (recipes.total_rating/recipes.rating_count) as avg_rating
+                    {AVERAGE_RATING}
             FROM recipes
             JOIN users ON recipes.user_id = users.id
             JOIN cuisines ON recipes.cuisine_id = cuisines.id"""
@@ -518,7 +520,7 @@ def build_search_query_conditions(
         avg_rating_ints = [int(rating) for rating in avg_rating]
         ratings_str = ", ".join(map(str, avg_rating_ints))
         query_condition = (
-            f"(recipes.total_rating/recipes.rating_count) IN ({ratings_str})"
+            f"{AVERAGE_RATING_CONDITION} IN ({ratings_str})"
         )
         is_first = append_to_conditions(is_first, conditions, query_condition)
 
