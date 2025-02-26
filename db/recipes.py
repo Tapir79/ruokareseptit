@@ -57,16 +57,21 @@ def get_featured_recipe():
     return result[0] if result else None
 
 
-def get_recipes_by_user(user_id):
+def get_recipes_by_user(user_id, limit=10, offset=0):
     sql = """SELECT recipes.id,
                     recipes.title,
                     recipes.rating_count,
                     (recipes.total_rating/recipes.rating_count) as avg_rating
-             FROM recipes JOIN users ON recipes.user_id = users.id
-             WHERE users.id = ?"""
-    result = db.query(sql, [user_id])
-    return result if result else None
+             FROM recipes
+             JOIN users ON recipes.user_id = users.id
+             WHERE users.id = ?
+             LIMIT ? OFFSET ?"""
+    result = db.query(sql, [user_id, limit, offset])
+    return result if result else []
 
+def get_total_number_of_recipes(user_id):
+    result = db.query("SELECT COUNT(*) FROM recipes WHERE user_id = ?", [user_id])
+    return result[0][0] if result else 0
 
 def get_recipe_ingredients(recipe_id):
     sql = """SELECT recipes.id,

@@ -7,16 +7,20 @@ import db.recipes as recipes
 def get_login():
     return render_template("login.html", errors={})
 
-
 def show_user_statistics(user_id):
     user = users.get_user(user_id)
-    user_recipes = recipes.get_recipes_by_user(user_id)
-    if not user_recipes:
-        user_recipes = {}
     if not user:
         abort(404)
 
-    return render_template("show_user.html", user=user, user_recipes=user_recipes)
+    page = request.args.get("page", 1, type=int)  # Default to page 1
+    per_page = 10  # Number of recipes per page
+    offset = (page - 1) * per_page
+
+    user_recipes = recipes.get_recipes_by_user(user_id, limit=per_page, offset=offset)
+    total_recipes = recipes.get_total_number_of_recipes(user_id)
+    total_pages = (total_recipes // per_page) + (1 if total_recipes % per_page else 0)
+
+    return render_template("show_user.html", user=user, user_recipes=user_recipes, page=page, total_pages=total_pages)
 
 def user_login(form_data):
     errors = {}
