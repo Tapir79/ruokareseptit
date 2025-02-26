@@ -69,9 +69,11 @@ def get_recipes_by_user(user_id, limit=10, offset=0):
     result = db.query(sql, [user_id, limit, offset])
     return result if result else []
 
+
 def get_total_number_of_recipes(user_id):
     result = db.query("SELECT COUNT(*) FROM recipes WHERE user_id = ?", [user_id])
     return result[0][0] if result else 0
+
 
 def get_recipe_ingredients(recipe_id):
     sql = """SELECT recipes.id,
@@ -380,19 +382,22 @@ def save_rating(recipe_id, comment, stars, rated_by):
     return last_insert_id
 
 
-def get_ratings(recipe_id):
-    sql = """SELECT
-             ratings.comment,
-             ratings.stars,
-             ratings.rated_by,
-             ratings.recipe_id,
-             ratings.created_at,
-             users.username
-             FROM ratings
-             JOIN users ON ratings.rated_by = users.id
-             WHERE recipe_id = ?
-             ORDER BY created_at DESC"""
-    return db.query(sql, [recipe_id])
+def get_ratings(recipe_id, limit=20, offset=0):
+    query = """SELECT r.id, r.comment, r.stars, r.rated_by, r.created_at, u.username
+                FROM ratings r
+                JOIN users u ON r.rated_by = u.id
+                WHERE r.recipe_id = ?
+                ORDER BY r.created_at DESC
+                LIMIT ? OFFSET ?
+                """
+    result = db.query(query, (recipe_id, limit, offset))
+    return result if result else []
+
+
+def get_total_ratings(recipe_id):
+    query = "SELECT COUNT(*) FROM ratings WHERE recipe_id = ?"
+    result = db.query(query, (recipe_id,))
+    return result[0][0] if result else 0
 
 
 def get_user_rating(recipe_id, rated_by):

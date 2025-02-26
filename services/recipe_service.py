@@ -85,7 +85,19 @@ def show_recipe(recipe_id):
     recipe_must_exist(single_recipe)
     recipe_ingredients = recipes.get_recipe_ingredients(recipe_id)
     recipe_instructions = recipes.get_recipe_instructions(recipe_id)
-    recipe_ratings = recipes.get_ratings(recipe_id)
+
+    # Ratings pagination
+    ratings_page = request.args.get("ratings_page", 1, type=int)
+    ratings_per_page = 20
+    offset = (ratings_page - 1) * ratings_per_page
+    recipe_ratings = recipes.get_ratings(
+        recipe_id, limit=ratings_per_page, offset=offset
+    )
+    total_ratings = recipes.get_total_ratings(recipe_id)
+    total_rating_pages = (total_ratings // ratings_per_page) + (
+        1 if total_ratings % ratings_per_page else 0
+    )
+
     image_exists = recipes.recipe_image_exists(recipe_id)
     session["recipe"] = dict(single_recipe)
 
@@ -102,6 +114,8 @@ def show_recipe(recipe_id):
         recipe_ratings=recipe_ratings,
         rating=rating,
         image_exists=image_exists,
+        ratings_page=ratings_page,
+        total_rating_pages=total_rating_pages,
     )
 
 

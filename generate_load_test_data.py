@@ -13,8 +13,7 @@ db.execute("DELETE FROM recipes")
 db.execute("DELETE FROM recipe_images")  # Clear images as well
 
 user_count = 1000
-recipe_count = 100000
-ratings_count = 100000
+recipe_count = 100000  # 100k recipes for load testing
 
 # Insert users (IDs 1..1000)
 for i in range(1, user_count + 1):
@@ -50,21 +49,19 @@ for i in range(1, recipe_count + 1):
         (instruction, 1, i)
     )
 
-# Insert ratings while ensuring uniqueness for (recipe_id, rated_by)
-existing_ratings = set()
-for _ in range(ratings_count):
-    while True:
-        recipe_id = random.randint(1, recipe_count)
-        rated_by = random.randint(2, user_count)  # ensure not user 1
-        if (recipe_id, rated_by) not in existing_ratings:
-            existing_ratings.add((recipe_id, rated_by))
-            break
-    stars = random.randint(1, 5)
-    comment = f"Rating for recipe {recipe_id} by user {rated_by}"
-    db.execute(
-        "INSERT INTO ratings(comment, stars, rated_by, recipe_id) VALUES (?, ?, ?, ?)",
-        (comment, stars, rated_by, recipe_id)
-    )
+# For each recipe, insert 30 ratings
+for recipe_id in range(1, recipe_count + 1):
+    # Select 30 unique raters from user 2 to user_count
+    raters = random.sample(range(2, user_count + 1), 30)
+    for rated_by in raters:
+        stars = random.randint(1, 5)
+        comment = f"Rating for recipe {recipe_id} by user {rated_by}"
+        db.execute(
+            "INSERT INTO ratings(comment, stars, rated_by, recipe_id) VALUES (?, ?, ?, ?)",
+            (comment, stars, rated_by, recipe_id)
+        )
+    if recipe_id % 1000 == 0:
+        print(f"Inserted ratings for recipe {recipe_id}.")
 
 # Insert image for every recipe using "images/2.jpg"
 image_path = os.path.join("images", "2.jpg")

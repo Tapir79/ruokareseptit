@@ -190,17 +190,30 @@ endblock %} {% block content %}
     </div>
     <div class="rating-container-stars">
       {% for i in range(0, rating.stars) %}
-      <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
+        <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="star" />
       {% endfor %}
       {% for i in range(0, 5-rating.stars) %}
-      <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
+        <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="empty_star" />
       {% endfor %}
     </div>
     <div class="rating-created-at">
-     {{ rating.created_at }}
+      {{ rating.created_at }}
     </div>
   </div>
   {% endfor %}
+
+  <!-- Ratings Pagination Controls -->
+  <div class="ratings-pagination" style="text-align: center; margin-top: 20px;">
+    {% if ratings_page > 1 %}
+      <a href="{{ url_for('recipe', recipe_id=recipe.id, ratings_page=ratings_page-1) }}">Edellinen</a>
+    {% endif %}
+    Sivu {{ ratings_page }} / {{ total_rating_pages }}
+    {% if ratings_page < total_rating_pages %}
+      <a href="{{ url_for('recipe', recipe_id=recipe.id, ratings_page=ratings_page+1) }}">Seuraava</a>
+    {% endif %}
+  </div>
+{% else %}
+  <p>Ei arvosteluja</p>
 {% endif %}
 
 
