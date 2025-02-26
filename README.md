@@ -26,8 +26,9 @@
 
 # Sovelluksen asennus 
 
-## Asenna `flask`-kirjasto:    
-    ``$ pip install flask``
+## Asenna `flask`-kirjasto:
+
+``$ pip install flask``
 
 ## Luo tietokanta
    
