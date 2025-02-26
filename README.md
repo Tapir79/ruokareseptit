@@ -17,12 +17,12 @@
 * [X] Käyttäjä pystyy suodattamaan reseptejä ruokavalioluokittelun perusteella.
 * [X] Käyttäjä pystyy suodattamaan reseptejä ruokakulttuuriluokittelun perusteella.
 * [X] Käyttäjä pystyy suodattamaan reseptejä arvosanan perusteella.
-* [] Käyttäjä pystyy järjestämään reseptejä arvosanan perusteella.
+* [X] Käyttäjä pystyy järjestämään reseptejä arvosanan perusteella.
+* [X] Käyttäjä pystyy järjestämään reseptejä otsikon perusteella.
 * [X] Käyttäjä voi lisätä kuvan reseptiin
 * [X] Käyttäjäsivu näyttää, montako reseptiä käyttäjä on lisännyt ja listan käyttäjän lisäämistä resepteistä.
 * [X] Sovelluksella on CSS-tyylitiedosto
 * [X] Sovellus testattu suurilla syötteillä
-
 
 # Sovelluksen asennus 
 
