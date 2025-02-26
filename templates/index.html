@@ -29,6 +29,12 @@
             {% for i in range(0, 5) %}
               <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
             {% endfor %}
+
+          {% endif %}
+          {% if featured_recipe.rating_count == 1 %}
+          (1 arvio)
+          {% else %}
+          ({{featured_recipe.rating_count}} arviota)
           {% endif %}
         </span>
         {% set cuisine_class = "" %}

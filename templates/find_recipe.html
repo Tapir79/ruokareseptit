@@ -103,7 +103,9 @@
                       <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="16" height="16" alt="tyhjä tähti">
                     {% endfor %}
                   {% endif %}
+                  ({{recipe.rating_count}})
                 </div>
+
                 <div class="cuisine-container">
                   {% set cuisine_class = "" %}
                   {% if recipe.cuisine_id == 1 %}

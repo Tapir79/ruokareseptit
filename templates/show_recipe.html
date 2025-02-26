@@ -35,6 +35,12 @@ endblock %} {% block content %}
     {% endif %}
   </span>
 
+  {% if recipe.rating_count == 1 %}
+  (1 arvio)
+  {% else %}
+  ({{recipe.rating_count}} arviota)
+  {% endif %}
+
     {% set cuisine_class = "" %}
     {% if recipe.cuisine_id == 1 %}
       {% set cuisine_class = "cuisine-nordic" %}

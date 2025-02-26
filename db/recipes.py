@@ -191,6 +191,7 @@ def find_recipes(
                     recipes.vegetarian,
                     recipes.lactose_free,
                     recipes.gluten_free,
+                    recipes.rating_count,
                     (SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = recipes.id)) as image_exists,
                     users.username,
                     cuisines.name as cuisine,
