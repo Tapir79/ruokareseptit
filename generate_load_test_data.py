@@ -14,6 +14,7 @@ db.execute("DELETE FROM recipe_images")  # Clear images as well
 
 user_count = 1000
 recipe_count = 100000  # 100k recipes for load testing
+ratings_count = 500
 
 # Insert users (IDs 1..1000)
 for i in range(1, user_count + 1):
@@ -51,8 +52,10 @@ for i in range(1, recipe_count + 1):
 
 # For each recipe, insert 30 ratings
 for recipe_id in range(1, recipe_count + 1):
-    # Select 30 unique raters from user 2 to user_count
-    raters = random.sample(range(2, user_count + 1), 30)
+    # Select unique raters from user 2 to user_count
+    if recipe_id % 2 == 0:
+        ratings_count = 10
+    raters = random.sample(range(2, user_count + 1), ratings_count)
     for rated_by in raters:
         stars = random.randint(1, 5)
         comment = f"Rating for recipe {recipe_id} by user {rated_by}"
