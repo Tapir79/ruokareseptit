@@ -47,6 +47,15 @@ def search_recipe():
     page = request.args.get("page", 1, type=int)
     per_page = 5
     cuisines = recipes.get_cuisines()
+    total_pages = recipes.get_total_search_results(
+        query,
+        vegan,
+        vegetarian,
+        lactose_free,
+        gluten_free,
+        avg_rating,
+        cuisine,
+    )
     results = recipes.find_recipes(
         query,
         vegan,
@@ -65,6 +74,8 @@ def search_recipe():
         has_more = True
         results = results[:per_page]
 
+    total_pages = (total_pages // per_page) + (1 if total_pages % per_page else 0)
+
     return render_template(
         "find_recipe.html",
         query=query,
@@ -72,6 +83,7 @@ def search_recipe():
         cuisines=cuisines,
         page=page,
         has_more=has_more,
+        total_pages=total_pages,
         vegan=vegan,
         vegetarian=vegetarian,
         lactose_free=lactose_free,

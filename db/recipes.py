@@ -1,7 +1,10 @@
 import db.db as db
 
-AVERAGE_RATING_CONDITION = "CAST(ROUND(recipes.total_rating*1.0/recipes.rating_count, 0) AS INTEGER)"
+AVERAGE_RATING_CONDITION = (
+    "CAST(ROUND(recipes.total_rating*1.0/recipes.rating_count, 0) AS INTEGER)"
+)
 AVERAGE_RATING = f"{AVERAGE_RATING_CONDITION } as avg_rating"
+
 
 def get_recipes():
     sql = """SELECT id, 
@@ -168,6 +171,34 @@ def remove_recipe(recipe_id):
     remove_unused_ingredients()
 
 
+def get_total_search_results(
+    query,
+    vegan,
+    vegetarian,
+    lactose_free,
+    gluten_free,
+    avg_rating,
+    cuisine,
+):
+    search_params, cuisine_param, conditions = build_search_query_conditions(
+        query, vegan, vegetarian, lactose_free, gluten_free, avg_rating, cuisine
+    )
+
+    total_sql = """SELECT count(*) as total_results
+                    FROM recipes
+                    JOIN users ON recipes.user_id = users.id
+                    JOIN cuisines ON recipes.cuisine_id = cuisines.id"""
+    params = []
+    if search_params:
+        params = [f"%{ query }%", f"%{ query }%", f"%{ query }%"]
+    if cuisine_param:
+        params.append(cuisine)
+
+    total_sql += conditions
+    total_results = db.query(total_sql, params)
+    return total_results[0]["total_results"] if total_results else 0
+
+
 def find_recipes(
     query,
     vegan,
@@ -187,26 +218,25 @@ def find_recipes(
 
     offset = (page - 1) * per_page
     sql = f"""SELECT recipes.id,
-                    recipes.title,
-                    recipes.description,
-                    recipes.user_id,
-                    recipes.vegan,
-                    recipes.vegetarian,
-                    recipes.lactose_free,
-                    recipes.gluten_free,
-                    recipes.rating_count,
-                    (SELECT EXISTS
-                        (SELECT 1 FROM recipe_images
-                         WHERE recipe_id = recipes.id)) as image_exists,
-                    users.username,
-                    cuisines.name as cuisine,
-                    cuisines.id as cuisine_id,
-                    {AVERAGE_RATING}
+                     recipes.title,
+                     recipes.description,
+                     recipes.user_id,
+                     recipes.vegan,
+                     recipes.vegetarian,
+                     recipes.lactose_free,
+                     recipes.gluten_free,
+                     recipes.rating_count,
+                     (SELECT EXISTS (SELECT 1 FROM recipe_images
+                                     WHERE recipe_id = recipes.id)) as image_exists,
+                     users.username,
+                     cuisines.name as cuisine,
+                     cuisines.id as cuisine_id,
+                     {AVERAGE_RATING}
             FROM recipes
             JOIN users ON recipes.user_id = users.id
             JOIN cuisines ON recipes.cuisine_id = cuisines.id"""
     sql += conditions
-    
+
     if order_by == "avg_rating":
         order_clause = " ORDER BY avg_rating DESC"
     else:
@@ -302,14 +332,14 @@ def add_instruction(recipe_id, instruction):
 
 def edit_instruction(recipe_id, instruction_id, new_instruction):
     sql_update_instruction = """UPDATE recipe_instructions
-                           SET instruction = ?
-                           WHERE recipe_id = ? AND id = ?"""
+                                SET instruction = ?
+                                WHERE recipe_id = ? AND id = ?"""
     db.execute(sql_update_instruction, [new_instruction, recipe_id, instruction_id])
 
 
 def delete_instruction(recipe_id, instruction_id):
     sql_delete_instruction = """DELETE FROM recipe_instructions
-                                      WHERE recipe_id = ? AND id = ?"""
+                                WHERE recipe_id = ? AND id = ?"""
     db.execute(sql_delete_instruction, [recipe_id, instruction_id])
 
 
@@ -396,12 +426,12 @@ def save_rating(recipe_id, comment, stars, rated_by):
 
 def get_ratings(recipe_id, limit=20, offset=0):
     query = """SELECT r.id, r.comment, r.stars, r.rated_by, r.created_at, u.username
-                FROM ratings r
-                JOIN users u ON r.rated_by = u.id
-                WHERE r.recipe_id = ?
-                ORDER BY r.created_at DESC
-                LIMIT ? OFFSET ?
-                """
+               FROM ratings r
+               JOIN users u ON r.rated_by = u.id
+               WHERE r.recipe_id = ?
+               ORDER BY r.created_at DESC
+               LIMIT ? OFFSET ?"""
+    
     result = db.query(query, (recipe_id, limit, offset))
     return result if result else []
 
@@ -453,8 +483,8 @@ def add_recipe_image(recipe_id, image_data):
 
 def update_recipe_image(recipe_id, image_data):
     sql = """UPDATE recipe_images
-            SET image = ?
-            WHERE recipe_id = ?"""
+             SET image = ?
+             WHERE recipe_id = ?"""
     db.execute(sql, [image_data, recipe_id])
 
 
@@ -476,6 +506,7 @@ def recipe_image_exists(recipe):
 
 
 # Helper functions
+
 
 def get_next_operator(is_first):
     if is_first:
@@ -505,11 +536,11 @@ def build_search_query_conditions(
 
     if query:
         query_condition = """(recipes.title LIKE ?
-                OR recipes.description LIKE ?
-                OR recipes.id IN (SELECT recipe_ingredients.recipe_id
-                                    FROM recipe_ingredients
-                                    JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
-                                    WHERE ingredients.name LIKE ?))"""
+                             OR recipes.description LIKE ?
+                             OR recipes.id IN (SELECT recipe_ingredients.recipe_id
+                                               FROM recipe_ingredients
+                                               JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
+                                               WHERE ingredients.name LIKE ?))"""
         search_params = True
         is_first = append_to_conditions(is_first, conditions, query_condition)
 
@@ -532,9 +563,7 @@ def build_search_query_conditions(
     if len(avg_rating) > 0:
         avg_rating_ints = [int(rating) for rating in avg_rating]
         ratings_str = ", ".join(map(str, avg_rating_ints))
-        query_condition = (
-            f"{AVERAGE_RATING_CONDITION} IN ({ratings_str})"
-        )
+        query_condition = f"{AVERAGE_RATING_CONDITION} IN ({ratings_str})"
         is_first = append_to_conditions(is_first, conditions, query_condition)
 
     if cuisine:
