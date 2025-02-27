@@ -54,13 +54,27 @@
 
           <div class="recipe-form-content">
             <label for="name">Aineksen nimi:</label>
+            {% if errors.name or errors.amount %}
             <input type="text" name="name" maxlength="30" value="{{ form_data.name if form_data and 'name' in form_data else '' }}" />
+            {% endif %}
+
+            {% if not errors.name and not errors.amount %}
+            <input type="text" name="name" maxlength="30" value="" /> 
+            {% endif %}
+
             {% if errors.name %}
             <span class="error-message">{{ errors.name }}</span>
             {% endif %}
 
             <label for="amount">Määrä:</label>
+            {% if errors.name or errors.amount %}
             <input type="text" name="amount" maxlength="20" value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}" />
+            {% endif %}
+
+            {% if not errors.name and not errors.amount %}
+            <input type="text" name="amount" maxlength="20" value="" />
+            {% endif %}
+
             {% if errors.amount %}
             <span class="error-message">{{ errors.amount }}</span>
             {% endif %}
@@ -75,9 +89,12 @@
 
       <div class="recipe-form-content">
         <label for="instruction_name">Uusi ohje:</label>
-        <input type="text" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
+
         {% if errors.instruction_name %}
+        <input type="text" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
         <span class="error-message">{{ errors.instruction_name }}</span>
+        {% else %}
+        <input type="text" name="instruction_name" maxlength="150" value="" />
         {% endif %}
 
         <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" />
