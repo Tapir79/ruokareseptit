@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, session
 import config
 from utils.validations import (
     require_login,
-    user_owns_the_recipe,
+    user_owns_recipe,
     recipe_must_exist,
     check_csrf,
 )
@@ -137,7 +137,7 @@ def edit_recipe(recipe_id):
 
     recipe_created_by = recipe["user_id"]
     logged_in_user = session["user_id"]
-    user_owns_the_recipe(logged_in_user, recipe_created_by)
+    user_owns_recipe(logged_in_user, recipe_created_by)
 
     form_data = request.form
     recipe_ingredients = get_updated_session_ingredients(recipe_id, form_data)

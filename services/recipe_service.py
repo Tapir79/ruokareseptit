@@ -4,11 +4,11 @@ from flask import make_response, redirect, render_template, flash, request, sess
 from db import recipes
 from utils.validations import (
     allowed_file,
-    validate_recipe_save_form,
-    validate_recipe_form_instructions,
-    validate_recipe_form_ingredients,
+    validate_save_recipe,
+    validate_recipe_instructions,
+    validate_recipe_ingredients,
     recipe_must_exist,
-    user_owns_the_recipe,
+    user_owns_recipe,
     check_image,
 )
 
@@ -174,7 +174,7 @@ def show_new_recipe():
 def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
     """Handles the logic for saving a new recipe."""
 
-    errors = validate_recipe_save_form(form_data)
+    errors = validate_save_recipe(form_data)
 
     if errors:
         return render_template(
@@ -279,7 +279,7 @@ def handle_new_recipe_session_ingredients(
 
     # Handle Adding a New Ingredient
     if "ingredient" in request.form and form_data["ingredient"] != "":
-        errors = validate_recipe_form_ingredients(form_data, recipe_ingredients)
+        errors = validate_recipe_ingredients(form_data, recipe_ingredients)
         if not errors:
             new_id = max((ing["id"] for ing in recipe_ingredients), default=0) + 1
             recipe_ingredients.append(
@@ -312,7 +312,7 @@ def handle_new_recipe_session_instructions(
 
     # Handle Adding a New Instruction
     if "instruction" in request.form and form_data["instruction"] != "":
-        errors = validate_recipe_form_instructions(form_data)
+        errors = validate_recipe_instructions(form_data)
         if not errors:
             new_id = max((instr["id"] for instr in recipe_instructions), default=0) + 1
             recipe_instructions.append(
@@ -343,7 +343,7 @@ def add_new_recipe_image(recipe_id):
     recipe_must_exist(single_recipe)
     recipe_created_by = single_recipe["user_id"]
     logged_in_user = session["user_id"]
-    user_owns_the_recipe(logged_in_user, recipe_created_by)
+    user_owns_recipe(logged_in_user, recipe_created_by)
 
     file = request.files["image"]
     errors = {}  # initialize errors
@@ -384,7 +384,7 @@ def edit_new_recipe_image(recipe_id):
     recipe_must_exist(single_recipe)
     recipe_created_by = single_recipe["user_id"]
     logged_in_user = session["user_id"]
-    user_owns_the_recipe(logged_in_user, recipe_created_by)
+    user_owns_recipe(logged_in_user, recipe_created_by)
 
     file = request.files["image"]
     if file:
@@ -515,9 +515,9 @@ def save_edited_recipe(
     recipe_created_by = recipe["user_id"]
     logged_in_user = session["user_id"]
 
-    user_owns_the_recipe(logged_in_user, recipe_created_by)
+    user_owns_recipe(logged_in_user, recipe_created_by)
 
-    errors = validate_recipe_save_form(form_data)
+    errors = validate_save_recipe(form_data)
 
     if errors:
         return render_template(
@@ -600,7 +600,7 @@ def handle_edit_recipe_session_instructions(
 
     # Handle Adding a New Instruction
     if "instruction" in request.form and form_data["instruction"] != "":
-        errors = validate_recipe_form_instructions(form_data)
+        errors = validate_recipe_instructions(form_data)
         if not errors:
             new_id = session["max_instruction_id"]
             session["max_instruction_id"] = int(new_id) + 1
@@ -652,7 +652,7 @@ def handle_edit_recipe_session_ingredients(
 
     # Handle Adding a New Ingredient
     if "ingredient" in request.form and form_data["ingredient"] != "":
-        errors = validate_recipe_form_ingredients(form_data, recipe_ingredients)
+        errors = validate_recipe_ingredients(form_data, recipe_ingredients)
         if not errors:
             new_id = session["max_ingredient_id"]
             session["max_ingredient_id"] = int(new_id) + 1
@@ -691,7 +691,7 @@ def handle_edit_recipe_session_ingredients(
 def delete_recipe(recipe_id):
     single_recipe = recipes.get_recipe(recipe_id)
     recipe_must_exist(single_recipe)
-    user_owns_the_recipe(session["user_id"], single_recipe["user_id"])
+    user_owns_recipe(session["user_id"], single_recipe["user_id"])
 
     if request.method == "GET":
         return render_template("remove_recipe.html", recipe=single_recipe)

@@ -36,7 +36,7 @@ def check_max_length(rules, value):
     if rules["type"] == "string" and "max_length" in rules and len(value) > rules["max_length"]:
         return f"Kenttä saa olla enintään {rules['max_length']} merkkiä pitkä."
 
-def check_already_added_ingredient(value, recipe_ingredients):
+def check_existing_ingredient(value, recipe_ingredients):
     if any(ingredient["name"].lower() == value for ingredient in recipe_ingredients):
         return f"{value} on jo lisätty."
 
@@ -78,13 +78,13 @@ def validate_recipe_ingredient_input(field_name, value, recipe_ingredients=[]):
         return None
 
     return (
-        check_already_added_ingredient(value, recipe_ingredients) or
+        check_existing_ingredient(value, recipe_ingredients) or
         check_required(rules, value) or
         check_max_length(rules, value) or
         check_type(rules, value)
     )
 
-def validate_recipe_form_ingredients(form_data, recipe_ingredients=[]):
+def validate_recipe_ingredients(form_data, recipe_ingredients=[]):
     errors = {}
 
     for field, value in form_data.items():
@@ -94,7 +94,7 @@ def validate_recipe_form_ingredients(form_data, recipe_ingredients=[]):
 
     return errors
 
-def validate_recipe_form_instructions(form_data):
+def validate_recipe_instructions(form_data):
     errors = {}
 
     for field, value in form_data.items():
@@ -104,7 +104,7 @@ def validate_recipe_form_instructions(form_data):
 
     return errors
 
-def validate_recipe_save_form(form_data):
+def validate_save_recipe(form_data):
     errors = {}
     for field, value in form_data.items():
         error = validate_recipe_input(field, value)
@@ -121,7 +121,7 @@ def require_login(session):
     if "user_id" not in session:
         abort(403)
 
-def user_owns_the_recipe(logged_in_user, recipe_created_by):
+def user_owns_recipe(logged_in_user, recipe_created_by):
     if logged_in_user != recipe_created_by:
         abort(403)
 
