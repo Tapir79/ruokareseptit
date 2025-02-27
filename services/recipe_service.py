@@ -1,6 +1,7 @@
+import html
 import sqlite3
 from flask import make_response, redirect, render_template, flash, request, session
-import db.recipes as recipes
+from db import recipes
 from utils.validations import (
     allowed_file,
     validate_recipe_save_form,
@@ -10,7 +11,6 @@ from utils.validations import (
     user_owns_the_recipe,
     check_image,
 )
-import html
 
 
 def delete_temporary_session_attributes():
@@ -139,12 +139,12 @@ def save_rating(recipe_id, form_data, rated_by):
         if existing_rating:
             existing_rating_id = existing_rating["id"]
             recipes.update_rating(existing_rating_id, comment, stars)
-            flash(f"Reseptin arvostelu päivitetty onnistuneesti!", "success")
+            flash("Reseptin arvostelu päivitetty onnistuneesti!", "success")
         else:
             recipes.save_rating(recipe_id, comment, stars, rated_by)
-            flash(f"Reseptin arvostelu lisätty onnistuneesti!", "success")
+            flash("Reseptin arvostelu lisätty onnistuneesti!", "success")
     except sqlite3.IntegrityError:
-        flash(f"Reseptin arvostelun tallennus epäonnistui!", "error")
+        flash("Reseptin arvostelun tallennus epäonnistui!", "error")
         if existing_rating:
             action = "päivitys"
         else:
@@ -225,7 +225,7 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
         recipes.add_instructions(recipe_id, recipe_instructions)
 
         delete_temporary_session_attributes()
-        flash(f"Resepti lisätty onnistuneesti!", "success")
+        flash("Resepti lisätty onnistuneesti!", "success")
         return render_template("upload_image.html", recipe_id=recipe_id)
 
     except sqlite3.IntegrityError:
@@ -239,20 +239,20 @@ def save_new_recipe(form_data, recipe_ingredients, recipe_instructions):
             cuisines=session["cuisines"],
         )
 
-    except sqlite3.DatabaseError as e:
+    except sqlite3.DatabaseError as ex:
         return render_template(
             "new_recipe.html",
-            errors={"general": "Tietokantavirhe. Yritä myöhemmin uudelleen"},
+            errors={"general": f"Tietokantavirhe {ex}. Yritä myöhemmin uudelleen"},
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
             cuisines=session["cuisines"],
         )
 
-    except Exception as e:
+    except Exception as ex:
         return render_template(
             "new_recipe.html",
-            errors={"general": "Odottamaton virhe. Yritä myöhemmin uudelleen."},
+            errors={"general": f"Odottamaton virhe {ex}. Yritä myöhemmin uudelleen."},
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
@@ -346,44 +346,34 @@ def add_new_recipe_image(recipe_id):
     user_owns_the_recipe(logged_in_user, recipe_created_by)
 
     file = request.files["image"]
+    errors = {}  # initialize errors
     if file:
         if not file.filename.endswith(".jpg"):
             errors = {"general": " väärä tiedostomuoto."}
-            return render_template(
-                "upload_image.html", recipe_id=recipe_id, errors=errors
-            )
-
         if file.filename == "":
             errors = {"general": "Tiedoston nimi ei voi olla tyhjä."}
-            return render_template(
-                "upload_image.html", recipe_id=recipe_id, errors=errors
-            )
-
         if file and allowed_file(file.filename):
             image_data = file.read()  # Read the binary data
             if len(image_data) > 100 * 1024:
                 errors = {"general": "Kuva on liian suuri"}
-                return render_template(
-                    "upload_image.html", recipe_id=recipe_id, errors=errors
-                )
 
-            try:
-                recipes.add_recipe_image(recipe_id, image_data)
+        if errors:
+            return render_template(
+                "upload_image.html", recipe_id=recipe_id, errors=errors
+            )
 
-                flash(f"Reseptin kuva lisätty onnistuneesti!", "success")
-
-                return redirect(f"/recipe/{recipe_id}")
-            except Exception as e:
-                print(f"Virhe kuvan tallennuksessa: {e}")  # Log error to console
-                errors = {
-                    "general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."
-                }
-                return render_template(
-                    "upload_image.html", recipe_id=recipe_id, errors=errors
-                )
-
-        errors = {"general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."}
-        return render_template("upload_image.html", recipe_id=recipe_id, errors=errors)
+        try:
+            recipes.add_recipe_image(recipe_id, image_data)
+            flash("Reseptin kuva lisätty onnistuneesti!", "success")
+            return redirect(f"/recipe/{recipe_id}")
+        except Exception as ex:
+            print(f"Virhe kuvan tallennuksessa: {ex}")  # Log error to console
+            errors = {
+                "general": "Odottamaton virhe kuvan tallennuksessa. Yritä uudelleen."
+            }
+            return render_template(
+                "upload_image.html", recipe_id=recipe_id, errors=errors
+            )
 
     return redirect(f"/recipe/{recipe_id}")
 
@@ -419,10 +409,10 @@ def edit_new_recipe_image(recipe_id):
                 else:
                     recipes.add_recipe_image(recipe_id, image_data)
 
-                flash(f"Reseptin kuva päivitetty onistuneesti!", "success")
+                flash("Reseptin kuva päivitetty onistuneesti!", "success")
                 return redirect(f"/recipe/{recipe_id}")
-            except Exception as e:
-                print(f"Virhe kuvan päivityksessä: {e}")  # Log error to console
+            except Exception as ex:
+                print(f"Virhe kuvan päivityksessä: {ex}")  # Log error to console
                 flash("Virhe kuvan päivityksessä", "error")
                 errors = {
                     "general": "Odottamaton virhe kuvan päivityksessä. Yritä uudelleen."
@@ -580,22 +570,22 @@ def save_edited_recipe(
             cuisines=session["cuisines"],
         )
 
-    except sqlite3.DatabaseError as e:
+    except sqlite3.DatabaseError as ex:
         return render_template(
             "edit_recipe.html",
             recipe=recipe,
-            errors={"general": "Tietokantavirhe. Yritä myöhemmin uudelleen"},
+            errors={"general": f"Tietokantavirhe {ex}. Yritä myöhemmin uudelleen"},
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,
             cuisines=session["cuisines"],
         )
 
-    except Exception as e:
+    except Exception as ex:
         return render_template(
             "edit_recipe.html",
             recipe=recipe,
-            errors={"general": "Odottamaton virhe. Yritä myöhemmin uudelleen."},
+            errors={"general": f"Odottamaton virhe {ex}. Yritä myöhemmin uudelleen."},
             form_data=form_data,
             recipe_ingredients=recipe_ingredients,
             recipe_instructions=recipe_instructions,

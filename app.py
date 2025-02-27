@@ -78,11 +78,11 @@ def recipe(recipe_id):
         save_rating(recipe_id, request.form, logged_in_user)
     return show_recipe(recipe_id)
 
- 
+
 @app.route("/create_recipe", methods=["GET", "POST"])
 def create_recipe():
     require_login(session)
-    
+
     if request.method == "GET":
         delete_temporary_session_attributes()
         return show_new_recipe()
