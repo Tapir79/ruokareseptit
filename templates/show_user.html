@@ -47,9 +47,9 @@
     {% if page > 1 %}
     <a
       class="btn btn-secondary pagination-button prev"
-      href="{{ url_for('show_user', user_id=user.id, page=page-1) }}"
-      >⟨ Edellinen</a
-    >
+      href="{{ url_for('show_user', user_id=user.id, page=page-1) }}">
+      ⟨ Edellinen
+      </a>
     {% endif %}
 
     <span class="pagination-info">Sivu {{ page }} / {{ total_pages }}</span>
@@ -57,9 +57,9 @@
     {% if page < total_pages %}
     <a
       class="btn btn-primary pagination-button next"
-      href="{{ url_for('show_user', user_id=user.id, page=page+1) }}"
-      >Seuraava ⟩</a
-    >
+      href="{{ url_for('show_user', user_id=user.id, page=page+1) }}">
+      Seuraava ⟩
+    </a>
     {% endif %}
   </div>
 
