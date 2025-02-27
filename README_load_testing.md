@@ -11,6 +11,10 @@ sqlite3 database.db < install/load_test_data.sql
 ## Pyyntöjen aikaa mitattu seuraavasti:
 
 ```
+import time 
+from Flask import g 
+
+
 @app.before_request
 def before_request():
     g.start_time = time.time()
@@ -23,7 +27,7 @@ def after_request(response):
 ```
 
 - etusivun lataus 0.0s
-- haku ilman suodattimia (ilman indeksiä)
+- haku ilman suodattimia (ilman indeksiä):
 
 ```
 elapsed time: elapsed time: 6.02 s
@@ -53,7 +57,8 @@ elapsed time:0.01 s 0.0
 
 - haku kaikilla suodattimilla (yht. 5 AND ehtoa ja 3 OR ehtoa) 0.01s (indeksillä)
 
-- Käyttäjätietojen lataus ilman sivutusta sai ohjelman kaatumaan. Sivutuksen kanssa
+- Käyttäjätietojen lataus ilman sivutusta sai ohjelman kaatumaan. 
+- Käyttäjätietojen lataus sivutuksen kanssa:
 
 ```
 elapsed time: 0.02 s
@@ -86,8 +91,8 @@ s
 
 ## Sovellukseen lisätyt suorituskykyparannukset:
 
-- loading="lazy" html image-tageihin (ei merkittävää parannusta)
-- indeksin lisääminen
+- loading="lazy" html image-tageihin
+- indeksien lisääminen
 - Sovelluksen etusivu lataa vain yhden kaikkein suosituimman reseptin tähtiluokituksen ja arvosteluiden määrän perusteella
 - Sovelluksen haku käyttää sivutusta, jonka vuoksi hakutulosten selaaminen on nopeaa
 - Käyttäjän tiedot on sivutettu ja niitä näytetään sivulla kerrallaan maksimissaan 10
@@ -95,26 +100,19 @@ s
 
 ## Parannukset tietokantakyselyihin
 
-kysely lopetetaan heti ensimmäisen osuman jälkeen, kun se suoritetaan muodossa SELECT EXISTS(subquery).
+Välillä haluataan tietää esim. onko reseptin kuva olemassa tai onko tietty luokittelu olemassa. Tällainen kysely lopetetaan heti ensimmäisen osuman jälkeen, kun se suoritetaan muodossa SELECT EXISTS(subquery).
+Esim.
 
 ```
 def recipe_image_exists(recipe_id):
     sql = """SELECT EXISTS (SELECT 1 FROM recipe_images WHERE recipe_id = ?)"""
     result = db.query(sql, [recipe_id])
     return result[0][0] == 1
-
-
-def cuisine_exists(cuisine_id):
-    sql = "SELECT EXISTS (SELECT 1 FROM cuisines WHERE id = ?)"
-    result = db.query(sql, [cuisine_id])
-
-    return result[0][0] == 1
 ```
 
 ## Indeksit:
 
 Indeksi lisätty kenttiin, joihin kohdistuu filtteröintejä, hakuja tai liitoksia muihin tauluihin.
-Indeksi luodaan automaattisesti, jos kentässä tai kenttien yhdistelmässä on määrittely UNIQUE. Näissä tapauksissa ei tarvitse luoda ideksiä.
 Lisätyt indeksit:
 
 ```
@@ -127,3 +125,4 @@ CREATE INDEX idx_recipe_instructions_recipe ON recipe_instructions(recipe_id);
 CREATE INDEX idx_ratings_recipe ON ratings(recipe_id);
 CREATE INDEX idx_recipe_images_recipe ON recipe_images(recipe_id);
 ```
+Indeksi luodaan automaattisesti, jos kentässä tai kenttien yhdistelmässä on määrittely UNIQUE. Näissä tapauksissa ei tarvitse luoda erillistä indeksiä määrittelyllä CREATE INDEX.
