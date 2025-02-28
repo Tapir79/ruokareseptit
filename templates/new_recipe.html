@@ -45,10 +45,8 @@
     <label><input type="checkbox" name="gluten_free" value="1" {% if form_data and form_data.get("gluten_free") == "1" %} checked {% endif %}> Gluteeniton</label>
   </div>
 
-  <!-- Side-by-side layout for Ingredients and Instructions -->
-  <div class="recipe-form-container">
+  <div class="recipe-edit-form-container">
 
-        <!-- Ingredients Form Column -->
         <div class="recipe-form-column">
           <h3>Lisää uusi aines</h3>
 
@@ -83,58 +81,58 @@
           </div>
         </div>
 
-            <!-- Instructions Form Column -->
-    <div class="recipe-form-column">
-      <h3>Lisää uusi ohje</h3>
-
-      <div class="recipe-form-content">
-        <label for="instruction_name">Uusi ohje:</label>
-
-        {% if errors.instruction_name %}
-        <input type="text" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
-        <span class="error-message">{{ errors.instruction_name }}</span>
-        {% else %}
-        <input type="text" name="instruction_name" maxlength="150" value="" />
-        {% endif %}
-
-        <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" />
-      </div>
-    </div>
-
-</div>
-<!-- Section for listing ingredients and instructions -->
-<div class="recipe-list-container">
-
-  <!-- Ingredients List Column -->
   <div class="recipe-list-column">
     <h3>Ainekset</h3>
     {% if recipe_ingredients %}
     <ul>
       {% for ingredient in recipe_ingredients %}
-      <li>{{ ingredient.name }} - {{ ingredient.amount }}
-        <input type="submit" name="delete_ingredient_{{ ingredient.id }}" value="Poista" />
+      <li>
+        <label for="ingredient_{{ ingredient.id }}">{{ ingredient.name }} - {{ ingredient.amount }}</label>
+        <button type="submit" name="delete_ingredient_{{ ingredient.id }}" class="btn-remove-small">
+          <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
+        </button>
       </li>
       {% endfor %}
     </ul>
     {% endif %}
   </div>
+</div>
 
-  <!-- Instructions List Column -->
+
+<div class="recipe-edit-form-container">
+
+  <div class="recipe-form-column">
+    <h3>Lisää uusi ohje</h3>
+
+    <div class="recipe-form-content">
+      <label for="instruction_name">Uusi ohje:</label>
+
+      {% if errors.instruction_name %}
+      <input type="text" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
+      <span class="error-message">{{ errors.instruction_name }}</span>
+      {% else %}
+      <input type="text" name="instruction_name" maxlength="150" value="" />
+      {% endif %}
+
+      <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" />
+    </div>
+  </div>
   <div class="recipe-list-column">
     <h3>Ohjeet</h3>
     {% if recipe_instructions %}
     <ol>
       {% for instruction in recipe_instructions %}
-      <li>{{ instruction.instruction_name }}
-        <input type="submit" name="delete_instruction_{{ instruction.id }}" value="Poista" />
+      <li>
+        <label for="instruction_{{ instruction.id }}">{{ instruction.instruction_name }}</label>
+        <button type="submit" name="delete_instruction_{{ instruction.id }}" class="btn-remove-small">
+          <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
+        </button>
       </li>
       {% endfor %}
     </ol>
     {% endif %}
   </div>
-
 </div>
-
 
 <div class="form-buttons">
   <button type="submit" class="btn btn-primary" name="save">Tallenna ja jatka kuvan lisäämiseen</button>
