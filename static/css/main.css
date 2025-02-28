@@ -564,6 +564,27 @@ p {
     /* Adjust as needed */
 }
 
+.recipe-form-column label,
+.recipe-form-column ul,
+.recipe-form-column ol{
+    font-size: 1.1em;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* Input Fields */
+.recipe-form-column input[type="text"],
+.recipe-form-column input[type="password"],
+.recipe-form-column textarea,
+.recipe-form-column select {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: border-color 0.3s ease;
+}
+
 /* Ensures input sections take equal space */
 .recipe-form-content {
     flex-grow: 1;
@@ -577,7 +598,6 @@ p {
     align-self: center;
     margin-top: auto;
 }
-
 
 
 /* Form Containers */
