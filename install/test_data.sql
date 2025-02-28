@@ -38,17 +38,17 @@ VALUES (3, 'Lihapullat', 'Lihapullat kermakastikkeessa ruotsalaiseen tapaan. Tar
 
 -- Ingredients for Laskiaispullat
 INSERT INTO ingredients(id, name) VALUES
-  (1, 'maito'),
+  (1, 'laktoositon maito'),
   (2, 'kuivahiiva'),
   (3, 'taloussokeri'),
   (4, 'puolikarkea vehnäjauho'),
   (5, 'suola'),
   (6, 'kardemumma'),
-  (7, 'voi (tai margariini)'),
+  (7, 'laktoositon voi (tai margariini)'),
   (8, 'rypsi- tai auringonkukkaöljy'),
   (9, 'kananmuna'),
   (10, 'raesokeri'),
-  (11, 'vispikerma'),
+  (11, 'laktoositon vispikerma'),
   (12, 'mantelimassa');
 
   -- Additional ingredients for Karjalanpaisti (if not already used)
