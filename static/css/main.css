@@ -453,7 +453,11 @@ p {
 
 .recipe-column ol li {
     display: list-item;
-    /* Forces correct list item behavior */
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 /* Style for the ingredients table */
