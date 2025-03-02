@@ -18,7 +18,7 @@
       </h2>
       <div class="recipe-info-container">
         <div class="top-row">
-          <span class="rating-stars" aria-label="Rating: {{ recipe.avg_rating }} out of 5 stars">
+          <span class="rating-stars" aria-label="Rating: {{ featured_recipe.avg_rating }} out of 5 stars">
             {% if featured_recipe.avg_rating %}
               {% for i in range(0, featured_recipe.avg_rating) %}
                 <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti">
