@@ -10,19 +10,19 @@
 <form action="/login" method="post">
   <div class="form-group">
     <label for="username">Tunnus:</label>
-    <input type="text" name="username" value="{{ username or '' }}" class="form-control" required />
+    <input type="text" id="username" name="username" value="{{ username or '' }}" class="form-control" required />
       {% if errors.username %}
       <span class="error-message">{{ errors.username }}</span>
       {% endif %}
   </div>
   <div class="form-group">
     <label for="password">Salasana:</label>
-    <input type="password" name="password" class="form-control" required />
+    <input type="password" id="password" name="password" class="form-control" required />
     {% if errors.password %}
     <span class="error-message">{{ errors.password }}</span>
     {% endif %}
   </div>
-  <button type="submit" class="btn btn-primary">Kirjaudu</button>
+  <button type="submit" class="btn btn-primary" aria-label="Kirjaudu">Kirjaudu</button>
 </form>
 {% endif %}
 
