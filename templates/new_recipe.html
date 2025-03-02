@@ -87,7 +87,8 @@
     <ul>
       {% for ingredient in recipe_ingredients %}
       <li>
-        <button type="submit" name="delete_ingredient_{{ ingredient.id }}" class="btn-remove-small" aria-label="Poista {{ingredient.name}}">
+        <span>{{ ingredient.name }} - {{ ingredient.amount }}</span>
+        <button type="submit" name="delete_ingredient_{{ ingredient.id }}" class="btn-remove-small" aria-label="Poista {{ingredient.ingredient_name}}">
           <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
         </button>
       </li>
@@ -122,7 +123,8 @@
     <ol>
       {% for instruction in recipe_instructions %}
       <li>
-        <button type="submit" name="delete_instruction_{{ instruction.id }}" class="btn-remove-small" aria-label="Poista {{ ingredient.name }}">
+        <span>{{ instruction.instruction_name }}</span>
+        <button type="submit" name="delete_instruction_{{ instruction.id }}" class="btn-remove-small" aria-label="Poista {{ instruction.instruction_name }}">
           <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
         </button>
       </li>
