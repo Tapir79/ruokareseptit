@@ -165,7 +165,7 @@ endblock %} {% block content %}
     <p><label for="comment">Kommentti:</label></p>
       {% if rating %}
      
-    <textarea name="comment" rows="8" class="comment-box">{{ rating.comment }}</textarea>
+    <textarea id="comment" name="comment" rows="8" class="comment-box">{{ rating.comment }}</textarea>
     <p>
       <label>
         <input type="submit" value="Muokkaa" class="btn btn-primary" />
@@ -173,7 +173,7 @@ endblock %} {% block content %}
     </p> 
     <hr>
     {% else %}
-    <textarea name="comment" rows="8" class="comment-box">
+    <textarea id="comment" name="comment" rows="8" class="comment-box">
       {{ rating.comment }}
     </textarea>
     <label>
