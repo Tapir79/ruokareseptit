@@ -74,7 +74,7 @@ Lisäksi luodaan 2 valmista testikäyttäjää:
 - [X] Käyttäjä pystyy lisäämään reseptiin ohjeita, muokkaamaan ja poistamaan niitä.
 - [X] Käyttäjä näkee kaikki sovellukseen lisätyt reseptit.
 - [X] Käyttäjä pystyy etsimään reseptejä hakusanalla.
-- [X] Käyttäjä pystyy valitsemaan reseptille yhden tai useamman luokittelun (esim. alkuruoka, intialainen, vegaaninen).
+- [X] Käyttäjä pystyy valitsemaan reseptille yhden tai useamman luokittelun (esim. eurooppalainen, vegaaninen).
 - [X] Käyttäjä pystyy antamaan reseptille kommentin.
 - [X] Reseptistä näytetään kommentit.
 - [X] Käyttäjä pystyy antamaan reseptille arvosanan.
