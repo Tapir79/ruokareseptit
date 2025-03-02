@@ -67,8 +67,6 @@ Lisäksi luodaan 2 valmista testikäyttäjää:
 
 ## Toiminnallisuudet
 
-[X] = toteutettu
-
 - [X] Sovelluksessa käyttäjät pystyvät jakamaan ruokareseptejään. Reseptissä lukee tarvittavat ainekset, kuvaus ja valmistusohje.
 - [X] Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
 - [X] Käyttäjä pystyy lisäämään reseptejä ja muokkaamaan ja poistamaan niitä.
