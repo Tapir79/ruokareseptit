@@ -5,7 +5,7 @@
 <h1>Uusi resepti</h1>
 
 <form action="/create_recipe" method="post">
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="hidden" id="title" name="csrf_token" value="{{ session.csrf_token }}" />
 
   <div class="form-group">
     <label for="title">Otsikko:</label>
@@ -17,7 +17,7 @@
 
   <div class="form-group">
     <label for="description">Kuvaus:</label>
-    <textarea name="description" rows="8" cols="60" maxlength="300">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
+    <textarea id="description" name="description" rows="8" cols="60" maxlength="300">{{ form_data.description if form_data and 'description' in form_data else '' }}</textarea>
     {% if errors.description %}
     <span class="error-message">{{ errors.description }}</span>
     {% endif %}
@@ -39,10 +39,10 @@
 
   <div class="form-group">
     <strong>Ruokavaliot:</strong><br>
-    <label><input type="checkbox" name="vegan" value="1" {% if form_data and form_data.get("vegan") == "1" %} checked {% endif %}> Vegaaninen</label>
-    <label><input type="checkbox" name="vegetarian" value="1" {% if form_data and form_data.get("vegetarian") == "1" %} checked {% endif %}> Kasvisruoka</label>
-    <label><input type="checkbox" name="lactose_free" value="1" {% if form_data and form_data.get("lactose_free") == "1" %} checked {% endif %}> Laktoositon</label>
-    <label><input type="checkbox" name="gluten_free" value="1" {% if form_data and form_data.get("gluten_free") == "1" %} checked {% endif %}> Gluteeniton</label>
+    <label><input id="vegan" type="checkbox" name="vegan" value="1" {% if form_data and form_data.get("vegan") == "1" %} checked {% endif %}> Vegaaninen</label>
+    <label><input id="vegetarian" type="checkbox" name="vegetarian" value="1" {% if form_data and form_data.get("vegetarian") == "1" %} checked {% endif %}> Kasvisruoka</label>
+    <label><input id="lactose_free" type="checkbox" name="lactose_free" value="1" {% if form_data and form_data.get("lactose_free") == "1" %} checked {% endif %}> Laktoositon</label>
+    <label><input id="gluten_free" type="checkbox" name="gluten_free" value="1" {% if form_data and form_data.get("gluten_free") == "1" %} checked {% endif %}> Gluteeniton</label>
   </div>
 
   <div class="recipe-edit-form-container">
@@ -53,11 +53,11 @@
           <div class="recipe-form-content">
             <label for="name">Aineksen nimi:</label>
             {% if errors.name or errors.amount %}
-            <input type="text" name="name" maxlength="30" value="{{ form_data.name if form_data and 'name' in form_data else '' }}" />
+            <input type="text" id="name" name="name" maxlength="30" value="{{ form_data.name if form_data and 'name' in form_data else '' }}" />
             {% endif %}
 
             {% if not errors.name and not errors.amount %}
-            <input type="text" name="name" maxlength="30" value="" /> 
+            <input type="text" id="name" name="name" maxlength="30" value="" /> 
             {% endif %}
 
             {% if errors.name %}
@@ -66,18 +66,18 @@
 
             <label for="amount">Määrä:</label>
             {% if errors.name or errors.amount %}
-            <input type="text" name="amount" maxlength="20" value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}" />
+            <input type="text" id="amount" name="amount" maxlength="20" value="{{ form_data.amount if form_data and 'amount' in form_data else '' }}" />
             {% endif %}
 
             {% if not errors.name and not errors.amount %}
-            <input type="text" name="amount" maxlength="20" value="" />
+            <input type="text" id="amount" name="amount" maxlength="20" value="" />
             {% endif %}
 
             {% if errors.amount %}
             <span class="error-message">{{ errors.amount }}</span>
             {% endif %}
             <br />
-            <input type="submit" class="btn btn-secondary" name="ingredient" value="Lisää uusi aines" />
+            <input type="submit" class="btn btn-secondary" name="ingredient" value="Lisää uusi aines" aria-label="Lisää uusi aines"/>
           </div>
         </div>
 
@@ -87,8 +87,7 @@
     <ul>
       {% for ingredient in recipe_ingredients %}
       <li>
-        <label for="ingredient_{{ ingredient.id }}">{{ ingredient.name }} - {{ ingredient.amount }}</label>
-        <button type="submit" name="delete_ingredient_{{ ingredient.id }}" class="btn-remove-small">
+        <button type="submit" name="delete_ingredient_{{ ingredient.id }}" class="btn-remove-small" aria-label="Poista {{ingredient.name}}">
           <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
         </button>
       </li>
@@ -108,13 +107,13 @@
       <label for="instruction_name">Uusi ohje:</label>
 
       {% if errors.instruction_name %}
-      <input type="text" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
+      <input type="text" id="instruction_name" name="instruction_name" maxlength="150" value="{{ form_data.instruction_name if form_data and 'instruction_name' in form_data else '' }}" />
       <span class="error-message">{{ errors.instruction_name }}</span>
       {% else %}
-      <input type="text" name="instruction_name" maxlength="150" value="" />
+      <input type="text" id="instruction_name" name="instruction_name" maxlength="150" value="" />
       {% endif %}
 
-      <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" />
+      <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" aria-label="Lisää uusi ohje"/>
     </div>
   </div>
   <div class="recipe-list-column">
@@ -123,8 +122,7 @@
     <ol>
       {% for instruction in recipe_instructions %}
       <li>
-        <label for="instruction_{{ instruction.id }}">{{ instruction.instruction_name }}</label>
-        <button type="submit" name="delete_instruction_{{ instruction.id }}" class="btn-remove-small">
+        <button type="submit" name="delete_instruction_{{ instruction.id }}" class="btn-remove-small" aria-label="Poista {{ ingredient.name }}">
           <img src="{{ url_for('static', filename='icons/delete.svg') }}" width="20" height="20" alt="Poista" />
         </button>
       </li>
@@ -135,8 +133,8 @@
 </div>
 
 <div class="form-buttons">
-  <button type="submit" class="btn btn-primary" name="save">Tallenna ja jatka kuvan lisäämiseen</button>
-  <button type="submit" name="back" class="btn btn-primary">Keskeytä</button>
+  <button type="submit" class="btn btn-primary" name="save" aria-label="Tallenna ja jatka kuvan lisäämiseen">Tallenna ja jatka kuvan lisäämiseen</button>
+  <button type="submit" name="back" class="btn btn-primary" aria-label="Keskeytä">Keskeytä</button>
 </div>
 </form>
 
