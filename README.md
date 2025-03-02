@@ -16,6 +16,7 @@
   - [Tietokanta-asiat](#tietokanta-asiat)
   - [Sovelluksen turvallisuus](#sovelluksen-turvallisuus)
   - [Suuren tietomäärän käsittely](#kuormitustestaus)
+- [Kuvat ja grafiikat](#kuvat-ja-grafiikat)
 
 ---
 
@@ -163,3 +164,8 @@ Eli suuren tietomäärän käsittely
 - [X] Testattu sovelluksen toimintaa 4 eri selaimella: Firefox, Chrome, Safari ja Lynx 
 - [X] Ajettu jokainen sivu template Chromen DevTools Axe-Core työkalulla 4.10.2 ja korjattu kaikki löydetyt virheet
 - [X] Ajettu jokainen sivu template Chromen Taba11y työkalulla ja testattu, että navigointi onnistuu näppäimillä ilman hiirtä myös selaimessa 
+
+## Kuvat ja grafiikat
+
+Kaikki sovelluksessa käytetyt kuvat on otettu itse. Samaten SVG-grafiikat on luotu itse lukuunottamatta tähtiä `star.svg` ja `star_empty.svg`.
+Ne on tehty muokkaamalla [www.svgrepo.com](https://www.svgrepo.com/)-palvelussa ja ne ovat käytössä sivustolla mainittujen ehtojen mukaisesti.
