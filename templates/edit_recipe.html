@@ -139,6 +139,7 @@
 
   <div class="recipe-edit-form-container">
   <div class="recipe-form-column">
+    <p>
     <h2>Ohjeet</h2>
     {% if errors.instruction_name %}
     <label for="instruction_name">Ohje:</label>
@@ -154,6 +155,7 @@
     <label for="instruction_name">Uusi ohje:</label>
     <input type="text" id="instruction_name" name="instruction_name" maxlength="150" />
     {% endif %}
+    </p>
     <input type="submit" name="instruction" value="Lisää uusi ohje" class="btn btn-secondary"/>
 </div>
 
