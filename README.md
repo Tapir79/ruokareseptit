@@ -157,3 +157,9 @@ Eli suuren tietomäärän käsittely
 - [X] Sovellusta testattu suurella tietomäärällä ja raportoitu tulokset. [README_load_testing.md](https://github.com/Tapir79/ruokareseptit/blob/main/README_load_testing.md)
 - [X] Sovelluksessa käytössä tietokohteiden sivutus
 - [X] Tietokantaan lisätty indeksi, joka nopeuttaa suuren tietomäärän käsittelyä
+
+## Käytettävyystestaus 
+
+- [X] Testattu sovelluksen toimintaa 4 eri selaimella: Firefox, Chrome, Safari ja Lynx 
+- [X] Ajettu jokainen sivu template Chromen DevTools Axe-Core työkalulla 4.10.2 ja korjattu kaikki löydetyt virheet
+- [X] Ajettu jokainen sivu template Chromen Taba11y työkalulla ja testattu, että navigointi onnistuu näppäimillä ilman hiirtä myös selaimessa 
