@@ -5,11 +5,11 @@
 <h1>Uusi resepti</h1>
 
 <form action="/create_recipe" method="post">
-  <input type="hidden" id="title" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 
   <div class="form-group">
     <label for="title">Otsikko:</label>
-    <input type="text" name="title" value="{{ form_data.title if form_data and 'title' else '' }}" maxlength="30" />
+    <input type="text" id="title" name="title" value="{{ form_data.title if form_data and 'title' else '' }}" maxlength="30" />
     {% if errors.title %}
     <span class="error-message">{{ errors.title }}</span>
     {% endif %}
