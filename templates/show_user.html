@@ -20,20 +20,20 @@
 
       <!-- Star Rating Display -->
       {% if recipe.avg_rating %}
-      <span class="recipe-stars">
+      <span class="recipe-stars" aria-label="Rating: {{ recipe.avg_rating }} out of 5 stars">
         {% for i in range(0, recipe.avg_rating) %}
         <img
           src="{{ url_for('static', filename='icons/star.svg') }}"
           width="18"
           height="18"
-          alt="star"
+          alt="tähti"
         />
         {% endfor %} {% for i in range(0, 5-recipe.avg_rating) %}
         <img
           src="{{ url_for('static', filename='icons/star_empty.svg') }}"
           width="18"
           height="18"
-          alt="empty star"
+          alt="tyhjä_tähti"
         />
         {% endfor %}
       </span>

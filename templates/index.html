@@ -18,13 +18,13 @@
       </h2>
       <div class="recipe-info-container">
         <div class="top-row">
-          <span class="rating-stars">
+          <span class="rating-stars" aria-label="Rating: {{ recipe.avg_rating }} out of 5 stars">
             {% if featured_recipe.avg_rating %}
               {% for i in range(0, featured_recipe.avg_rating) %}
                 <img src="{{ url_for('static', filename='icons/star.svg') }}" width="20" height="20" alt="tähti">
               {% endfor %}
               {% for i in range(0, 5 - featured_recipe.avg_rating) %}
-                <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
+                <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä_tähti">
               {% endfor %}
               {% if featured_recipe.rating_count == 1 %}
                 (1 arvio)
@@ -33,7 +33,7 @@
               {% endif %}
             {% else %}
               {% for i in range(0, 5) %}
-                <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä tähti">
+                <img src="{{ url_for('static', filename='icons/star_empty.svg') }}" width="20" height="20" alt="tyhjä_tähti">
               {% endfor %}
             {% endif %}
           </span>
@@ -59,16 +59,16 @@
         </div>
         <div class="bottom-row">
           {% if featured_recipe.vegan %}
-            <span class="tag tag-vegan">Vegaani</span>
+            <span class="tag tag-vegan" aria-label="vegaani">Vegaani</span>
           {% endif %}
           {% if featured_recipe.vegetarian %}
-            <span class="tag tag-vegetarian">Kasvis</span>
+            <span class="tag tag-vegetarian" aria-label="kasvis">Kasvis</span>
           {% endif %}
           {% if featured_recipe.lactose_free %}
-            <span class="tag tag-lactose-free">Laktoositon</span>
+            <span class="tag tag-lactose-free" aria-label="laktoositon">Laktoositon</span>
           {% endif %}
           {% if featured_recipe.gluten_free %}
-            <span class="tag tag-gluten-free">Gluteeniton</span>
+            <span class="tag tag-gluten-free" aria-label="gluteeniton">Gluteeniton</span>
           {% endif %}
         </div>
       </div>
