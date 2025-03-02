@@ -105,6 +105,7 @@
     <h3>Lisää uusi ohje</h3>
 
     <div class="recipe-form-content">
+      <p>
       <label for="instruction_name">Uusi ohje:</label>
 
       {% if errors.instruction_name %}
@@ -113,7 +114,7 @@
       {% else %}
       <input type="text" id="instruction_name" name="instruction_name" maxlength="150" value="" />
       {% endif %}
-
+      </p>
       <input type="submit" class="btn btn-secondary" name="instruction" value="Lisää uusi ohje" aria-label="Lisää uusi ohje"/>
     </div>
   </div>
