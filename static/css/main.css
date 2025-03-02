@@ -52,13 +52,13 @@ p {
 }
 
 .btn-secondary {
-    background: #ddd;
+    background: #c2c2c2;
     color: black;
     border: none;
 }
 
 .btn-secondary:hover {
-    background: #bbb;
+    background: #e7e6e6;
 }
 
 .btn-remove-small {
@@ -97,22 +97,22 @@ p {
 }
 
 .tag-gluten-free {
-    border-color: #c37604;
-    color: #c37604;
+    border-color: #9c5f03;
+    color: #914f02;
 }
 
 .tag-lactose-free {
-    border-color: #0f4e82;
+    border-color: #013d6e;
     color: #0f4e82;
 }
 
 .tag-vegan {
-    border-color: #379103;
-    color: #379103;
+    border-color: #1e5201;
+    color: #2b7203;
 }
 
 .tag-vegetarian {
-    border-color: #6f9702;
+    border-color: #3f5502;
     color: #6f9702;
 }
 
@@ -129,7 +129,7 @@ p {
 
 /* Specific cuisine styles */
 .cuisine-nordic {
-    background-color: #5d9ad6;
+    background-color: #032e5a;
     /* current blue */
     color: white;
 }
@@ -182,13 +182,13 @@ p {
 }
 
 .flash-success {
-    background-color: #d4edda;
+    background-color: #bfe2c8;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
 
 .flash-error {
-    background-color: #f8d7da;
+    background-color: #f1b6bb;
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
