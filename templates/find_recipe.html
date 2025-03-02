@@ -64,6 +64,7 @@
 
       <div class="filter-box">
         <h3>Järjestä</h3>
+        <label for="order_by">Järjestä hakutulokset:</label>
         <select name="order_by" id="order_by">
           <option value="title" {% if request.args.get('order_by') == 'title' %}selected{% endif %}>Otsikko (A-Z)</option>
           <option value="avg_rating" {% if request.args.get('order_by') == 'avg_rating' %}selected{% endif %}>Tähdet (korkein ensin)</option>
