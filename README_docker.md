@@ -1,4 +1,4 @@
-# Create a docker image
+# Luo docker image
 
 ##  Asenna Buildx builder ja lataa QEMU emulattorit
 ```
