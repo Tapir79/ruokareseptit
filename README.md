@@ -7,6 +7,7 @@
   - [Luo tietokanta](#luo-tietokanta)
   - [(Optionaalinen) lisää testidata tietokantaan](#optionaalinen-lisaa-testidata-tietokantaan)
   - [Käynnistä sovellus](#käynnista-sovellus)
+  - [Docker](#docker)     
 - [Toteutukset](#toteutukset)
   - [Toiminnallisuudet](#toiminnallisuudet)
   - [Tekniset perusvaatimukset](#tekniset-perusvaatimukset)
@@ -61,6 +62,18 @@ Lisäksi luodaan 2 valmista testikäyttäjää:
 ## Käynnistä sovellus
 
 `$ flask run`
+
+Navigoi:     
+["http://localhost:5000/"](http://localhost:5000/)
+
+---
+
+## Docker 
+
+Halutessasi voit luoda ohjelmasta docker-imagen [ohjeilla](https://github.com/Tapir79/ruokareseptit/tree/main/README_docker.md)   
+tai ladata Dockerhubista toimivan imagen `docker pull tapir79/ruokareseptit` 
+
+
 
 ---
 
