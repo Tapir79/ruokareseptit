@@ -1,18 +1,18 @@
 # Create a docker image
 
-## (1 time only) create & bootstrap a buildx builder
+##  Asenna Buildx builder ja lataa QEMU emulattorit
 ```
 docker buildx create --name multiarch --use
-docker buildx inspect --bootstrap   # downloads QEMU emulators
+docker buildx inspect --bootstrap   # QEMU 
 ```
 
-## choose tags
+## Tagit
 ```
 IMAGE=tapir79/ruokareseptit
 TAG=latest           
 ```
 
-## Push to docker hub
+## Lisää Dockerhubiin
 ```
 docker buildx build \
   --platform linux/amd64,linux/arm64/v8 \
@@ -21,39 +21,39 @@ docker buildx build \
   .
 ```
 
-## On Intel / x86 host
+## Intel / x86 host
 ```
-docker pull ${IMAGE}:${TAG}      # pulls linux/amd64 variant
+docker pull ${IMAGE}:${TAG}      # linux/amd64 variant
 ```
-Example:
+Esim:
 ```
 docker pull tapir79/ruokareseptit
 ```
 
-## On Apple‑silicon Mac
+## Apple‑silicon Mac
 ```
-docker pull ${IMAGE}:${TAG}      # pulls linux/arm64 variant
+docker pull ${IMAGE}:${TAG}      # linux/arm64 variant
 ```
 
-## Check architecture
+## Tarkista arkkitehtuuri
 ```
 docker image inspect ${IMAGE}:${TAG} --format '{{.Os}}/{{.Architecture}}'
 ```
-Example:
+Esim:
 ```
 docker image inspect tapir79/ruokareseptit --format '{{.Os}}/{{.Architecture}}'
 ```
 
-## Run
+## Käynnistä image
 
-with a persistent DB bind‑mount
+Pysyvä tietokanta bind‑mount
 ```
 docker run -p 5000:5000 \
   -v "$PWD/database/database.db:/app/database.db" \
   ${IMAGE}:${TAG}
 ```
 
-Example:
+Esim:
 
 ```
 docker run -p 5000:5000 -v "$PWD/database/database.db:/app/database.db" tapir79/ruokareseptit
